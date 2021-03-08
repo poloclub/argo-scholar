@@ -367,6 +367,7 @@ export function requestImportGraphFromCSV(hasNodeFile, delimiter, newProjectName
     delimiter,
     newProjectName
   };
+  // console.log(importConfig);
   ipcRenderer.send(IMPORT_GRAPH, importConfig);
 
   // TODO: Potentially separate this out to web worker.
@@ -396,6 +397,77 @@ export function requestImportGraphFromCSV(hasNodeFile, delimiter, newProjectName
     // Newly imported graph shouldn't have label showing
     appState.graph.frame.turnOffLabelCSSRenderer();
   });
+}
+
+export function requestCreatePaperGraph(newProjectName, paperNode) {
+  if (!newProjectName) {
+    newProjectName = 'Test Project';
+  }
+  appState.import.loading = true;
+
+  // TODO: Potentially separate this out to web worker.
+  createPaperGraph(paperNode).then(graph => {
+    // Run post import filters
+    appState.import.postImportFilter(graph.rawGraph);
+
+    runInAction('load imported graph', () => {
+      appState.graph.rawGraph = graph.rawGraph;
+      appState.graph.metadata = graph.metadata;
+      appState.graph.setUpFrame();
+    });
+    // Reinitialize global configs
+    appState.graph.nodes = appState.graph.initialGlobalConfig.nodes;
+    appState.graph.overrides = new Map();
+    appState.import.loading = false;
+    appState.import.dialogOpen = false;
+    // Sync preference store with graph-frontend frame
+    if (!appState.preferences.darkMode) { // assume frame defaults to dark
+      appState.graph.frame.toggleDark();
+    }
+    if (appState.preferences.minimapShowing) {
+      appState.graph.frame.showMiniMap();
+    } else {
+      appState.graph.frame.hideMiniMap();
+    }
+    // Newly imported graph shouldn't have label showing
+    appState.graph.frame.turnOffLabelCSSRenderer();
+  });
+}
+
+async function createPaperGraph(paperNode) {
+  // Since the CSV lib we use uses int index when there's not header/column names specified
+  // but the frontend selector always convert int to string values, we need to
+  // manually convert the user-selected fromId and toId values back to int.
+  // Note that this should only be done when there's no header provided on the CSV (hasColumns == false).
+  // const fromId = config.nodes.hasColumns ? config.edges.mapping.fromId : parseInt(config.edges.mapping.fromId);
+  // const toId = config.nodes.hasColumns ? config.edges.mapping.toId : parseInt(config.edges.mapping.toId);
+
+  // Create temporary data structures.
+  let nodesArr = [];
+  const graph = createGraph();
+  const degreeDict = {};
+
+  graph.addNode(paperNode[0], { id: paperNode[0], degree: 0});
+  nodesArr.push({id: paperNode[0], degree: 0, pagerank: 0, paperName: paperNode[1] });
+  degreeDict[paperNode[0]] = 0;
+
+  const edgesSet = new Set();
+  
+  const edgesArr = [];
+
+  const rank = pageRank(graph);
+  nodesArr = nodesArr.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: paperNode[1]}));
+  return {
+    rawGraph: { nodes: nodesArr, edges: edgesArr },
+    metadata: {
+      snapshotName: 'Untitled Graph',
+      fullNodes: nodesArr.length,
+      fullEdges: edgesArr.length, //Math.floor(edgesArr.length / 2), // Counting undirected edges
+      nodeProperties: Object.keys(nodesArr[0]),
+      nodeComputed: ['pagerank', 'degree', 'paperName'],
+      edgeProperties: ['source_id', 'target_id'],
+    },
+  }
 }
 
 export function requestImportGraphFromGexf() {

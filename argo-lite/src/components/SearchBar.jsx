@@ -1,5 +1,9 @@
 import React from "react";
 import appState from "../stores/index";
+import {
+  requestCreatePaperGraph,
+  requestCreateNewProject
+} from "../ipc/client";
 
 class SearchBar extends React.Component {
   constructor(props) {
@@ -36,7 +40,21 @@ class SearchBar extends React.Component {
           .then((response) => {
             apiresponse = response;
             this.state.id = response.paperId;
-            alert(this.state.id)
+            // alert(this.state.id);
+            appState.graph.runActiveLayout();
+
+            requestCreateNewProject({
+              name: appState.project.newProjectName,
+              createdDate: new Date().toLocaleString(),
+            });
+            let paperNode = [response.paperId, response.title];
+            requestCreatePaperGraph( //edgefile.delimiter and nodefile.delimiter are the same
+              appState.project.newProjectName, paperNode
+            );
+
+            // Importing a graph means no label would be shown by default,
+            // thus turn off label CSSRenderer for better performance.
+            appState.graph.frame.turnOffLabelCSSRenderer();
           })
           .catch((error) => {
             alert("Not a valid CorpusID. Please try again v1.");
