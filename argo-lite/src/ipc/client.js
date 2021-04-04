@@ -448,15 +448,29 @@ async function createPaperGraph(paperNode) {
   const degreeDict = {};
 
   graph.addNode(paperNode[0], { id: paperNode[0], degree: 0});
-  nodesArr.push({id: paperNode[0], degree: 0, pagerank: 0, paperName: paperNode[1] });
+  nodesArr.push({id: paperNode[0], degree: 0, pagerank: 0, paperName: paperNode[1], paperAbstract: paperNode[2] });
+
   degreeDict[paperNode[0]] = 0;
 
   const edgesSet = new Set();
   
   const edgesArr = [];
-
+  
   const rank = pageRank(graph);
-  nodesArr = nodesArr.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: paperNode[1]}));
+
+  // const nodesData = nodesArr.reduce((map, currentNode) => {
+  //   map[currentNode.id] = {id: currentNode.id, pagerank: rank[currentNode.id], degree: degreeDict[currentNode.id], paperName: currentNode.paperName, top5Citations: paperNode[3]};
+  //   return map;
+  // }, {}); 
+
+  const nodesData = nodesArr.reduce((map, currentNode) => {
+    map[currentNode.id] = {node: currentNode, top5Citations: paperNode[3]};
+    return map;
+  }, {}); 
+
+  appState.graph.preprocessedRawGraph = {nodes: nodesArr, edges: edgesArr, graph: graph, degreeDict: degreeDict, nodesDataMap: nodesData};
+  nodesArr = nodesArr.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract}));
+
   return {
     rawGraph: { nodes: nodesArr, edges: edgesArr },
     metadata: {
