@@ -1,10 +1,13 @@
-import { observable, computed, action, runInAction } from "mobx";
+import { observable, computed, action, runInAction, toJS } from "mobx";
 import createGraph from "ngraph.graph";
 import { scales } from "../constants/index";
 import uniq from "lodash/uniq";
 import { averageClusteringCoefficient, connectedComponents, graphDensity, averageDegree, exactGraphDiameter } from "../services/AlgorithmUtils";
 import { ContextMenu, MenuFactory, MenuItemFactory } from "@blueprintjs/core";
-import { Frame } from "../graph-frontend";
+import { Frame, graph } from "../graph-frontend";
+import appState from ".";
+
+import pageRank from 'ngraph.pagerank';
 
 export default class GraphStore {
 
@@ -91,6 +94,16 @@ export default class GraphStore {
     size: 5,
     label: "",
     shape: "circle"
+  };
+
+  // preprocessed rawGraph
+  @observable
+  preprocessedRawGraph = {
+    nodes: [],
+    edges: [],
+    graph: null,
+    degreeDict: {},
+    nodesDataMap: {},
   };
 
   @observable
@@ -226,6 +239,49 @@ export default class GraphStore {
   @computed
   get numHiddenNodes() {
     return this.rawGraph.nodes.filter(n => n.isHidden).length;
+  }
+
+  addNodetoGraph(node, parent) {
+    // console.log("addNodetoGraph node: ", node);
+    console.log("addNodetoGraph parent: ", parent);
+    let rawGraphNodes = toJS(appState.graph.preprocessedRawGraph.nodes);
+
+    let edgesArr = toJS(appState.graph.preprocessedRawGraph.edges);
+    let graph = toJS(appState.graph.preprocessedRawGraph.graph);
+    const degreeDict = toJS(appState.graph.preprocessedRawGraph.degreeDict);
+    graph.addNode(node[0], {id : node[0], degree: 0});
+
+    let addedNode = {id: node[0], degree: 0, pagerank: 0, paperName: node[1], paperAbstract: node[2]};
+
+    rawGraphNodes.push(addedNode);
+
+    edgesArr.push({source_id: parent.node.id, target_id: node[0]});
+    degreeDict[node[0]] = 1;
+
+    degreeDict[parent.node.id] += 1;
+
+    const rank = pageRank(graph);
+
+    const nodesData = toJS(appState.graph.preprocessedRawGraph.nodesDataMap);
+    nodesData[node[0]] = {node: addedNode, top5Citations: node[3]};
+
+    // const nodesData = nodes.reduce((map, currentNode) => {
+    //   map[currentNode.id] = {id: currentNode.id, pagerank: rank[currentNode.id], degree: degreeDict[currentNode.id], paperName: currentNode.paperName};
+    //   return map;
+    // }, {}); 
+  
+    appState.graph.preprocessedRawGraph = {nodes: rawGraphNodes, edges: edgesArr, graph: graph, degreeDict: degreeDict, nodesDataMap: nodesData};
+
+    let nodesArr = rawGraphNodes.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract}));
+
+    console.log("nodesArr: ", nodesArr);
+    console.log("edgesArr: ", edgesArr);
+    appState.graph.rawGraph = { nodes: nodesArr, edges: edgesArr };
+    appState.graph.metadata.fullNodes = nodesArr.length;
+    appState.graph.metadata.fullEdges = edgesArr.length;
+    // appState.graph.metadata.nodeProperties = Object.keys(nodesArr[0]);
+
+    // appState.graph.setUpFrame();
   }
 
   showNodes(nodeids) {
@@ -427,6 +483,67 @@ export default class GraphStore {
             },
             text: 'Show 5 Neighbors with Highest PageRank',
             key: 'Show 5 Neighbors with Highest PageRank'
+          }),
+          this.frame.rightClickedNode && MenuItemFactory({
+            onClick: () => {
+              if (this.frame.rightClickedNode) {
+                const rightClickedNodeId = this.frame.rightClickedNode.data.ref.id.toString();
+
+                let parentNode = toJS(appState.graph.preprocessedRawGraph.nodesDataMap[rightClickedNodeId]);
+
+                const rightClickedNodeCitations = parentNode.top5Citations;
+
+                console.log("right click id: ", rightClickedNodeId);
+                console.log("citations: ", rightClickedNodeCitations);
+
+                console.log("right clicked node: ", parentNode);
+
+                // let citation = rightClickedNodeCitations[0];
+                // let apiurl = "https://api.semanticscholar.org/v1/paper/" + citation.paperId;
+                // console.log("API url:", apiurl);
+                // fetch(apiurl)
+                //   .then((res) => {
+                //     if (res.ok) {
+                //       return res.json();
+                //     } else {
+                //       throw "error";
+                //     }
+                //   })
+                //   .then((response) => {
+                //     console.log("a new paper name: ", response.title);
+                //     let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5)];
+                //     this.addNodetoGraph(paperNode, parentNode);
+
+                //     // appState.graph.setUpFrame();
+                //   });
+                //   // .catch((error) => {
+                //   //   alert("Something broke :(.");
+                //   // });
+
+                rightClickedNodeCitations.forEach(citation => {
+                  let apiurl = "https://api.semanticscholar.org/v1/paper/" + citation.paperId;
+                  fetch(apiurl)
+                    .then((res) => {
+                      if (res.ok) {
+                        return res.json();
+                      } else {
+                        throw "error";
+                      }
+                    })
+                    .then((response) => {
+                      console.log("a new paper name: ", response.title);
+                      let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5)];
+                      this.addNodetoGraph(paperNode, parentNode);
+                    })
+                    .catch((error) => {
+                      alert("Something broke :(");
+                    });
+                  });
+
+              }
+            },
+            text: 'Add 5 Paper Neighbors',
+            key: 'Add 5 Paper Neighbors'
           }),
         ]
       });

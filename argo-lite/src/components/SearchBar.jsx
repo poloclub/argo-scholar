@@ -9,8 +9,8 @@ class SearchBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        query: null, 
-        id: null
+        query: '', 
+        id: 0
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -27,7 +27,6 @@ class SearchBar extends React.Component {
     const corpusIDregex = /^[0-9]+$/;
     if (corpusIDregex.test(this.state.query)) {
         let apiurl = "https://api.semanticscholar.org/v1/paper/CorpusID:" + this.state.query;
-        var apiresponse;
 
         fetch(apiurl)
           .then((res) => {
@@ -38,7 +37,6 @@ class SearchBar extends React.Component {
             }
           })
           .then((response) => {
-            apiresponse = response;
             this.state.id = response.paperId;
             // alert(this.state.id);
             appState.graph.runActiveLayout();
@@ -47,7 +45,7 @@ class SearchBar extends React.Component {
               name: appState.project.newProjectName,
               createdDate: new Date().toLocaleString(),
             });
-            let paperNode = [response.paperId, response.title];
+            let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5)];
             requestCreatePaperGraph( //edgefile.delimiter and nodefile.delimiter are the same
               appState.project.newProjectName, paperNode
             );
