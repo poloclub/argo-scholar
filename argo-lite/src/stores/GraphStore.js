@@ -241,29 +241,36 @@ export default class GraphStore {
     return this.rawGraph.nodes.filter(n => n.isHidden).length;
   }
 
-  addNodetoGraph(node, parent) {
-    // console.log("addNodetoGraph node: ", node);
-    console.log("addNodetoGraph parent: ", parent);
+  addNodetoGraph(node, parentID) {
     let rawGraphNodes = toJS(appState.graph.preprocessedRawGraph.nodes);
-
     let edgesArr = toJS(appState.graph.preprocessedRawGraph.edges);
     let graph = toJS(appState.graph.preprocessedRawGraph.graph);
     const degreeDict = toJS(appState.graph.preprocessedRawGraph.degreeDict);
-    graph.addNode(node[0], {id : node[0], degree: 0});
 
-    let addedNode = {id: node[0], degree: 0, pagerank: 0, paperName: node[1], paperAbstract: node[2]};
+
+    graph.addNode(node[0]);
+    // graph.addNode(node[0], {id : node[0], degree: 1});
+
+    graph.addLink(parentID, node[0]);
+    // graph.addLink(tempParent.id, node[0]);
+
+    let addedNode = {id: node[0], degree: 1, pagerank: 0, paperName: node[1], paperAbstract: node[2]};
+    // let addedNode = {id: node[0], degree: 0, pagerank: 0, paperName: node[1], paperAbstract: node[2]};
 
     rawGraphNodes.push(addedNode);
 
-    edgesArr.push({source_id: parent.node.id, target_id: node[0]});
+    edgesArr.push({source_id: parentID, target_id: node[0]});
     degreeDict[node[0]] = 1;
 
-    degreeDict[parent.node.id] += 1;
+    degreeDict[parentID] += 1;
 
     const rank = pageRank(graph);
+    console.log("pagerank: ", rank);
 
     const nodesData = toJS(appState.graph.preprocessedRawGraph.nodesDataMap);
-    nodesData[node[0]] = {node: addedNode, top5Citations: node[3]};
+    nodesData[node[0]] = {top5Citations: node[3]};
+
+    // nodesData[node[0]] = {node: addedNode, top5Citations: node[3]};
 
     // const nodesData = nodes.reduce((map, currentNode) => {
     //   map[currentNode.id] = {id: currentNode.id, pagerank: rank[currentNode.id], degree: degreeDict[currentNode.id], paperName: currentNode.paperName};
@@ -275,12 +282,11 @@ export default class GraphStore {
     let nodesArr = rawGraphNodes.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract}));
 
     console.log("nodesArr: ", nodesArr);
-    console.log("edgesArr: ", edgesArr);
+    // console.log("edgesArr: ", edgesArr);
     appState.graph.rawGraph = { nodes: nodesArr, edges: edgesArr };
     appState.graph.metadata.fullNodes = nodesArr.length;
     appState.graph.metadata.fullEdges = edgesArr.length;
-    // appState.graph.metadata.nodeProperties = Object.keys(nodesArr[0]);
-
+    appState.graph.metadata.nodeProperties = Object.keys(nodesArr[0]); 
     // appState.graph.setUpFrame();
   }
 
@@ -493,32 +499,10 @@ export default class GraphStore {
 
                 const rightClickedNodeCitations = parentNode.top5Citations;
 
-                console.log("right click id: ", rightClickedNodeId);
-                console.log("citations: ", rightClickedNodeCitations);
+                // console.log("right click id: ", rightClickedNodeId);
+                // console.log("citations: ", rightClickedNodeCitations);
 
-                console.log("right clicked node: ", parentNode);
-
-                // let citation = rightClickedNodeCitations[0];
-                // let apiurl = "https://api.semanticscholar.org/v1/paper/" + citation.paperId;
-                // console.log("API url:", apiurl);
-                // fetch(apiurl)
-                //   .then((res) => {
-                //     if (res.ok) {
-                //       return res.json();
-                //     } else {
-                //       throw "error";
-                //     }
-                //   })
-                //   .then((response) => {
-                //     console.log("a new paper name: ", response.title);
-                //     let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5)];
-                //     this.addNodetoGraph(paperNode, parentNode);
-
-                //     // appState.graph.setUpFrame();
-                //   });
-                //   // .catch((error) => {
-                //   //   alert("Something broke :(.");
-                //   // });
+                // console.log("right clicked node: ", parentNode);
 
                 rightClickedNodeCitations.forEach(citation => {
                   let apiurl = "https://api.semanticscholar.org/v1/paper/" + citation.paperId;
@@ -531,15 +515,20 @@ export default class GraphStore {
                       }
                     })
                     .then((response) => {
-                      console.log("a new paper name: ", response.title);
+                      // console.log("a new paper name: ", response.title);
                       let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5)];
-                      this.addNodetoGraph(paperNode, parentNode);
+                      this.addNodetoGraph(paperNode, rightClickedNodeId);
+                      // this.rawGraph.nodes = this.rawGraph.nodes.map(n => {
+                      //   return n;
+                      // }); 
                     })
                     .catch((error) => {
                       alert("Something broke :(");
                     });
                   });
-
+                  // appState.graph.frame.updateGraph(this.computedGraph);
+                  // console.log(appState.graph.rawGraph.nodes);
+                  // appState.graph.setUpFrame();
               }
             },
             text: 'Add 5 Paper Neighbors',
