@@ -412,4 +412,27 @@ module.exports = function(self) {
   self.getSelectedIds = function() {
     return self.selection.map(n => n.id);
   };
+
+  
+  // updateFrontEndNodeGraphDataWithBackendRawgraph make more explicit 
+  self.updateNodesData = function() {
+    const nodeData = appState.graph.preprocessedRawGraph.nodesPanelData;
+    // console.log("computed graph: ", nodeData);
+    self.graph.forEachNode(function(node) {
+      // var node = self.graph.getNode(node.id);
+      // console.log("current node: ", node);
+      // self.removeNode(node);
+      // self.addNode(nodeData.getNode(node.id));
+      var node = self.graph.getNode(node.id);
+      var updateNode = nodeData[node.id];
+      // console.log("node: ", node);
+      // console.log("updateNode", updateNode);
+      node.data.ref.degree = updateNode.degree;
+      node.data.ref.pagerank = updateNode.pagerank;
+
+      // self.graph.removeNode(node.id);
+      // self.graph.addNode(node.id, node.data);
+    });
+  }
+};
 };

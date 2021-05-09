@@ -5,9 +5,11 @@ import uniq from "lodash/uniq";
 import { averageClusteringCoefficient, connectedComponents, graphDensity, averageDegree, exactGraphDiameter } from "../services/AlgorithmUtils";
 import { ContextMenu, MenuFactory, MenuItemFactory } from "@blueprintjs/core";
 import { Frame, graph } from "../graph-frontend";
-import appState from ".";
 
 import pageRank from 'ngraph.pagerank';
+
+// const index = require('../index.js');
+// console.log("index require: ", index);
 
 export default class GraphStore {
 
@@ -103,7 +105,9 @@ export default class GraphStore {
     edges: [],
     graph: null,
     degreeDict: {},
-    nodesDataMap: {},
+    citationMap: {},
+    nodesPanelData: {},
+    computedGraph: null
   };
 
   @observable
@@ -244,14 +248,14 @@ export default class GraphStore {
   addNodetoGraph(node, parentID) {
     let rawGraphNodes = toJS(appState.graph.preprocessedRawGraph.nodes);
     let edgesArr = toJS(appState.graph.preprocessedRawGraph.edges);
-    let graph = toJS(appState.graph.preprocessedRawGraph.graph);
+    let backEndgraph = toJS(appState.graph.preprocessedRawGraph.graph);
     const degreeDict = toJS(appState.graph.preprocessedRawGraph.degreeDict);
 
 
-    graph.addNode(node[0]);
+    backEndgraph.addNode(node[0]);
     // graph.addNode(node[0], {id : node[0], degree: 1});
 
-    graph.addLink(parentID, node[0]);
+    backEndgraph.addLink(parentID, node[0]);
     // graph.addLink(tempParent.id, node[0]);
 
     let addedNode = {id: node[0], degree: 1, pagerank: 0, paperName: node[1], paperAbstract: node[2]};
@@ -264,30 +268,32 @@ export default class GraphStore {
 
     degreeDict[parentID] += 1;
 
-    const rank = pageRank(graph);
-    console.log("pagerank: ", rank);
+    const rank = pageRank(backEndgraph);
+    // console.log("pagerank: ", rank);
 
-    const nodesData = toJS(appState.graph.preprocessedRawGraph.nodesDataMap);
-    nodesData[node[0]] = {top5Citations: node[3]};
+    const nodesCitationData = toJS(appState.graph.preprocessedRawGraph.citationMap);
+    nodesCitationData[node[0]] = {top5Citations: node[3]};
 
     // nodesData[node[0]] = {node: addedNode, top5Citations: node[3]};
 
-    // const nodesData = nodes.reduce((map, currentNode) => {
-    //   map[currentNode.id] = {id: currentNode.id, pagerank: rank[currentNode.id], degree: degreeDict[currentNode.id], paperName: currentNode.paperName};
-    //   return map;
-    // }, {}); 
-  
-    appState.graph.preprocessedRawGraph = {nodes: rawGraphNodes, edges: edgesArr, graph: graph, degreeDict: degreeDict, nodesDataMap: nodesData};
-
     let nodesArr = rawGraphNodes.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract}));
 
-    console.log("nodesArr: ", nodesArr);
-    // console.log("edgesArr: ", edgesArr);
+    const nodesData = nodesArr.reduce((map, currentNode) => {
+      map[currentNode.node_id] = currentNode;
+      return map;
+    }, {}); 
+  
+    appState.graph.preprocessedRawGraph = {nodes: rawGraphNodes, edges: edgesArr, graph: backEndgraph, degreeDict: degreeDict, citationMap: nodesCitationData, nodesPanelData: nodesData, computedGraph: this.computedGraph};
+
+
+    this.frame.updateFrontEndNodeGraphDataWithBackendRawgraph();
+
+    // console.log("nodesData: ", nodesData);
+    // console.log("nodesArr: ", nodesArr);
     appState.graph.rawGraph = { nodes: nodesArr, edges: edgesArr };
     appState.graph.metadata.fullNodes = nodesArr.length;
     appState.graph.metadata.fullEdges = edgesArr.length;
     appState.graph.metadata.nodeProperties = Object.keys(nodesArr[0]); 
-    // appState.graph.setUpFrame();
   }
 
   showNodes(nodeids) {
@@ -405,6 +411,12 @@ export default class GraphStore {
       this.pinnedNodes = new Set(savedStates.pinnedNodes);
     }
 
+    const nodesData = savedStates.rawGraph.nodes.reduce((map, currentNode) => {
+      map[currentNode.node_id] = currentNode;
+      return map;
+    }, {}); 
+  
+    appState.graph.preprocessedRawGraph.nodesPanelData = nodesData;
 
     this.runActiveLayout();
   }
@@ -495,9 +507,9 @@ export default class GraphStore {
               if (this.frame.rightClickedNode) {
                 const rightClickedNodeId = this.frame.rightClickedNode.data.ref.id.toString();
 
-                let parentNode = toJS(appState.graph.preprocessedRawGraph.nodesDataMap[rightClickedNodeId]);
+                let rightClickedNodeCitations = toJS(appState.graph.preprocessedRawGraph.citationMap[rightClickedNodeId]).top5Citations;
 
-                const rightClickedNodeCitations = parentNode.top5Citations;
+                // const rightClickedNodeCitations = parentNode.top5Citations;
 
                 // console.log("right click id: ", rightClickedNodeId);
                 // console.log("citations: ", rightClickedNodeCitations);
@@ -518,9 +530,6 @@ export default class GraphStore {
                       // console.log("a new paper name: ", response.title);
                       let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5)];
                       this.addNodetoGraph(paperNode, rightClickedNodeId);
-                      // this.rawGraph.nodes = this.rawGraph.nodes.map(n => {
-                      //   return n;
-                      // }); 
                     })
                     .catch((error) => {
                       alert("Something broke :(");
