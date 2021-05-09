@@ -45,7 +45,7 @@ class SearchBar extends React.Component {
               name: appState.project.newProjectName,
               createdDate: new Date().toLocaleString(),
             });
-            let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5)];
+            let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5), response.references.slice(0,5)];
             requestCreatePaperGraph( //edgefile.delimiter and nodefile.delimiter are the same
               appState.project.newProjectName, paperNode
             );

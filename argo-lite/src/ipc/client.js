@@ -447,8 +447,10 @@ async function createPaperGraph(paperNode) {
   const graph = createGraph();
   const degreeDict = {};
 
-  graph.addNode(paperNode[0], { id: paperNode[0], degree: 0});
-  nodesArr.push({id: paperNode[0], degree: 0, pagerank: 0, paperName: paperNode[1], paperAbstract: paperNode[2] });
+  graph.addNode(paperNode[0]);
+  // graph.addNode(paperNode[0], { id: paperNode[0], degree: 0});
+
+  nodesArr.push({id: paperNode[0], degree: 0, pagerank: 0, paperName: paperNode[1], paperAbstract: paperNode[2]});
 
   degreeDict[paperNode[0]] = 0;
 
@@ -458,17 +460,22 @@ async function createPaperGraph(paperNode) {
   
   const rank = pageRank(graph);
 
-  // const nodesData = nodesArr.reduce((map, currentNode) => {
-  //   map[currentNode.id] = {id: currentNode.id, pagerank: rank[currentNode.id], degree: degreeDict[currentNode.id], paperName: currentNode.paperName, top5Citations: paperNode[3]};
-  //   return map;
-  // }, {}); 
-
   const nodesData = nodesArr.reduce((map, currentNode) => {
-    map[currentNode.id] = {node: currentNode, top5Citations: paperNode[3]};
+    map[currentNode.id] = {id: currentNode.id, pagerank: rank[currentNode.id], degree: degreeDict[currentNode.id], paperName: currentNode.paperName};
     return map;
   }, {}); 
 
-  appState.graph.preprocessedRawGraph = {nodes: nodesArr, edges: edgesArr, graph: graph, degreeDict: degreeDict, nodesDataMap: nodesData};
+  const nodesCitationReferenceData = nodesArr.reduce((map, currentNode) => {
+    map[currentNode.id] = {top5Citations: paperNode[3], top5References: paperNode[4]};
+    return map;
+  }, {}); 
+
+  // const nodesData = nodesArr.reduce((map, currentNode) => {
+  //   map[currentNode.id] = {node: currentNode, top5Citations: paperNode[3]};
+  //   return map;
+  // }, {}); 
+
+  appState.graph.preprocessedRawGraph = {nodes: nodesArr, edges: edgesArr, graph: graph, degreeDict: degreeDict, citationReferenceMap: nodesCitationReferenceData, nodesPanelData: nodesData};
   nodesArr = nodesArr.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract}));
 
   return {

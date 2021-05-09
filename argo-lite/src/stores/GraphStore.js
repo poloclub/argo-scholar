@@ -105,7 +105,7 @@ export default class GraphStore {
     edges: [],
     graph: null,
     degreeDict: {},
-    citationMap: {},
+    citationReferenceMap: {},
     nodesPanelData: {},
     computedGraph: null
   };
@@ -245,7 +245,10 @@ export default class GraphStore {
     return this.rawGraph.nodes.filter(n => n.isHidden).length;
   }
 
-  addNodetoGraph(node, parentID) {
+  /**
+   * citationOrReference: 0 if citation, 1 if reference 
+   */
+  addNodetoGraph(node, parentID, citationOrReference) {
     let rawGraphNodes = toJS(appState.graph.preprocessedRawGraph.nodes);
     let edgesArr = toJS(appState.graph.preprocessedRawGraph.edges);
     let backEndgraph = toJS(appState.graph.preprocessedRawGraph.graph);
@@ -263,7 +266,12 @@ export default class GraphStore {
 
     rawGraphNodes.push(addedNode);
 
-    edgesArr.push({source_id: parentID, target_id: node[0]});
+    if (citationOrReference == 0) {
+      edgesArr.push({source_id: node[0], target_id: parentID});
+    } else {
+      edgesArr.push({source_id: parentID, target_id: node[0]});
+    }
+    
     degreeDict[node[0]] = 1;
 
     degreeDict[parentID] += 1;
@@ -271,8 +279,8 @@ export default class GraphStore {
     const rank = pageRank(backEndgraph);
     // console.log("pagerank: ", rank);
 
-    const nodesCitationData = toJS(appState.graph.preprocessedRawGraph.citationMap);
-    nodesCitationData[node[0]] = {top5Citations: node[3]};
+    const nodesCitationReferenceData = toJS(appState.graph.preprocessedRawGraph.citationReferenceMap);
+    nodesCitationReferenceData[node[0]] = {top5Citations: node[3], top5References: node[4]};
 
     // nodesData[node[0]] = {node: addedNode, top5Citations: node[3]};
 
@@ -283,10 +291,26 @@ export default class GraphStore {
       return map;
     }, {}); 
   
-    appState.graph.preprocessedRawGraph = {nodes: rawGraphNodes, edges: edgesArr, graph: backEndgraph, degreeDict: degreeDict, citationMap: nodesCitationData, nodesPanelData: nodesData, computedGraph: this.computedGraph};
+    appState.graph.preprocessedRawGraph = {nodes: rawGraphNodes, edges: edgesArr, graph: backEndgraph, degreeDict: degreeDict, citationReferenceMap: nodesCitationReferenceData,
+       nodesPanelData: nodesData, computedGraph: this.computedGraph};
 
+    // let frontEndGraph = require('../index.js');
+
+    // var getFrontEndGraph = require('../index.js');
+
+    // console.log("frontendgraph:", frontEndGraph);
 
     this.frame.updateFrontEndNodeGraphDataWithBackendRawgraph();
+    // frontEndGraph.forEachNode(function(node){
+    //   console.log(node.id, node.data);
+    // });
+
+
+
+    // self.graph.forEachNode(function(node){
+    //   let tempNode = self.graph.getNode(node);
+    //   console.log("got a node: ", tempNode);
+    // });
 
     // console.log("nodesData: ", nodesData);
     // console.log("nodesArr: ", nodesArr);
@@ -294,6 +318,9 @@ export default class GraphStore {
     appState.graph.metadata.fullNodes = nodesArr.length;
     appState.graph.metadata.fullEdges = edgesArr.length;
     appState.graph.metadata.nodeProperties = Object.keys(nodesArr[0]); 
+    // console.log("raw graph nodes: ", this.rawGraph.nodes);
+    // graphFrame.inGraph = appState.graph.computedGraph;
+    // appState.graph.setUpFrame();
   }
 
   showNodes(nodeids) {
@@ -507,7 +534,7 @@ export default class GraphStore {
               if (this.frame.rightClickedNode) {
                 const rightClickedNodeId = this.frame.rightClickedNode.data.ref.id.toString();
 
-                let rightClickedNodeCitations = toJS(appState.graph.preprocessedRawGraph.citationMap[rightClickedNodeId]).top5Citations;
+                let rightClickedNodeCitations = toJS(appState.graph.preprocessedRawGraph.citationReferenceMap[rightClickedNodeId]).top5Citations;
 
                 // const rightClickedNodeCitations = parentNode.top5Citations;
 
@@ -528,20 +555,70 @@ export default class GraphStore {
                     })
                     .then((response) => {
                       // console.log("a new paper name: ", response.title);
-                      let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5)];
-                      this.addNodetoGraph(paperNode, rightClickedNodeId);
-                    })
-                    .catch((error) => {
-                      alert("Something broke :(");
+                      let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5), response.references.slice(0,5)];
+                      this.addNodetoGraph(paperNode, rightClickedNodeId, 0);
+                      // graphFrame.updateNodes();
+                      // graphFrame.updateGraph(appState.graph.computedGraph);
+                      // graphFrame.inGraph = appState.graph.computedGraph;
+                      // this.rawGraph.nodes = this.rawGraph.nodes.map(n => {
+                      //   return n;
+                      // }); 
                     });
+                    // .catch((error) => {
+                    //   alert("Something broke :(");
+                    // });
                   });
                   // appState.graph.frame.updateGraph(this.computedGraph);
                   // console.log(appState.graph.rawGraph.nodes);
                   // appState.graph.setUpFrame();
               }
             },
-            text: 'Add 5 Paper Neighbors',
-            key: 'Add 5 Paper Neighbors'
+            text: 'Add 5 Paper Citations',
+            key: 'Add 5 Paper Citations'
+          }),
+          this.frame.rightClickedNode && MenuItemFactory({
+            onClick: () => {
+              if (this.frame.rightClickedNode) {
+                const rightClickedNodeId = this.frame.rightClickedNode.data.ref.id.toString();
+
+                let rightClickedNodeReferences = toJS(appState.graph.preprocessedRawGraph.citationReferenceMap[rightClickedNodeId]).top5References;
+
+                // const rightClickedNodeCitations = parentNode.top5Citations;
+
+                // console.log("right click id: ", rightClickedNodeId);
+                // console.log("citations: ", rightClickedNodeCitations);
+
+                // console.log("right clicked node: ", parentNode);
+
+                rightClickedNodeReferences.forEach(citation => {
+                  let apiurl = "https://api.semanticscholar.org/v1/paper/" + citation.paperId;
+                  fetch(apiurl)
+                    .then((res) => {
+                      if (res.ok) {
+                        return res.json();
+                      } else {
+                        throw "error";
+                      }
+                    })
+                    .then((response) => {
+                      // console.log("a new paper name: ", response.title);
+                      let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5), response.references.slice(0,5)];
+                      this.addNodetoGraph(paperNode, rightClickedNodeId, 1);
+                      // graphFrame.updateNodes();
+                      // graphFrame.updateGraph(appState.graph.computedGraph);
+                      // graphFrame.inGraph = appState.graph.computedGraph;
+                      // this.rawGraph.nodes = this.rawGraph.nodes.map(n => {
+                      //   return n;
+                      // }); 
+                    });
+                    // .catch((error) => {
+                    //   alert("Something broke :(");
+                    // });
+                  });
+              }
+            },
+            text: 'Add 5 Paper References',
+            key: 'Add 5 Paper References'
           }),
         ]
       });
