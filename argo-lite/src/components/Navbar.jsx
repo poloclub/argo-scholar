@@ -21,6 +21,7 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import argologo from '../images/argologo.png';
 import { toaster } from '../notifications/client';
 import { LOGO_URL, GITHUB_URL, SAMPLE_GRAPH_SNAPSHOTS } from '../constants';
+import SearchBar from "./SearchBar";
 
 @observer
 class RegularNavbar extends React.Component {
@@ -31,7 +32,7 @@ class RegularNavbar extends React.Component {
           <a href={LOGO_URL} target="_blank">
             <img title="Argo Lite" id="Argo logo" src={argologo} width="35" height="35"></img>
           </a>
-          <div className={classnames([Classes.NAVBAR_HEADING])}> &nbsp; Argo <small>Lite</small></div>
+          <div className={classnames([Classes.NAVBAR_HEADING])}> &nbsp; Argo <small>Scholar</small></div>
           {/* <a
             href="https://poloclub.github.io/argo-graph/"
             target='_blank'
@@ -56,7 +57,6 @@ class RegularNavbar extends React.Component {
 
                       return (
                         <MenuItem
-                          key={sampleSnapshotTitle}
                           iconName="graph"
                           text={sampleSnapshotTitle}
                           onClick={() => {
@@ -268,11 +268,12 @@ class RegularNavbar extends React.Component {
           }
             </div>
           )}
-
         </div>
         <div
           className={classnames([Classes.NAVBAR_GROUP, Classes.ALIGN_RIGHT])}
         >
+          <SearchBar />
+
           <Button
             className={classnames([Classes.BUTTON, Classes.MINIMAL])}
             iconName="graph"
