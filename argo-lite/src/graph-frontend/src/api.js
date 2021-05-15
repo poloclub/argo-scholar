@@ -412,4 +412,23 @@ module.exports = function(self) {
   self.getSelectedIds = function() {
     return self.selection.map(n => n.id);
   };
+
+  self.updateFrontEndNodeGraphDataWithBackendRawgraph = function() {
+    const nodeData = appState.graph.preprocessedRawGraph.nodesPanelData;
+    self.graph.forEachNode(function(node) {
+      var node = self.graph.getNode(node.id);
+      var updateNode = nodeData[node.id];
+      node.data.ref.degree = updateNode.degree;
+      node.data.ref.pagerank = updateNode.pagerank;
+    });
+  };
+
+  self.addFrontEndNodeInARow = function(sourcenodeid, spawnnodeid, numofnode) {
+    var parentnode = self.graph.getNode(sourcenodeid);
+    var childnode = self.graph.getNode(spawnnodeid);
+    childnode.x = parentnode.x + 25;
+    childnode.y = parentnode.y - 25 * numofnode;
+    childnode.pinnedx = true;
+    childnode.pinnedy = true;
+  };
 };
