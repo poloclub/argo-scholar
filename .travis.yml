@@ -7,7 +7,7 @@ cache:
 env:
   - CI=false
 before_script:
-  - cd argo-lite
+  - cd argo-scholar
 script:
   - npm install
   - npm run build

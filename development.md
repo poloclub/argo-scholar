@@ -6,7 +6,7 @@ Argo Lite's frontend is written using the [Create React App](https://github.com/
 
 Knowledge of React and MobX is necessary to understand the codebase.
 
-Install node.js, head to `cd argo-lite` and run `npm install` to install the dependencies. And run `npm start` to start the development version. The rest of the commands are also standard [Create React App](https://github.com/facebook/create-react-app) commands, documented [here](argo-lite/README.md).
+Install node.js, head to `cd argo-scholar` and run `npm install` to install the dependencies. And run `npm start` to start the development version. The rest of the commands are also standard [Create React App](https://github.com/facebook/create-react-app) commands, documented [here](argo-scholar/README.md).
 
 ## Developing the backend
 
