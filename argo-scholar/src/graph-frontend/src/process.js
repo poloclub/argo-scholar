@@ -174,11 +174,16 @@ var Frame = function(graph, options) {
   var stage = 0;
   var numberOfFrameSinceMiniMapRerender = 1;
   this.render = function() {
+    if(self.graph.getNodesCount() != 0) {
+      appState.preferences.currentEmptyGraphDoNotDisplayLegend = false;
+    }
+
     self.updateCamera();
     self.updateNodes();
+
     if (stage == 1) {
-      self.updateLabels();
       self.updateEdges();
+      self.updateLabels();
       stage = 0;
     }
     stage += 1;

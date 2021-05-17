@@ -8,9 +8,6 @@ import { Frame, graph } from "../graph-frontend";
 
 import pageRank from 'ngraph.pagerank';
 
-// const index = require('../index.js');
-// console.log("index require: ", index);
-
 export default class GraphStore {
 
   initialGlobalConfig = {
@@ -256,33 +253,27 @@ export default class GraphStore {
 
 
     backEndgraph.addNode(node[0]);
-    // graph.addNode(node[0], {id : node[0], degree: 1});
-
-    backEndgraph.addLink(parentID, node[0]);
-    // graph.addLink(tempParent.id, node[0]);
 
     let addedNode = {id: node[0], degree: 1, pagerank: 0, paperName: node[1], paperAbstract: node[2]};
-    // let addedNode = {id: node[0], degree: 0, pagerank: 0, paperName: node[1], paperAbstract: node[2]};
 
     rawGraphNodes.push(addedNode);
+    if (parentID != "null") {
+      backEndgraph.addLink(parentID, node[0]);
+      if (citationOrReference == 0) {
+        edgesArr.push({source_id: node[0], target_id: parentID});
+      } else {
+        edgesArr.push({source_id: parentID, target_id: node[0]});
+      }
 
-    if (citationOrReference == 0) {
-      edgesArr.push({source_id: node[0], target_id: parentID});
-    } else {
-      edgesArr.push({source_id: parentID, target_id: node[0]});
+      degreeDict[parentID] += 1;
     }
-    
+  
     degreeDict[node[0]] = 1;
 
-    degreeDict[parentID] += 1;
-
     const rank = pageRank(backEndgraph);
-    // console.log("pagerank: ", rank);
 
     const nodesCitationReferenceData = toJS(appState.graph.preprocessedRawGraph.citationReferenceMap);
     nodesCitationReferenceData[node[0]] = {top5Citations: node[3], top5References: node[4]};
-
-    // nodesData[node[0]] = {node: addedNode, top5Citations: node[3]};
 
     let nodesArr = rawGraphNodes.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract}));
 
@@ -294,36 +285,12 @@ export default class GraphStore {
     appState.graph.preprocessedRawGraph = {nodes: rawGraphNodes, edges: edgesArr, graph: backEndgraph, degreeDict: degreeDict, citationReferenceMap: nodesCitationReferenceData,
        nodesPanelData: nodesData, computedGraph: this.computedGraph};
 
-    // let frontEndGraph = require('../index.js');
-
-    // var getFrontEndGraph = require('../index.js');
-
-    // console.log("frontendgraph:", frontEndGraph);
-
     this.frame.updateFrontEndNodeGraphDataWithBackendRawgraph();
-    // this.frame.addFrontEndNodeInARow(parentID, node[0], 1);
 
-
-    // frontEndGraph.forEachNode(function(node){
-    //   console.log(node.id, node.data);
-    // });
-
-
-
-    // self.graph.forEachNode(function(node){
-    //   let tempNode = self.graph.getNode(node);
-    //   console.log("got a node: ", tempNode);
-    // });
-
-    // console.log("nodesData: ", nodesData);
-    // console.log("nodesArr: ", nodesArr);
     appState.graph.rawGraph = { nodes: nodesArr, edges: edgesArr };
     appState.graph.metadata.fullNodes = nodesArr.length;
     appState.graph.metadata.fullEdges = edgesArr.length;
     appState.graph.metadata.nodeProperties = Object.keys(nodesArr[0]); 
-    // console.log("raw graph nodes: ", this.rawGraph.nodes);
-    // graphFrame.inGraph = appState.graph.computedGraph;
-    // appState.graph.setUpFrame();
   }
 
   showNodes(nodeids) {
@@ -477,6 +444,9 @@ export default class GraphStore {
   }
 
   setUpFrame() {
+    if (this.frame) {
+      this.frame.getGraph().clear()
+    }
     const graphFrame = new Frame(this.computedGraph);
     graphFrame.init();
     graphFrame.display();
@@ -539,12 +509,6 @@ export default class GraphStore {
 
                 let rightClickedNodeCitations = toJS(appState.graph.preprocessedRawGraph.citationReferenceMap[rightClickedNodeId]).top5Citations;
 
-                // const rightClickedNodeCitations = parentNode.top5Citations;
-
-                // console.log("right click id: ", rightClickedNodeId);
-                // console.log("citations: ", rightClickedNodeCitations);
-
-                // console.log("right clicked node: ", parentNode);
                 let curcount = 0;
                 rightClickedNodeCitations.forEach(citation => {
                   let apiurl = "https://api.semanticscholar.org/v1/paper/" + citation.paperId;
@@ -557,27 +521,15 @@ export default class GraphStore {
                       }
                     })
                     .then((response) => {
-                      // console.log("a new paper name: ", response.title);
                       let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5), response.references.slice(0,5)];
                       this.addNodetoGraph(paperNode, rightClickedNodeId, 0);
-
-                      // this.frame.addFrontEndNodeInARow(response.paperId);
                       this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, curcount);
                       curcount += 1;
-                      // graphFrame.updateNodes();
-                      // graphFrame.updateGraph(appState.graph.computedGraph);
-                      // graphFrame.inGraph = appState.graph.computedGraph;
-                      // this.rawGraph.nodes = this.rawGraph.nodes.map(n => {
-                      //   return n;
-                      // }); 
+                    })
+                    .catch((error) => {
+                      alert("Something broke :(");
                     });
-                    // .catch((error) => {
-                    //   alert("Something broke :(");
-                    // });
                   });
-                  // appState.graph.frame.updateGraph(this.computedGraph);
-                  // console.log(appState.graph.rawGraph.nodes);
-                  // appState.graph.setUpFrame();
               }
             },
             text: 'Add 5 Paper Citations',
@@ -606,10 +558,10 @@ export default class GraphStore {
                       this.addNodetoGraph(paperNode, rightClickedNodeId, 1);
                       this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, curcount);
                       curcount += 1;
+                    })
+                    .catch((error) => {
+                      alert("Something broke :(");
                     });
-                    // .catch((error) => {
-                    //   alert("Something broke :(");
-                    // });
                   });
               }
             },

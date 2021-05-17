@@ -87,7 +87,6 @@ class EdgesPanel extends React.Component {
                                <input 
                                  type="checkbox"
                                  onChange={it => {
-                                     console.log(appState.graph.directedOrNot);
                                      appState.graph.directedOrNot = !appState.graph.directedOrNot;
                                  }
                                  }
