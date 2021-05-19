@@ -523,7 +523,7 @@ export default class GraphStore {
                     .then((response) => {
                       let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5), response.references.slice(0,5)];
                       this.addNodetoGraph(paperNode, rightClickedNodeId, 0);
-                      this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, curcount);
+                      this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, curcount, 0);
                       curcount += 1;
                     })
                     .catch((error) => {
@@ -556,7 +556,7 @@ export default class GraphStore {
                     .then((response) => {
                       let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5), response.references.slice(0,5)];
                       this.addNodetoGraph(paperNode, rightClickedNodeId, 1);
-                      this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, curcount);
+                      this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, curcount, 1);
                       curcount += 1;
                     })
                     .catch((error) => {
