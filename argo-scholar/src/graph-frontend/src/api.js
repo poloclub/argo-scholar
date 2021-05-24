@@ -420,6 +420,7 @@ module.exports = function(self) {
       var updateNode = nodeData[node.id];
       node.data.ref.degree = updateNode.degree;
       node.data.ref.pagerank = updateNode.pagerank;
+      node.data.ref.node_id = updateNode.node_id;
     });
   };
 
@@ -431,7 +432,7 @@ module.exports = function(self) {
     } else {
       childnode.x = parentnode.x - 25;
     }
-    childnode.y = parentnode.y - 25 * numofnode;
+    childnode.y = parentnode.y - 25 * (numofnode + 1);
     childnode.pinnedx = true;
     childnode.pinnedy = true;
   };

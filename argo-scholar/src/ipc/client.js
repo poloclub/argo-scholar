@@ -422,6 +422,7 @@ export function requestCreateEmptyPaperGraph(newProjectName) {
     appState.import.dialogOpen = false;
 
     appState.preferences.currentEmptyGraphDoNotDisplayLegend = true;
+    appState.graph.nodesShowingLabels = [];
 
     // Sync preference store with graph-frontend frame
     if (!appState.preferences.darkMode) { // assume frame defaults to dark
@@ -463,7 +464,7 @@ async function createEmptyPaperGraph() {
   //   return map;
   // }, {}); 
 
-  appState.graph.preprocessedRawGraph = {nodes: nodesArr, edges: edgesArr, graph: graph, degreeDict: degreeDict, citationReferenceMap: nodesCitationReferenceData, nodesPanelData: nodesData};
+  appState.graph.preprocessedRawGraph = {graph: graph, degreeDict: degreeDict, citationReferenceMap: nodesCitationReferenceData, nodesPanelData: nodesData};
   nodesArr = nodesArr.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract}));
 
   return {

@@ -7,6 +7,7 @@ import { ContextMenu, MenuFactory, MenuItemFactory } from "@blueprintjs/core";
 import { Frame, graph } from "../graph-frontend";
 
 import pageRank from 'ngraph.pagerank';
+import appState from ".";
 
 export default class GraphStore {
 
@@ -24,10 +25,10 @@ export default class GraphStore {
         max: 10,
         scale: "Linear Scale"
       },
-      labelBy: "node_id",
+      labelBy: "paperName",
       shape: "circle",
-      labelSize: 1,
-      labelLength: 10
+      labelSize: 0.5,
+      labelLength: 30
     },
     edges: {
       color: "#7f7f7f"
@@ -98,13 +99,10 @@ export default class GraphStore {
   // preprocessed rawGraph
   @observable
   preprocessedRawGraph = {
-    nodes: [],
-    edges: [],
     graph: null,
     degreeDict: {},
     citationReferenceMap: {},
     nodesPanelData: {},
-    computedGraph: null
   };
 
   @observable
@@ -123,7 +121,7 @@ export default class GraphStore {
     nodeProperties: [],
     nodeComputed: ["pagerank", "degree"],
     edgeProperties: [],
-    snapshotName: "loading..." // Optional: for display in Argo-lite only
+    snapshotName: "loading..." // Optional: for display in Argo-scholar only
   };
 
   // used for listing all the properties, either original or computed
@@ -246,44 +244,43 @@ export default class GraphStore {
    * citationOrReference: 0 if citation, 1 if reference 
    */
   addNodetoGraph(node, parentID, citationOrReference) {
-    let rawGraphNodes = toJS(appState.graph.preprocessedRawGraph.nodes);
-    let edgesArr = toJS(appState.graph.preprocessedRawGraph.edges);
+    let rawGraphNodes = toJS(appState.graph.rawGraph.nodes);
+    let edgesArr = toJS(appState.graph.rawGraph.edges);
     let backEndgraph = toJS(appState.graph.preprocessedRawGraph.graph);
-    const degreeDict = toJS(appState.graph.preprocessedRawGraph.degreeDict);
-
+    let degreeDict = toJS(appState.graph.preprocessedRawGraph.degreeDict);
 
     backEndgraph.addNode(node[0]);
 
     let addedNode = {id: node[0], degree: 1, pagerank: 0, paperName: node[1], paperAbstract: node[2]};
 
+    degreeDict[node[0]] = 0;
     rawGraphNodes.push(addedNode);
     if (parentID != "null") {
-      backEndgraph.addLink(parentID, node[0]);
       if (citationOrReference == 0) {
+        backEndgraph.addLink(node[0], parentID);
         edgesArr.push({source_id: node[0], target_id: parentID});
       } else {
+        backEndgraph.addLink(parentID, node[0]);
         edgesArr.push({source_id: parentID, target_id: node[0]});
       }
-
+      degreeDict[node[0]] += 1;
       degreeDict[parentID] += 1;
     }
-  
-    degreeDict[node[0]] = 1;
 
-    const rank = pageRank(backEndgraph);
+    let rank = pageRank(backEndgraph);
 
-    const nodesCitationReferenceData = toJS(appState.graph.preprocessedRawGraph.citationReferenceMap);
+    let nodesCitationReferenceData = toJS(appState.graph.preprocessedRawGraph.citationReferenceMap);
     nodesCitationReferenceData[node[0]] = {top5Citations: node[3], top5References: node[4]};
 
     let nodesArr = rawGraphNodes.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract}));
 
-    const nodesData = nodesArr.reduce((map, currentNode) => {
+    let nodesData = nodesArr.reduce((map, currentNode) => {
       map[currentNode.node_id] = currentNode;
       return map;
     }, {}); 
   
-    appState.graph.preprocessedRawGraph = {nodes: rawGraphNodes, edges: edgesArr, graph: backEndgraph, degreeDict: degreeDict, citationReferenceMap: nodesCitationReferenceData,
-       nodesPanelData: nodesData, computedGraph: this.computedGraph};
+    appState.graph.preprocessedRawGraph = {graph: backEndgraph, degreeDict: degreeDict, citationReferenceMap: nodesCitationReferenceData,
+      nodesPanelData: nodesData};
 
     this.frame.updateFrontEndNodeGraphDataWithBackendRawgraph();
 
@@ -331,6 +328,7 @@ export default class GraphStore {
   getSnapshot() {
     const snapshot = {
       rawGraph: this.rawGraph,
+      citationReferenceMap: this.preprocessedRawGraph.citationReferenceMap,
       overrides: this.overrides,
       nodesShowingLabels: this.nodesShowingLabels,
       positions: this.frame.getPositions(),
@@ -345,7 +343,7 @@ export default class GraphStore {
   }
 
   /**
-   * [Argo-lite] Saves graph snapshot as String
+   * [Argo-scholar] Saves graph snapshot as String
    * 
    * Note that Argo-lite snapshot contains all graph data
    * and metadata except nodes/edges deleted by users.
@@ -408,12 +406,29 @@ export default class GraphStore {
       this.pinnedNodes = new Set(savedStates.pinnedNodes);
     }
 
-    const nodesData = savedStates.rawGraph.nodes.reduce((map, currentNode) => {
+    let nodesData = savedStates.rawGraph.nodes.reduce((map, currentNode) => {
       map[currentNode.node_id] = currentNode;
       return map;
     }, {}); 
   
-    appState.graph.preprocessedRawGraph.nodesPanelData = nodesData;
+    this.preprocessedRawGraph.nodesPanelData = nodesData;
+
+    this.preprocessedRawGraph.citationReferenceMap = savedStates.citationReferenceMap;
+
+    let graph = createGraph();
+    let degreeDict = {};
+
+    this.rawGraph.nodes.forEach(node => {
+      graph.addNode(node.id);
+      degreeDict[node.id] = node.degree;
+    });
+
+    this.rawGraph.edges.forEach(edge => {
+      graph.addLink(edge.source_id, edge.target_id);
+    })
+
+    this.preprocessedRawGraph.graph = graph;
+    this.preprocessedRawGraph.degreeDict = degreeDict;
 
     this.runActiveLayout();
   }
