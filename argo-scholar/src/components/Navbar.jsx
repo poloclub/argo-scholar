@@ -57,6 +57,7 @@ class RegularNavbar extends React.Component {
 
                       return (
                         <MenuItem
+                          key={sampleSnapshotTitle}
                           iconName="graph"
                           text={sampleSnapshotTitle}
                           onClick={() => {

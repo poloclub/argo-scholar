@@ -420,14 +420,19 @@ module.exports = function(self) {
       var updateNode = nodeData[node.id];
       node.data.ref.degree = updateNode.degree;
       node.data.ref.pagerank = updateNode.pagerank;
+      node.data.ref.node_id = updateNode.node_id;
     });
   };
 
   self.addFrontEndNodeInARow = function(sourcenodeid, spawnnodeid, numofnode) {
     var parentnode = self.graph.getNode(sourcenodeid);
     var childnode = self.graph.getNode(spawnnodeid);
-    childnode.x = parentnode.x + 25;
-    childnode.y = parentnode.y - 25 * numofnode;
+    if (citationOrReference == 0) {
+      childnode.x = parentnode.x + 25;
+    } else {
+      childnode.x = parentnode.x - 25;
+    }
+    childnode.y = parentnode.y - 25 * (numofnode + 1);
     childnode.pinnedx = true;
     childnode.pinnedy = true;
   };

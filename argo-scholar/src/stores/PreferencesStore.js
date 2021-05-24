@@ -14,6 +14,7 @@ export default class PreferencesStore {
   @observable dataSheetDialogOpen = false;
   @observable isRenderOptionsCardHidden = IS_IFRAME_WIDGET;
 
+  @observable currentEmptyGraphDoNotDisplayLegend = false;
   // The following fields are asynchronously loaded.
   // Any writes to these fields through saveUserConfig
   // won't be active until the app exits and starts

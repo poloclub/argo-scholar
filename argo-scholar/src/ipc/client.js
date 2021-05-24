@@ -399,14 +399,14 @@ export function requestImportGraphFromCSV(hasNodeFile, delimiter, newProjectName
   });
 }
 
-export function requestCreatePaperGraph(newProjectName, paperNode) {
+export function requestCreateEmptyPaperGraph(newProjectName) {
   if (!newProjectName) {
     newProjectName = 'Test Project';
   }
   appState.import.loading = true;
 
   // TODO: Potentially separate this out to web worker.
-  createPaperGraph(paperNode).then(graph => {
+  createEmptyPaperGraph().then(graph => {
     // Run post import filters
     appState.import.postImportFilter(graph.rawGraph);
 
@@ -420,6 +420,10 @@ export function requestCreatePaperGraph(newProjectName, paperNode) {
     appState.graph.overrides = new Map();
     appState.import.loading = false;
     appState.import.dialogOpen = false;
+
+    appState.preferences.currentEmptyGraphDoNotDisplayLegend = true;
+    appState.graph.nodesShowingLabels = [];
+
     // Sync preference store with graph-frontend frame
     if (!appState.preferences.darkMode) { // assume frame defaults to dark
       appState.graph.frame.toggleDark();
@@ -432,9 +436,10 @@ export function requestCreatePaperGraph(newProjectName, paperNode) {
     // Newly imported graph shouldn't have label showing
     appState.graph.frame.turnOffLabelCSSRenderer();
   });
+
 }
 
-async function createPaperGraph(paperNode) {
+async function createEmptyPaperGraph() {
   // Since the CSV lib we use uses int index when there's not header/column names specified
   // but the frontend selector always convert int to string values, we need to
   // manually convert the user-selected fromId and toId values back to int.
@@ -443,43 +448,32 @@ async function createPaperGraph(paperNode) {
   // const toId = config.nodes.hasColumns ? config.edges.mapping.toId : parseInt(config.edges.mapping.toId);
 
   // Create temporary data structures.
-  let nodesArr = [];
+  const nodesArr = [];
   const graph = createGraph();
   const degreeDict = {};
 
-  graph.addNode(paperNode[0]);
-  // graph.addNode(paperNode[0], { id: paperNode[0], degree: 0});
-
-  nodesArr.push({id: paperNode[0], degree: 0, pagerank: 0, paperName: paperNode[1], paperAbstract: paperNode[2]});
-
-  degreeDict[paperNode[0]] = 0;
-
-  const edgesSet = new Set();
-  
   const edgesArr = [];
   
   const rank = pageRank(graph);
+  const nodesData = {}; 
 
-  const nodesData = nodesArr.reduce((map, currentNode) => {
-    map[currentNode.id] = {id: currentNode.id, pagerank: rank[currentNode.id], degree: degreeDict[currentNode.id], paperName: currentNode.paperName};
-    return map;
-  }, {}); 
+  const nodesCitationReferenceData = {}; 
 
-  const nodesCitationReferenceData = nodesArr.reduce((map, currentNode) => {
-    map[currentNode.id] = {top5Citations: paperNode[3], top5References: paperNode[4]};
-    return map;
-  }, {}); 
+  // const nodesData = nodesArr.reduce((map, currentNode) => {
+  //   map[currentNode.id] = {node: currentNode, top5Citations: paperNode[3]};
+  //   return map;
+  // }, {}); 
 
-  appState.graph.preprocessedRawGraph = {nodes: nodesArr, edges: edgesArr, graph: graph, degreeDict: degreeDict, citationReferenceMap: nodesCitationReferenceData, nodesPanelData: nodesData};
+  appState.graph.preprocessedRawGraph = {graph: graph, degreeDict: degreeDict, citationReferenceMap: nodesCitationReferenceData, nodesPanelData: nodesData};
   nodesArr = nodesArr.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract}));
 
   return {
     rawGraph: { nodes: nodesArr, edges: edgesArr },
     metadata: {
       snapshotName: 'Untitled Graph',
-      fullNodes: nodesArr.length,
-      fullEdges: edgesArr.length, //Math.floor(edgesArr.length / 2), // Counting undirected edges
-      nodeProperties: Object.keys(nodesArr[0]),
+      fullNodes: 0,
+      fullEdges: 0, //Math.floor(edgesArr.length / 2), // Counting undirected edges
+      nodeProperties: ["id", "degree", "pagerank", "paperName", "paperAbstract", "node_id"],
       nodeComputed: ['pagerank', 'degree', 'paperName'],
       edgeProperties: ['source_id', 'target_id'],
     },
