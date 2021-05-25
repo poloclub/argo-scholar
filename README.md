@@ -2,7 +2,6 @@
 
 NEED TO CHANGE THIS 
 
-[![Build Status](https://travis-ci.org/poloclub/argo-graph-lite.svg?branch=master)](https://travis-ci.org/poloclub/argo-graph-lite)
 
 An interactive graph visualization system that runs in your web browsers. No installation needed.
 
