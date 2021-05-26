@@ -1,6 +1,10 @@
 # argo-scholar
 
-NEED TO CHANGE THIS 
+**Argo Scholar New Features:**
+- Ability to add multiple nodes to a graph 
+- Ability to add citations or references of any node to the graph 
+- Ability to read information regarding each node: i.e. paper name, paper abstract, etc
+- Ability to share graph with snapshot (json)
 
 
 An interactive graph visualization system that runs in your web browsers. No installation needed.
