@@ -448,16 +448,16 @@ async function createEmptyPaperGraph() {
   // const toId = config.nodes.hasColumns ? config.edges.mapping.toId : parseInt(config.edges.mapping.toId);
 
   // Create temporary data structures.
-  const nodesArr = [];
-  const graph = createGraph();
-  const degreeDict = {};
+  let nodesArr = [];
+  let graph = createGraph();
+  let degreeDict = {};
 
-  const edgesArr = [];
+  let edgesArr = [];
   
-  const rank = pageRank(graph);
-  const nodesData = {}; 
+  let rank = pageRank(graph);
+  let nodesData = {}; 
 
-  const nodesCitationReferenceData = {}; 
+  let nodesCitationReferenceData = {}; 
 
   // const nodesData = nodesArr.reduce((map, currentNode) => {
   //   map[currentNode.id] = {node: currentNode, top5Citations: paperNode[3]};
