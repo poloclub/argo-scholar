@@ -243,38 +243,42 @@ export default class GraphStore {
   /**
    * citationOrReference: 0 if citation, 1 if reference 
    */
-  addNodetoGraph(node, parentID, citationOrReference) {
+  addNodetoGraph(paperJsonResponse, parentID, citationOrReference) {
     let rawGraphNodes = toJS(appState.graph.rawGraph.nodes);
     let edgesArr = toJS(appState.graph.rawGraph.edges);
     let backEndgraph = toJS(appState.graph.preprocessedRawGraph.graph);
     let degreeDict = toJS(appState.graph.preprocessedRawGraph.degreeDict);
 
-    backEndgraph.addNode(node[0]);
+    backEndgraph.addNode(paperJsonResponse.paperId);
 
-    let addedNode = {id: node[0], degree: 1, pagerank: 0, paperName: node[1], paperAbstract: node[2]};
+    let addedNode = {id: paperJsonResponse.paperId, degree: 0, pagerank: 0, paperName: paperJsonResponse.title, paperAbstract: (paperJsonResponse.abstract == null ? "n/a" : paperJsonResponse.abstract),
+      citationCount: paperJsonResponse.citations.length, venue: (paperJsonResponse.venue == "" ? "n/a" : paperJsonResponse.venue), year: paperJsonResponse.year, url: paperJsonResponse.url};
 
-    degreeDict[node[0]] = 0;
+    degreeDict[paperJsonResponse.paperId] = 0;
     rawGraphNodes.push(addedNode);
     if (parentID != "null") {
       if (citationOrReference == 0) {
-        backEndgraph.addLink(node[0], parentID);
-        edgesArr.push({source_id: node[0], target_id: parentID});
+        backEndgraph.addLink(paperJsonResponse.paperId, parentID);
+        edgesArr.push({source_id: paperJsonResponse.paperId, target_id: parentID});
       } else {
-        backEndgraph.addLink(parentID, node[0]);
-        edgesArr.push({source_id: parentID, target_id: node[0]});
+        backEndgraph.addLink(parentID, paperJsonResponse.paperId);
+        edgesArr.push({source_id: parentID, target_id: paperJsonResponse.paperId});
       }
-      degreeDict[node[0]] += 1;
+      degreeDict[paperJsonResponse.paperId] += 1;
       degreeDict[parentID] += 1;
     }
+    
+    const rank = pageRank(backEndgraph);
 
-    let rank = pageRank(backEndgraph);
+    const nodesCitationReferenceData = toJS(appState.graph.preprocessedRawGraph.citationReferenceMap);
+    nodesCitationReferenceData[paperJsonResponse.paperId] = {top5Citations: paperJsonResponse.citations.slice(0,5), top5References: paperJsonResponse.references.slice(0,5)};
 
-    let nodesCitationReferenceData = toJS(appState.graph.preprocessedRawGraph.citationReferenceMap);
-    nodesCitationReferenceData[node[0]] = {top5Citations: node[3], top5References: node[4]};
+    // nodesData[node[0]] = {node: addedNode, top5Citations: node[3]};
 
-    let nodesArr = rawGraphNodes.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract}));
+    let nodesArr = rawGraphNodes.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], 
+      paperName: n.paperName, paperAbstract: n.paperAbstract, citationCount: n.citationCount, venue: n.venue, year: n.year, url: n.url}));
 
-    let nodesData = nodesArr.reduce((map, currentNode) => {
+    const nodesData = nodesArr.reduce((map, currentNode) => {
       map[currentNode.node_id] = currentNode;
       return map;
     }, {}); 
@@ -536,8 +540,7 @@ export default class GraphStore {
                       }
                     })
                     .then((response) => {
-                      let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5), response.references.slice(0,5)];
-                      this.addNodetoGraph(paperNode, rightClickedNodeId, 0);
+                      this.addNodetoGraph(response, rightClickedNodeId, 0);
                       this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, curcount, 0);
                       curcount += 1;
                     })
@@ -569,8 +572,7 @@ export default class GraphStore {
                       }
                     })
                     .then((response) => {
-                      let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5), response.references.slice(0,5)];
-                      this.addNodetoGraph(paperNode, rightClickedNodeId, 1);
+                      this.addNodetoGraph(response, rightClickedNodeId, 1);
                       this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, curcount, 1);
                       curcount += 1;
                     })

@@ -448,24 +448,20 @@ async function createEmptyPaperGraph() {
   // const toId = config.nodes.hasColumns ? config.edges.mapping.toId : parseInt(config.edges.mapping.toId);
 
   // Create temporary data structures.
-  const nodesArr = [];
-  const graph = createGraph();
-  const degreeDict = {};
+  let nodesArr = [];
+  let graph = createGraph();
+  let degreeDict = {};
 
-  const edgesArr = [];
+  let edgesArr = [];
   
-  const rank = pageRank(graph);
-  const nodesData = {}; 
+  let rank = pageRank(graph);
+  let nodesData = {}; 
 
-  const nodesCitationReferenceData = {}; 
-
-  // const nodesData = nodesArr.reduce((map, currentNode) => {
-  //   map[currentNode.id] = {node: currentNode, top5Citations: paperNode[3]};
-  //   return map;
-  // }, {}); 
+  let nodesCitationReferenceData = {}; 
 
   appState.graph.preprocessedRawGraph = {graph: graph, degreeDict: degreeDict, citationReferenceMap: nodesCitationReferenceData, nodesPanelData: nodesData};
-  nodesArr = nodesArr.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract}));
+  nodesArr = nodesArr.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract,
+     citationCount: n.citationCount, url: n.url}));
 
   return {
     rawGraph: { nodes: nodesArr, edges: edgesArr },
@@ -473,7 +469,7 @@ async function createEmptyPaperGraph() {
       snapshotName: 'Untitled Graph',
       fullNodes: 0,
       fullEdges: 0, //Math.floor(edgesArr.length / 2), // Counting undirected edges
-      nodeProperties: ["id", "degree", "pagerank", "paperName", "paperAbstract", "node_id"],
+      nodeProperties: ["id", "degree", "pagerank", "paperName", "paperAbstract", "citationCount", "venue", "year", "url", "node_id"],
       nodeComputed: ['pagerank', 'degree', 'paperName'],
       edgeProperties: ['source_id', 'target_id'],
     },
