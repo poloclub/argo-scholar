@@ -424,7 +424,7 @@ module.exports = function(self) {
     });
   };
 
-  self.addFrontEndNodeInARow = function(sourcenodeid, spawnnodeid, numofnode) {
+  self.addFrontEndNodeInARow = function(sourcenodeid, spawnnodeid, numofnode, citationOrReference) {
     var parentnode = self.graph.getNode(sourcenodeid);
     var childnode = self.graph.getNode(spawnnodeid);
     if (citationOrReference == 0) {

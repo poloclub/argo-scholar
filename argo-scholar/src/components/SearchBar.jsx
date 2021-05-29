@@ -47,10 +47,10 @@ class SearchBar extends React.Component {
             })
             .then((response) => {
               this.state.id = response.paperId;
-
-              let paperNode = [response.paperId, response.title, response.abstract, response.citations.slice(0,5), response.references.slice(0,5)];
-              appState.graph.addNodetoGraph(paperNode, "null", 0);
-
+              
+              appState.graph.addNodetoGraph(response, "null", 0);
+              appState.graph.process.graph.getNode(response.paperId).pinnedx = true;
+              appState.graph.process.graph.getNode(response.paperId).pinnedy = true;
             })
             .catch((error) => {
               alert("Not a valid CorpusID. Please try again v1.");
