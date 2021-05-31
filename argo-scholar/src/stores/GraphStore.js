@@ -3,7 +3,7 @@ import createGraph from "ngraph.graph";
 import { scales } from "../constants/index";
 import uniq from "lodash/uniq";
 import { averageClusteringCoefficient, connectedComponents, graphDensity, averageDegree, exactGraphDiameter } from "../services/AlgorithmUtils";
-import { ContextMenu, MenuFactory, MenuItemFactory } from "@blueprintjs/core";
+import { ContextMenu, MenuFactory, MenuItemFactory, MenuDividerFactory } from "@blueprintjs/core";
 import { Frame, graph } from "../graph-frontend";
 
 import pageRank from 'ngraph.pagerank';
@@ -252,7 +252,8 @@ export default class GraphStore {
     backEndgraph.addNode(paperJsonResponse.paperId);
 
     let addedNode = {id: paperJsonResponse.paperId, degree: 0, pagerank: 0, paperName: paperJsonResponse.title, paperAbstract: (paperJsonResponse.abstract == null ? "n/a" : paperJsonResponse.abstract),
-      citationCount: paperJsonResponse.citations.length, venue: (paperJsonResponse.venue == "" ? "n/a" : paperJsonResponse.venue), year: paperJsonResponse.year, url: paperJsonResponse.url};
+      authors: paperJsonResponse.authors.map(n => n.name).join(', '), citationCount: paperJsonResponse.citations.length, venue: (paperJsonResponse.venue == "" ? "n/a" : paperJsonResponse.venue),
+      year: paperJsonResponse.year, url: paperJsonResponse.url};
 
     degreeDict[paperJsonResponse.paperId] = 0;
     rawGraphNodes.push(addedNode);
@@ -276,7 +277,7 @@ export default class GraphStore {
     // nodesData[node[0]] = {node: addedNode, top5Citations: node[3]};
 
     let nodesArr = rawGraphNodes.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], 
-      paperName: n.paperName, paperAbstract: n.paperAbstract, citationCount: n.citationCount, venue: n.venue, year: n.year, url: n.url}));
+      paperName: n.paperName, paperAbstract: n.paperAbstract, authors: n.authors, citationCount: n.citationCount, venue: n.venue, year: n.year, url: n.url}));
 
     const nodesData = nodesArr.reduce((map, currentNode) => {
       map[currentNode.node_id] = currentNode;
@@ -521,6 +522,10 @@ export default class GraphStore {
             text: 'Show 5 Neighbors with Highest PageRank',
             key: 'Show 5 Neighbors with Highest PageRank'
           }),
+          this.frame.rightClickedNode && MenuDividerFactory({
+            title: 'Argo Scholar',
+            key: 'Argo Scholar'
+          }),
           this.frame.rightClickedNode && MenuItemFactory({
             onClick: () => {
               if (this.frame.rightClickedNode) {
@@ -542,12 +547,14 @@ export default class GraphStore {
                     .then((response) => {
                       this.addNodetoGraph(response, rightClickedNodeId, 0);
                       this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, curcount, 0);
+                      appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
                       curcount += 1;
                     })
                     .catch((error) => {
                       alert("Something broke :(");
                     });
                   });
+                appState.graph.frame.updateNodesShowingLabels();
               }
             },
             text: 'Add 5 Paper Citations',
@@ -574,12 +581,14 @@ export default class GraphStore {
                     .then((response) => {
                       this.addNodetoGraph(response, rightClickedNodeId, 1);
                       this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, curcount, 1);
+                      appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
                       curcount += 1;
                     })
                     .catch((error) => {
                       alert("Something broke :(");
                     });
                   });
+                appState.graph.frame.updateNodesShowingLabels();
               }
             },
             text: 'Add 5 Paper References',
