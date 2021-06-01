@@ -457,9 +457,7 @@ async function createEmptyPaperGraph() {
   let rank = pageRank(graph);
   let nodesData = {}; 
 
-  let nodesCitationReferenceData = {}; 
-
-  appState.graph.preprocessedRawGraph = {graph: graph, degreeDict: degreeDict, citationReferenceMap: nodesCitationReferenceData, nodesPanelData: nodesData};
+  appState.graph.preprocessedRawGraph = {graph: graph, degreeDict: degreeDict, nodesPanelData: nodesData};
   nodesArr = nodesArr.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract, 
     authors: n.authors, citationCount: n.citationCount, url: n.url}));
 

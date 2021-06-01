@@ -47,7 +47,10 @@ class SearchBar extends React.Component {
             })
             .then((response) => {
               this.state.id = response.paperId;
-
+              if (response.paperId in appState.graph.preprocessedRawGraph.nodesPanelData) {
+                alert("Node already in graph");
+                return;
+              }
               appState.graph.addNodetoGraph(response, "null", 0);
               appState.graph.process.graph.getNode(response.paperId).pinnedx = true;
               appState.graph.process.graph.getNode(response.paperId).pinnedy = true;

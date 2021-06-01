@@ -101,7 +101,6 @@ export default class GraphStore {
   preprocessedRawGraph = {
     graph: null,
     degreeDict: {},
-    citationReferenceMap: {},
     nodesPanelData: {},
   };
 
@@ -249,14 +248,15 @@ export default class GraphStore {
     let backEndgraph = toJS(appState.graph.preprocessedRawGraph.graph);
     let degreeDict = toJS(appState.graph.preprocessedRawGraph.degreeDict);
 
-    backEndgraph.addNode(paperJsonResponse.paperId);
+    if (!(paperJsonResponse.paperId in degreeDict)) {
+      backEndgraph.addNode(paperJsonResponse.paperId);
+      let addedNode = {id: paperJsonResponse.paperId, degree: 0, pagerank: 0, paperName: paperJsonResponse.title, paperAbstract: (paperJsonResponse.abstract == null ? "n/a" : paperJsonResponse.abstract),
+        authors: paperJsonResponse.authors.map(n => n.name).join(', '), citationCount: paperJsonResponse.citations.length, venue: (paperJsonResponse.venue == "" ? "n/a" : paperJsonResponse.venue),
+        year: paperJsonResponse.year, url: paperJsonResponse.url};
+      degreeDict[paperJsonResponse.paperId] = 0;
+      rawGraphNodes.push(addedNode);
+    }
 
-    let addedNode = {id: paperJsonResponse.paperId, degree: 0, pagerank: 0, paperName: paperJsonResponse.title, paperAbstract: (paperJsonResponse.abstract == null ? "n/a" : paperJsonResponse.abstract),
-      authors: paperJsonResponse.authors.map(n => n.name).join(', '), citationCount: paperJsonResponse.citations.length, venue: (paperJsonResponse.venue == "" ? "n/a" : paperJsonResponse.venue),
-      year: paperJsonResponse.year, url: paperJsonResponse.url};
-
-    degreeDict[paperJsonResponse.paperId] = 0;
-    rawGraphNodes.push(addedNode);
     if (parentID != "null") {
       if (citationOrReference == 0) {
         backEndgraph.addLink(paperJsonResponse.paperId, parentID);
@@ -284,8 +284,7 @@ export default class GraphStore {
       return map;
     }, {}); 
   
-    appState.graph.preprocessedRawGraph = {graph: backEndgraph, degreeDict: degreeDict, citationReferenceMap: nodesCitationReferenceData,
-      nodesPanelData: nodesData};
+    appState.graph.preprocessedRawGraph = {graph: backEndgraph, degreeDict: degreeDict, nodesPanelData: nodesData};
 
     this.frame.updateFrontEndNodeGraphDataWithBackendRawgraph();
 
@@ -418,8 +417,6 @@ export default class GraphStore {
   
     this.preprocessedRawGraph.nodesPanelData = nodesData;
 
-    this.preprocessedRawGraph.citationReferenceMap = savedStates.citationReferenceMap;
-
     let graph = createGraph();
     let degreeDict = {};
 
@@ -530,29 +527,39 @@ export default class GraphStore {
             onClick: () => {
               if (this.frame.rightClickedNode) {
                 const rightClickedNodeId = this.frame.rightClickedNode.data.ref.id.toString();
-
-                let rightClickedNodeCitations = toJS(appState.graph.preprocessedRawGraph.citationReferenceMap[rightClickedNodeId]).top5Citations;
-
                 let curcount = 0;
-                rightClickedNodeCitations.forEach(citation => {
-                  let apiurl = "https://api.semanticscholar.org/v1/paper/" + citation.paperId;
-                  fetch(apiurl)
-                    .then((res) => {
-                      if (res.ok) {
-                        return res.json();
-                      } else {
-                        throw "error";
+                let offset = 0;
+                let apiurl = "https://api.semanticscholar.org/v1/paper/" + rightClickedNodeId;
+                fetch(apiurl)
+                  .then((res) => {return res.json();})
+                  .then((response) => {return response.citations})
+                  .then((citations) => {
+                    let edgesArr = toJS(appState.graph.rawGraph.edges);
+                    for (let i = 0; i < citations.length; i++) {
+                      if (edgesArr.some(edge => edge.source_id == citations[i].paperId && edge.target_id == rightClickedNodeId)) {
+                        console.log("contains key");
+                        continue;
                       }
-                    })
-                    .then((response) => {
-                      this.addNodetoGraph(response, rightClickedNodeId, 0);
-                      this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, curcount, 0);
-                      appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
                       curcount += 1;
-                    })
-                    .catch((error) => {
-                      alert("Something broke :(");
-                    });
+                      let citationAPI = "https://api.semanticscholar.org/v1/paper/" + citations[i].paperId;
+                      fetch(citationAPI)
+                        .then((res) => {
+                          if (res.ok) {
+                            return res.json();
+                          } else {
+                            throw "error";
+                          }
+                        })
+                        .then((response) => {
+                          this.addNodetoGraph(response, rightClickedNodeId, 0);
+                          this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, offset, 0);
+                          appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
+                          offset += 1;
+                        });
+                      if (curcount >= 5) {
+                        break;
+                      }
+                    }
                   });
                 appState.graph.frame.updateNodesShowingLabels();
               }
@@ -564,29 +571,40 @@ export default class GraphStore {
             onClick: () => {
               if (this.frame.rightClickedNode) {
                 const rightClickedNodeId = this.frame.rightClickedNode.data.ref.id.toString();
-
-                let rightClickedNodeReferences = toJS(appState.graph.preprocessedRawGraph.citationReferenceMap[rightClickedNodeId]).top5References;
                 let curcount = 0;
-                
-                rightClickedNodeReferences.forEach(citation => {
-                  let apiurl = "https://api.semanticscholar.org/v1/paper/" + citation.paperId;
-                  fetch(apiurl)
-                    .then((res) => {
-                      if (res.ok) {
-                        return res.json();
-                      } else {
-                        throw "error";
+                let offset = 0;
+                let apiurl = "https://api.semanticscholar.org/v1/paper/" + rightClickedNodeId;
+                fetch(apiurl)
+                  .then((res) => {return res.json();})
+                  .then((response) => {return response.references})
+                  .then((references) => {
+                    let edgesArr = toJS(appState.graph.rawGraph.edges);
+                    for (let i = 0; i < references.length; i++) {
+                      if (edgesArr.some(edge => edge.source_id == rightClickedNodeId && edge.target_id == references[i].paperId)) {
+                        console.log("contains key");
+                        continue;
                       }
-                    })
-                    .then((response) => {
-                      this.addNodetoGraph(response, rightClickedNodeId, 1);
-                      this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, curcount, 1);
-                      appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
                       curcount += 1;
-                    })
-                    .catch((error) => {
-                      alert("Something broke :(");
-                    });
+                      let citationAPI = "https://api.semanticscholar.org/v1/paper/" + references[i].paperId;
+                      fetch(citationAPI)
+                        .then((res) => {
+                          if (res.ok) {
+                            return res.json();
+                          } else {
+                            throw "error";
+                          }
+                        })
+                        .then((response) => {
+                          this.addNodetoGraph(response, rightClickedNodeId, 1);
+                          // console.log("add node curcount: ", offset);
+                          this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, offset, 1);
+                          appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
+                          offset += 1;
+                        });
+                      if (curcount >= 5) {
+                        break;
+                      }
+                    }
                   });
                 appState.graph.frame.updateNodesShowingLabels();
               }
