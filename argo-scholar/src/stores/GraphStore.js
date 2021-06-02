@@ -271,11 +271,6 @@ export default class GraphStore {
     
     const rank = pageRank(backEndgraph);
 
-    const nodesCitationReferenceData = toJS(appState.graph.preprocessedRawGraph.citationReferenceMap);
-    nodesCitationReferenceData[paperJsonResponse.paperId] = {top5Citations: paperJsonResponse.citations.slice(0,5), top5References: paperJsonResponse.references.slice(0,5)};
-
-    // nodesData[node[0]] = {node: addedNode, top5Citations: node[3]};
-
     let nodesArr = rawGraphNodes.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], 
       paperName: n.paperName, paperAbstract: n.paperAbstract, authors: n.authors, citationCount: n.citationCount, venue: n.venue, year: n.year, url: n.url}));
 
