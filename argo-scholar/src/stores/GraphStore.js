@@ -246,7 +246,7 @@ export default class GraphStore {
     let rawGraphNodes = toJS(appState.graph.rawGraph.nodes);
     let edgesArr = toJS(appState.graph.rawGraph.edges);
     let backEndgraph = toJS(appState.graph.preprocessedRawGraph.graph);
-    const degreeDict = toJS(appState.graph.preprocessedRawGraph.degreeDict);
+    let degreeDict = toJS(appState.graph.preprocessedRawGraph.degreeDict);
 
     if (!(paperJsonResponse.paperId in degreeDict)) {
       backEndgraph.addNode(paperJsonResponse.paperId);
