@@ -101,7 +101,7 @@ class SearchBar extends React.Component {
         <input type="submit" value="Submit" />
       </form>
 
-      <button onClick={this.createEmptyGraph}>Empty Graph</button>
+      <button onClick={this.createEmptyGraph}>Create Empty Graph</button>
       </div>
     );
   }

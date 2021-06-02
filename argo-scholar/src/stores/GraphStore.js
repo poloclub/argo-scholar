@@ -246,7 +246,7 @@ export default class GraphStore {
     let rawGraphNodes = toJS(appState.graph.rawGraph.nodes);
     let edgesArr = toJS(appState.graph.rawGraph.edges);
     let backEndgraph = toJS(appState.graph.preprocessedRawGraph.graph);
-    let degreeDict = toJS(appState.graph.preprocessedRawGraph.degreeDict);
+    const degreeDict = toJS(appState.graph.preprocessedRawGraph.degreeDict);
 
     if (!(paperJsonResponse.paperId in degreeDict)) {
       backEndgraph.addNode(paperJsonResponse.paperId);
@@ -256,7 +256,7 @@ export default class GraphStore {
       degreeDict[paperJsonResponse.paperId] = 0;
       rawGraphNodes.push(addedNode);
     }
-
+    
     if (parentID != "null") {
       if (citationOrReference == 0) {
         backEndgraph.addLink(paperJsonResponse.paperId, parentID);

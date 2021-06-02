@@ -461,6 +461,7 @@ async function createEmptyPaperGraph() {
   nodesArr = nodesArr.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract, 
     authors: n.authors, citationCount: n.citationCount, url: n.url}));
 
+
   return {
     rawGraph: { nodes: nodesArr, edges: edgesArr },
     metadata: {
