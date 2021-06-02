@@ -413,7 +413,7 @@ export function requestCreateEmptyPaperGraph(newProjectName) {
     runInAction('load imported graph', () => {
       appState.graph.rawGraph = graph.rawGraph;
       appState.graph.metadata = graph.metadata;
-      appState.graph.setUpFrame();
+      // appState.graph.setUpFrame();
     });
     // Reinitialize global configs
     appState.graph.nodes = appState.graph.initialGlobalConfig.nodes;
