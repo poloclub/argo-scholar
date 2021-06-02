@@ -457,16 +457,10 @@ async function createEmptyPaperGraph() {
   let rank = pageRank(graph);
   let nodesData = {}; 
 
-  let nodesCitationReferenceData = {}; 
+  appState.graph.preprocessedRawGraph = {graph: graph, degreeDict: degreeDict, nodesPanelData: nodesData};
+  nodesArr = nodesArr.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract, 
+    authors: n.authors, citationCount: n.citationCount, url: n.url}));
 
-  // const nodesData = nodesArr.reduce((map, currentNode) => {
-  //   map[currentNode.id] = {node: currentNode, top5Citations: paperNode[3]};
-  //   return map;
-  // }, {}); 
-
-  appState.graph.preprocessedRawGraph = {graph: graph, degreeDict: degreeDict, citationReferenceMap: nodesCitationReferenceData, nodesPanelData: nodesData};
-  nodesArr = nodesArr.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], paperName: n.paperName, paperAbstract: n.paperAbstract,
-     citationCount: n.citationCount, url: n.url}));
 
   return {
     rawGraph: { nodes: nodesArr, edges: edgesArr },
@@ -474,8 +468,8 @@ async function createEmptyPaperGraph() {
       snapshotName: 'Untitled Graph',
       fullNodes: 0,
       fullEdges: 0, //Math.floor(edgesArr.length / 2), // Counting undirected edges
-      nodeProperties: ["id", "degree", "pagerank", "paperName", "paperAbstract", "citationCount", "venue", "year", "url", "node_id"],
-      nodeComputed: ['pagerank', 'degree', 'paperName'],
+      nodeProperties: ["id", "degree", "pagerank", "paperName", "paperAbstract", "authors", "citationCount", "venue", "year", "url", "node_id"],
+      nodeComputed: ['pagerank', 'degree'],
       edgeProperties: ['source_id', 'target_id'],
     },
   }

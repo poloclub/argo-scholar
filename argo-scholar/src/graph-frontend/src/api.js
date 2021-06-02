@@ -424,6 +424,7 @@ module.exports = function(self) {
     });
   };
 
+  // citationOrReference: 0 is citation and goes on right side, 0 is reference and goes on left side
   self.addFrontEndNodeInARow = function(sourcenodeid, spawnnodeid, numofnode, citationOrReference) {
     var parentnode = self.graph.getNode(sourcenodeid);
     var childnode = self.graph.getNode(spawnnodeid);
