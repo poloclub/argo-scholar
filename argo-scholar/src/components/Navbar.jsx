@@ -18,8 +18,8 @@ import appState from "../stores/index";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import argologo_dark from '../images/new_argologo_dark.svg';
-import argologo_light from '../images/new_argologo_light.svg';
+import argologo_dark from '../images/argoscholar_logo_dark.svg';
+import argologo_light from '../images/argoscholar_logo_light.svg';
 import { toaster } from '../notifications/client';
 import { LOGO_URL, GITHUB_URL, SAMPLE_GRAPH_SNAPSHOTS } from '../constants';
 import SearchBar from "./SearchBar";
