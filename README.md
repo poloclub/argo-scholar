@@ -11,7 +11,7 @@ An interactive graph visualization system that runs in your web browsers. No ins
 
 [**Live Demo** - Launch Argo Lite in your browser](https://poloclub.github.io/argo-graph-lite/)
 
-<img src="img/argoscholar_README_Logo.png" width=100% alt="Argo Lite logo">
+<img src="img/argoscholar_README_Logo.png" width=60% alt="Argo Lite logo">
 
 ## Documentations
 
