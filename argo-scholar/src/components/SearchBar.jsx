@@ -1,71 +1,84 @@
 import React from "react";
 import appState from "../stores/index";
+import classnames from "classnames";
 import {
   requestCreateEmptyPaperGraph,
   requestCreateNewProject
 } from "../ipc/client";
+import {
+  Button,
+  Classes,
+  InputGroup,
+  Intent,
+  Position,
+  Tooltip,
+  Popover,
+  Menu,
+  MenuItem,
+  MenuDivider
+} from "@blueprintjs/core";
 
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
-    this._isMounted = false;  
-    this.state = {
-        query: '', 
-        id: 0
-    };
+    // this._isMounted = false;  
+    // this.state = {
+    //     query: '', 
+    //     id: 0
+    // };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleChange = this.handleChange.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
   }
   
-  componentDidMount() {
-    this._isMounted = true;
-  };
+  // componentDidMount() {
+  //   this._isMounted = true;
+  // };
 
-  componentWillUnmount() {
-    this._isMounted = false;
-  };
+  // componentWillUnmount() {
+  //   this._isMounted = false;
+  // };
 
-  handleChange(event) {
-    this._isMounted && this.setState({query: event.target.value});
-  }
+  // handleChange(event) {
+  //   this._isMounted && this.setState({query: event.target.value});
+  // }
   
-  handleSubmit(event) {
-    console.log('A CorpusID was submitted: ' + this.state.query);
-    const corpusIDregex = /^[0-9]+$/;
-    if (this._isMounted) {
-      if (corpusIDregex.test(this.state.query)) {
-          let apiurl = "https://api.semanticscholar.org/v1/paper/CorpusID:" + this.state.query;
+  // handleSubmit(event) {
+  //   console.log('A CorpusID was submitted: ' + this.state.query);
+  //   const corpusIDregex = /^[0-9]+$/;
+  //   if (this._isMounted) {
+  //     if (corpusIDregex.test(this.state.query)) {
+  //         let apiurl = "https://api.semanticscholar.org/v1/paper/CorpusID:" + this.state.query;
 
-          fetch(apiurl)
-            .then((res) => {
-              if (res.ok) {
-                return res.json();
-              } else {
-                throw "error";
-              }
-            })
-            .then((response) => {
-              this.state.id = response.paperId;
-              if (response.paperId in appState.graph.preprocessedRawGraph.nodesPanelData) {
-                alert("Node already in graph");
-                return;
-              }
-              appState.graph.addNodetoGraph(response, "null", 0);
-              appState.graph.process.graph.getNode(response.paperId).pinnedx = true;
-              appState.graph.process.graph.getNode(response.paperId).pinnedy = true;
-              appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
-              appState.graph.frame.updateNodesShowingLabels();
-            })
-            .catch((error) => {
-              alert("Not a valid CorpusID. Please try again v1.");
-            });
-      } else {
-          alert("Not a valid CorpusID. Please try again.");
-      }
-    }
-    event.preventDefault();
-  }
+  //         fetch(apiurl)
+  //           .then((res) => {
+  //             if (res.ok) {
+  //               return res.json();
+  //             } else {
+  //               throw "error";
+  //             }
+  //           })
+  //           .then((response) => {
+  //             this.state.id = response.paperId;
+  //             if (response.paperId in appState.graph.preprocessedRawGraph.nodesPanelData) {
+  //               alert("Node already in graph");
+  //               return;
+  //             }
+  //             appState.graph.addNodetoGraph(response, "null", 0);
+  //             appState.graph.process.graph.getNode(response.paperId).pinnedx = true;
+  //             appState.graph.process.graph.getNode(response.paperId).pinnedy = true;
+  //             appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
+  //             appState.graph.frame.updateNodesShowingLabels();
+  //           })
+  //           .catch((error) => {
+  //             alert("Not a valid CorpusID. Please try again v1.");
+  //           });
+  //     } else {
+  //         alert("Not a valid CorpusID. Please try again.");
+  //     }
+  //   }
+  //   event.preventDefault();
+  // }
 
   createEmptyGraph(event) {
     appState.graph.runActiveLayout();
@@ -88,7 +101,7 @@ class SearchBar extends React.Component {
   render() {
     return (
       <div>
-      <form onSubmit={this.handleSubmit}>
+      {/* <form onSubmit={this.handleSubmit}>
         <label>
           CorpusID:
           <input 
@@ -99,9 +112,34 @@ class SearchBar extends React.Component {
         />
         </label>
         <input type="submit" value="Submit" />
-      </form>
+      </form>*/}
 
-      <button onClick={this.createEmptyGraph}>Create Empty Graph</button>
+
+
+            <Popover
+            content={
+              <Menu>
+                <MenuItem
+                  text="Add Papers"
+                  iconName="pt-icon-new-object"
+                  onClick={() => {appState.project.isAddPapersDialogOpen = true;}}
+                  />
+                <MenuItem
+                  text="Clear all papers"
+                  iconName="pt-icon-graph-remove"
+                  onClick={this.createEmptyGraph}
+                />
+              </Menu>
+            }
+            position={Position.BOTTOM}
+          >
+            <Button
+              className={classnames([Classes.BUTTON, Classes.MINIMAL])}
+              iconName="pt-icon-manual"
+            >
+              Papers
+            </Button>
+          </Popover>
       </div>
     );
   }
