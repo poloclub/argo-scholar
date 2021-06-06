@@ -96,7 +96,7 @@ class ShareDialog extends React.Component {
                                                 // Generate a random UUID
                                                 const uuid = uuidv4();
                                                 // Generate URL corresponding to the UUID
-                                                const sharedURL = `https://poloclub.github.io/argo-graph-lite/#${uuid}`;
+                                                const sharedURL = `https://poloclub.github.io/argo-scholar/#${uuid}`;
 
                                                 // Wait for backend response
                                                 const requestSuccess = await this.handleRequest(uuid);
@@ -239,7 +239,7 @@ class ShareDialog extends React.Component {
                                         // Generate a random UUID
                                         const uuid = uuidv4();
                                         // Generate URL corresponding to the UUID
-                                        const sharedURL = `https://poloclub.github.io/argo-graph-lite/#${uuid}`;
+                                        const sharedURL = `https://poloclub.github.io/argo-scholar/#${uuid}`;
 
                                         // Wait for backend response
                                         const requestSuccess = await this.handleRequest(uuid);
