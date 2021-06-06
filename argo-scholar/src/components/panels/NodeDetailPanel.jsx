@@ -48,7 +48,7 @@ class NodeDetail extends React.Component {
               {appState.graph.allPropertiesKeyList.map((it, i) => (
                 <tr key={`${it}-${i}`}>
                   <td style={{ padding: '5px 10px' }}>{it}</td>
-                  <td style={{ padding: '5px 10px', whiteSpace: 'normal' }}>{formatLongFloat(this.props.node[it])}</td>
+                  <td style={{ padding: '5px 10px', whiteSpace: 'normal' }}>{(it == "url") ? <a href={this.props.node[it]} target={"_blank"}>Link to Paper</a> : formatLongFloat(this.props.node[it])}</td>
                 </tr>
               ))}
             </tbody>
