@@ -434,7 +434,7 @@ module.exports = function(self) {
       childnode.x = parentnode.x - 25;
     }
     childnode.y = parentnode.y - 25 * (numofnode + 1);
-    childnode.pinnedx = true;
-    childnode.pinnedy = true;
+    // childnode.pinnedx = true;
+    // childnode.pinnedy = true;
   };
 };

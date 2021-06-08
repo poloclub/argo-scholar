@@ -434,7 +434,7 @@ export function requestCreateEmptyPaperGraph(newProjectName) {
       appState.graph.frame.hideMiniMap();
     }
     // Newly imported graph shouldn't have label showing
-    appState.graph.frame.turnOffLabelCSSRenderer();
+    // appState.graph.frame.turnOffLabelCSSRenderer();
   });
 
 }
