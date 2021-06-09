@@ -22,6 +22,7 @@ export default class ProjectStore {
   @observable isProjectDetailDialogOpen = false;
   @observable isSaveSnapshotDialogOpen = false;
   @observable isRenameSnapshotDialogOpen = false;
+  @observable isAddPapersDialogOpen = false;
   // when the ipc returns the projects data for the first time
   // turn off `isFetching` so that the spinner of WorkspaceView will be turned off
   // Also used when refreshing WorkspaceView

@@ -24,6 +24,9 @@ class SaveSnapshotDialog extends React.Component {
   render() {
     return (
         <Dialog
+        className={classnames({
+          [Classes.DARK]: appState.preferences.darkMode
+        })}
           iconName="projects"
           isOpen={appState.project.isRenameSnapshotDialogOpen}
           onClose={() => {
