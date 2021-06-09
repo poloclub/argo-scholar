@@ -90,7 +90,7 @@ class AddPapersDialog extends React.Component {
         <div className={classnames(Classes.DIALOG_BODY)}>
           <label className="pt-label .modifier">
             Add by Corpus ID:
-            <span className="pt-text-muted"> (required)</span>
+            {/* <span className="pt-text-muted"> (required)</span> */}
             <input
               class="pt-input"
               type="text"
