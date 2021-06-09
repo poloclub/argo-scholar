@@ -30,7 +30,7 @@ class SearchBar extends React.Component {
     // this.handleChange = this.handleChange.bind(this);
     // this.handleSubmit = this.handleSubmit.bind(this);
   }
-  
+
   // componentDidMount() {
   //   this._isMounted = true;
   // };
@@ -42,7 +42,7 @@ class SearchBar extends React.Component {
   // handleChange(event) {
   //   this._isMounted && this.setState({query: event.target.value});
   // }
-  
+
   // handleSubmit(event) {
   //   console.log('A CorpusID was submitted: ' + this.state.query);
   //   const corpusIDregex = /^[0-9]+$/;
@@ -86,7 +86,7 @@ class SearchBar extends React.Component {
       name: appState.project.newProjectName,
       createdDate: new Date().toLocaleString(),
     });
-    requestCreateEmptyPaperGraph( 
+    requestCreateEmptyPaperGraph(
       appState.project.newProjectName
     );
 
@@ -95,13 +95,13 @@ class SearchBar extends React.Component {
     appState.graph.frame.turnOffLabelCSSRenderer();
     event.preventDefault();
     appState.graph.selectedNodes.length = 0;
-    appState.graph.currentlyHovered = null; 
+    appState.graph.currentlyHovered = null;
   }
 
   render() {
     return (
       <div>
-      {/* <form onSubmit={this.handleSubmit}>
+        {/* <form onSubmit={this.handleSubmit}>
         <label>
           CorpusID:
           <input 
@@ -116,30 +116,30 @@ class SearchBar extends React.Component {
 
 
 
-            <Popover
-            content={
-              <Menu>
-                <MenuItem
-                  text="Add Papers"
-                  iconName="pt-icon-new-object"
-                  onClick={() => {appState.project.isAddPapersDialogOpen = true;}}
-                  />
-                <MenuItem
-                  text="Clear all papers"
-                  iconName="pt-icon-graph-remove"
-                  onClick={this.createEmptyGraph}
-                />
-              </Menu>
-            }
-            position={Position.BOTTOM}
+        <Popover
+          content={
+            <Menu>
+              <MenuItem
+                text="Add Papers"
+                iconName="pt-icon-new-object"
+                onClick={() => { appState.project.isAddPapersDialogOpen = true; }}
+              />
+              <MenuItem
+                text="Clear all papers"
+                iconName="pt-icon-graph-remove"
+                onClick={this.createEmptyGraph}
+              />
+            </Menu>
+          }
+          position={Position.BOTTOM}
+        >
+          <Button
+            className={classnames([Classes.BUTTON, Classes.MINIMAL])}
+            iconName="pt-icon-manual"
           >
-            <Button
-              className={classnames([Classes.BUTTON, Classes.MINIMAL])}
-              iconName="pt-icon-manual"
-            >
-              Papers
+            Papers
             </Button>
-          </Popover>
+        </Popover>
       </div>
     );
   }
