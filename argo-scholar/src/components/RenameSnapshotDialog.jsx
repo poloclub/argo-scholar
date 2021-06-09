@@ -55,6 +55,7 @@ class SaveSnapshotDialog extends React.Component {
               className={classnames({
                 [Classes.DISABLED]: !this.state.name
               })}
+              disabled={!this.state.name}
               intent={Intent.PRIMARY}
               onClick={() => {
                 appState.graph.metadata.snapshotName = this.state.name;

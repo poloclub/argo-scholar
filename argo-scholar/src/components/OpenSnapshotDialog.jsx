@@ -56,6 +56,7 @@ class OpenSnapshotDialog extends React.Component {
                 className={classnames({
                   [Classes.DISABLED]: !this.state.selectedFile
                 })}
+                disabled={!this.state.selectedFile}
                 intent={Intent.PRIMARY}
                 onClick={() => {
                   // This dialog is closed when user is done selecting file
