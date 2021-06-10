@@ -89,17 +89,23 @@ class AddPapersDialog extends React.Component {
       >
         <div className={classnames(Classes.DIALOG_BODY)}>
           <label className="pt-label .modifier">
-            Add by Corpus ID:
-            {/* <span className="pt-text-muted"> (required)</span> */}
+            <span>
+              Add by <i>Corpus ID</i>:
+            </span>
             <input
-              class="pt-input"
+              class="pt-input pt-fill"
               type="text"
-              placeholder="Input CorpusID here"
+              placeholder="Input Corpus ID here"
               dir="auto"
               value={this.state.query}
               onChange={event => this.setState({ query: event.target.value })}
             />
           </label>
+          <div className="pt-callout pt-icon-info-sign">
+            <i>Corpus ID</i>, also known as <i>S2CID</i> or <i>S2 corpus ID</i>, is a unique identifier for a paper in the <b>Semantic Scholar</b> database.<br />
+            <a href="https://www.semanticscholar.org/"> Look up the <i>Corpus ID</i> of a paper</a>
+
+          </div>
         </div>
 
         <div className={Classes.DIALOG_FOOTER}>
