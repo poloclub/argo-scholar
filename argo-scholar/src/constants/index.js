@@ -15,8 +15,8 @@ export const BACKEND_URL = "https://argo-share.herokuapp.com"; // for production
 // export const BACKEND_URL = "https://sleepy-brushlands-57948.herokuapp.com"; // for free heroku
 // export const BACKEND_URL = "http://localhost:1337"; // for local strapi development
 export const SAMPLE_GRAPH_SNAPSHOTS = [
-  ["Les Miserables", "0859c585-e1ff-4bf6-a1f2-0e6aec5de62f"],
-  ["CORD-19 Citation Graph 06-02", "4bf882d3-8966-4f41-a590-acafeb998d2a"]
+  ["Apolo Sample", "0859c585-e1ff-4bf6-a1f2-0e6aec5de62f"],
+  // ["CORD-19 Citation Graph 06-02", "4bf882d3-8966-4f41-a590-acafeb998d2a"]
 ];
 
 // When resizing window or running on mobile,
