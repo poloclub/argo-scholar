@@ -1,8 +1,8 @@
-# Develop Argo Lite
+# Develop Argo Scholar
 
 ## Developing the frontend
 
-Argo Lite's frontend is written using the [Create React App](https://github.com/facebook/create-react-app) tool chain, using [MobX](https://mobx.js.org/README.html) for state management.
+Argo Scholar's frontend is written using the [Create React App](https://github.com/facebook/create-react-app) tool chain, using [MobX](https://mobx.js.org/README.html) for state management.
 
 Knowledge of React and MobX is necessary to understand the codebase.
 
@@ -10,18 +10,18 @@ Install node.js, head to `cd argo-scholar` and run `npm install` to install the 
 
 ## Developing the backend
 
-Argo Lite has a sharing server for sharing graph snapshots. See [the Deployment Guide](deploy.md).
+Argo Scholar has a sharing server for sharing graph snapshots. See [the Deployment Guide](deploy.md).
 
-## Creating Live Demo on Surge to Test New Argo Lite Features
+## Creating Live Demo on Surge to Test New Argo Scholar Features
 
-After changes are made to the Argo Lite code base, [Surge](https://surge.sh/) can be used to deploy these changes to a URL that can be shared with others for testing new features. 
+After changes are made to the Argo Scholar code base, [Surge](https://surge.sh/) can be used to deploy these changes to a URL that can be shared with others for testing new features. 
 
 To do this, you need to do the following steps:
 1) Switch to the branch where your changes have been made and make a duplicate branch (e.g., named as "demo/branch-name" to help group all surge demo branches). Use the duplicate branch to complete the rest of the steps in order to preserve the files in the original branch.
 
-2) Navigate to the Argo Lite react-app in your terminal
+2) Navigate to the Argo Scholar react-app in your terminal
 
-3) Open the package.json file and find the `"homepage"` attribute. Completely remove the attribute: `"homepage": "https://poloclub.github.io/argo-graph-lite"`
+3) Open the package.json file and find the `"homepage"` attribute. Completely remove the attribute: `"homepage": "https://poloclub.github.io/argo-scholar"`
 
 4) Inside the package.json file, find the `"scripts"` attribute. Within this attribute, there is an attribute named `"deploy"`. Remove the value and replace it with `"npm run build && cp build/index.html build/200.html && surge build https://{YOUR DESIRED URL NAME}.surge.sh"`. An example is shown below:
 

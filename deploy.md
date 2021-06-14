@@ -1,16 +1,16 @@
-# Deploy Argo Lite
+# Deploy Argo Scholar
 
-Deploying your own custom version of Argo Lite is easy (for sharing private/proprietary data or with custom algorithms).
+Deploying your own custom version of Argo Scholar is easy (for sharing private/proprietary data or with custom algorithms).
 
 ## Frontend
 
-As mentioned in [the development guide](development.md), Argo Lite's frontend uses the [Create React App](https://github.com/facebook/create-react-app) toolchain. It comes with the `gh-pages` tool for deploying to Github Pages, as well as a Travis CI config. You can refer the documentation of either of them (`gh-pages` for manual deployment and Travis CI for automatic deployment). Other tools such as `now.sh` will also work.
+As mentioned in [the development guide](development.md), Argo Scholar's frontend uses the [Create React App](https://github.com/facebook/create-react-app) toolchain. It comes with the `gh-pages` tool for deploying to Github Pages, as well as a Travis CI config. You can refer the documentation of either of them (`gh-pages` for manual deployment and Travis CI for automatic deployment). Other tools such as `now.sh` will also work.
 
 There are many useful frontend configuration options in `argo-scholar/src/constants/index.js`. You can change the backend and sample graphs linked there.
 
 ## Backend Sharing Service
 
-Argo Lite uses [Strapi](https://strapi.io/) for the backend service.
+Argo Scholar uses [Strapi](https://strapi.io/) for the backend service.
 
 To securely set up Strapi, we recommend following their official documentation.
 

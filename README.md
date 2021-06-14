@@ -16,7 +16,7 @@ An interactive graph visualization system that runs in your web browsers. No ins
 ## Documentations
 
 - [Quick Start (Visualization, Saving and Sharing Snapshots)](quickstart.md)
-- [Tutorial - Visualizing a citation graph of COVID-19 publications (Import Data, Incremental Exploration)](tutorial.md)
+- [Tutorial - Visualizing a citation graph of Apolo (Initial Graph, Incremental Exploration, Saving Progress)](tutorial.md)
 - [Develop Argo Scholar](development.md)
 - [Deploy Argo Scholar (and custom sharing service with access)](deploy.md)
 

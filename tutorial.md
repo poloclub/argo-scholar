@@ -1,4 +1,4 @@
-# Argo Scholar Tutorial with the CORD-19 Dataset
+# Argo Scholar Tutorial with Apolo Paper
 
 This tutorial assumes that you have already completed [the Quick Start Guide](quickstart.md). In addition to the quick start, this tutorial covers:
 
@@ -7,8 +7,7 @@ This tutorial assumes that you have already completed [the Quick Start Guide](qu
 
 We will start our literature graph with the Apolo paper found [here](https://www.semanticscholar.org/paper/Apolo%3A-making-sense-of-large-network-data-by-rich-Chau-Kittur/42936c2f2f5c8f4152494b94609fb33ec6264b8b#citing-papers).
 
-If you want to insert your own papers, all you will need is the paper's Semantic Scholar CorpusID. You can locate this by searching for the paper on [Semantic Scholar
-s website](https://www.semanticscholar.org/). The CorpusID will be located on the paper's Semantic Scholar page, next to the paper title.  
+If you want to insert your own papers, all you will need is the paper's Semantic Scholar CorpusID. You can locate this by searching for the paper on [Semantic Scholar's website](https://www.semanticscholar.org/). The CorpusID will be located on the paper's Semantic Scholar page, next to the paper title.  
 
 ![Locating a paper's CorpusID](img/img-corpusid.png)
 
