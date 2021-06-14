@@ -1,43 +1,40 @@
-# Argo Lite Tutorial with the CORD-19 Dataset
+# Argo Scholar Tutorial with the CORD-19 Dataset
 
 This tutorial assumes that you have already completed [the Quick Start Guide](quickstart.md). In addition to the quick start, this tutorial covers:
 
-- How to import your data from CSV/TSV and GEXF files
-- How to incrementally explore large graphs
+- How to initialize your own graph
+- How to incrementally explore your own graph's citation and reference network
 
-We have prepared a real-world example graph - the COVID-19 publication citation network, derived from the [CORD-19 Open Research Dataset](https://www.semanticscholar.org/cord19/get-started).
+We will start our literature graph with the Apolo paper found [here](https://www.semanticscholar.org/paper/Apolo%3A-making-sense-of-large-network-data-by-rich-Chau-Kittur/42936c2f2f5c8f4152494b94609fb33ec6264b8b#citing-papers).
 
-This dataset is frequently updated, so if you are interested in getting the most up-to-date citation graph, we have provided [a script](https://github.com/poloclub/cord-19-citation-graph) for reference on extracting this graph.
+If you want to insert your own papers, all you will need is the paper's Semantic Scholar CorpusID. You can locate this by searching for the paper on [Semantic Scholar
+s website](https://www.semanticscholar.org/). The CorpusID will be located on the paper's Semantic Scholar page, next to the paper title.  
+
+![Locating a paper's CorpusID](img/img-corpusid.png)
 
 Now let's get started!
 
-## Importing graph data
+## Initializing the graph 
 
-Argo Lite supports importing multiple types of graph and network formats. You can import CSV/TSV graph files or GEXF files (we'll probably add more types later).
+When you first open Argo Scholar, you should see the sample Apolo graph. In order to build your graph from the ground up, you will need to start with an empty graph. 
 
-You only need to import the graph once, and then you can work with graph snapshots (sharable by URLs) without touching any file again.
+You can do this by clicking on the `Papers` tab and selecting `Clear all papers`.
 
-You can find sample files to import in the `samples` directory of this repository.
-
-Now try using `Graph -> Import...`.
-
-At the end of the import dialog, you will see an option `After import, show [...]`. Since this graph is larger than the Les Miserable one we have used in the Quick Start, and visualizing all of the nodes together would likely be visually overwhelming, so let's choose to visualize `top 10 nodes with highest PageRank scores` for now.
-
-(Note that you can always do this later using `Tools -> Filters` or `Tools -> Data Sheet`).
-
-During the import, Argo Lite will compute the PageRank and degrees values of each node automatically.
+Now you can add your paper nodes. Use `Papers -> Add Papers` to see the add paper popup. Input the paper's CorpusID to add it to the graph. You can do this with as many papers as you so wish.
 
 ## Incrementally Adding Neighbors
 
-Now with the top 10 nodes (with highest PageRank scores) showing, let's try to add some neighbor nodes!
+Now we have starting paper nodes, we can add some neighbor nodes! 
 
-In this dataset, each node is a COVID-19 related publication. Find a paper that you find interesting. If you are not interested in any of the 10 papers above, you can also use `Tools -> Data Sheet` to search and select an interesting paper and add it to the visualization.
+Right-click the paper you find interesting. You will see the option to either `Add 5 Paper Citations` or `Add 5 Paper References`. Clicking either option will add 5 addition paper nodes to the graph. You can keep on adding neighbors until you have added all possible papers. 
+
+After adding the citations or references, you can now explore the newly added nodes. If you are not find certain papers interesting or relevant, you can hide them from view by clicking on the paper and selecting `Hide`. 
 
 Now select 1 paper that you find interesting, you will see a `Neighbors (xx nodes hidden)` button on the floating selection menu. Clicking on it will bring you to the *Neighbor Menu*.
 
 In the *Neighbor Menu*, you can see a table listing all the neighbor nodes and their attributes. You can sort them by their attributes, individually add or hide them in the graph, or use the tools above to add an arbitrary number of neighbors with top PageRank or degree values. This helps you identify highly cited papers that has cited or is cited by the current selected paper that you are interested in.
 
-![Argo Lite incremental exploration](img/video-incremental.gif)
+![Argo Scholar incremental exploration](img/video-incremental.gif)
 
 If you are using a mouse (as opposed to a touchscreen device), you can find a shortcut to do the same thing by right clicking a node.
 
@@ -45,6 +42,14 @@ You can also individually manage nodes in `Tools -> Data Sheet`.
 
 When you are done, save or share your snapshot using the `Graph` menu!
 
+## Continuing Where You Left Off
+
+If you have saved your snapshot, you can import the graph at anytime in the future, and resume right where you left off.
+
+You can find sample files to import in the `samples` directory of this repository.
+
+Now try using `Graph -> Open Snapshot`.
+
 ## Next Steps
 
-Congratulations! You have learned how to import graph data as well as incremnetally exploring a graph. If you are interested in customizing Argo Lite or deploying your own sharing service, please refer to [the Development Guide](development.md) and [the Deployment Guide](deploy.md)
+Congratulations! You have learned how to import graph data as well as incremnetally exploring a graph. If you are interested in customizing Argo Scholar or deploying your own sharing service, please refer to [the Development Guide](development.md) and [the Deployment Guide](deploy.md)
