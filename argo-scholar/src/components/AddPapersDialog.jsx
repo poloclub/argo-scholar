@@ -57,8 +57,8 @@ class AddPapersDialog extends React.Component {
               return;
             }
             appState.graph.addNodetoGraph(response, "null", 0);
-            appState.graph.process.graph.getNode(response.paperId).pinnedx = true;
-            appState.graph.process.graph.getNode(response.paperId).pinnedy = true;
+            // appState.graph.process.graph.getNode(response.paperId).pinnedx = true;
+            // appState.graph.process.graph.getNode(response.paperId).pinnedy = true;
             appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
             appState.graph.frame.updateNodesShowingLabels();
             appState.project.isAddPapersDialogOpen = false;

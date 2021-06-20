@@ -10,7 +10,7 @@ Install node.js, head to `cd argo-scholar` and run `npm install` to install the 
 
 ## Developing the backend
 
-Argo Scholar has a sharing server for sharing graph snapshots. See [the Deployment Guide](deploy.md).
+Argo Scholar has a sharing server for sharing network snapshots. See [the Deployment Guide](deploy.md).
 
 ## Creating Live Demo on Surge to Test New Argo Scholar Features
 
