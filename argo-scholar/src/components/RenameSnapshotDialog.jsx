@@ -23,48 +23,49 @@ class SaveSnapshotDialog extends React.Component {
 
   render() {
     return (
-        <Dialog
+      <Dialog
         className={classnames({
           [Classes.DARK]: appState.preferences.darkMode
         })}
-          iconName="projects"
-          isOpen={appState.project.isRenameSnapshotDialogOpen}
-          onClose={() => {
-            appState.project.isRenameSnapshotDialogOpen = false;
-          }}
-          title={`Rename Snapshot`}
-        >
-          <div className={classnames(Classes.DIALOG_BODY)}>
-            <label className="pt-label .modifier">
-              Snapshot Name
+        iconName="projects"
+        isOpen={appState.project.isRenameSnapshotDialogOpen}
+        onClose={() => {
+          appState.project.isRenameSnapshotDialogOpen = false;
+        }}
+        title={`Rename Snapshot`}
+      >
+        <div className={classnames(Classes.DIALOG_BODY)}>
+          <label className="pt-label .modifier">
+            Snapshot Name
               <span className="pt-text-muted"> (required)</span>
-              <input
-                className="pt-input"
-                type="text"
-                placeholder="My Snapshot"
-                dir="auto"
-                value={this.state.name}
-                onChange={event => this.setState({ name: event.target.value })}
-              />
-            </label>
-          </div>
+            <input
+              className="pt-input"
+              type="text"
+              placeholder="My Snapshot"
+              dir="auto"
+              value={this.state.name}
+              onChange={event => this.setState({ name: event.target.value })}
+            />
+          </label>
+        </div>
 
-          <div className={Classes.DIALOG_FOOTER}>
-            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-              <Button
-                className={classnames({
-                  [Classes.DISABLED]: !this.state.name
-                })}
-                intent={Intent.PRIMARY}
-                onClick={() => {
-                  appState.graph.metadata.snapshotName = this.state.name;
-                  appState.project.isRenameSnapshotDialogOpen = false;
-                }}
-                text="Done"
-              />
-            </div>
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+            <Button
+              className={classnames({
+                [Classes.DISABLED]: !this.state.name
+              })}
+              disabled={!this.state.name}
+              intent={Intent.PRIMARY}
+              onClick={() => {
+                appState.graph.metadata.snapshotName = this.state.name;
+                appState.project.isRenameSnapshotDialogOpen = false;
+              }}
+              text="Done"
+            />
           </div>
-        </Dialog>
+        </div>
+      </Dialog>
     );
   }
 }
