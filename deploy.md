@@ -6,7 +6,7 @@ Deploying your own custom version of Argo Scholar is easy (for sharing private/p
 
 As mentioned in [the development guide](development.md), Argo Scholar's frontend uses the [Create React App](https://github.com/facebook/create-react-app) toolchain. It comes with the `gh-pages` tool for deploying to Github Pages, as well as a Travis CI config. You can refer the documentation of either of them (`gh-pages` for manual deployment and Travis CI for automatic deployment). Other tools such as `now.sh` will also work.
 
-There are many useful frontend configuration options in `argo-scholar/src/constants/index.js`. You can change the backend and sample graphs linked there.
+There are many useful frontend configuration options in `argo-scholar/src/constants/index.js`. You can change the backend and sample networks linked there.
 
 ## Backend Sharing Service
 

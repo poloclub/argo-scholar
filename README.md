@@ -1,13 +1,6 @@
 # Argo Scholar
 
-**Argo Scholar New Features:**
-- Ability to add multiple nodes to a graph 
-- Ability to add citations or references of any node to the graph 
-- Ability to read information regarding each node: i.e. paper name, paper abstract, etc
-- Ability to share graph with snapshot (json)
-
-
-An interactive graph visualization system that runs in your web browsers. No installation needed.
+An interactive literature exploration visualization system that runs in your web browsers. No installation needed.
 
 [**Live Demo** - Launch Argo Scholar in your browser](https://poloclub.github.io/argo-scholar/)
 
@@ -16,19 +9,19 @@ An interactive graph visualization system that runs in your web browsers. No ins
 ## Documentations
 
 - [Quick Start (Visualization, Saving and Sharing Snapshots)](quickstart.md)
-- [Tutorial - Visualizing a citation graph of Apolo (Initial Graph, Incremental Exploration, Saving Progress)](tutorial.md)
+- [Tutorial - Visualizing a citation network of Apolo (Initialize Network, Incremental Exploration, Saving Progress)](tutorial.md)
 - [Develop Argo Scholar](development.md)
 - [Deploy Argo Scholar (and custom sharing service with access)](deploy.md)
 
 ## Feature Highlights
 
-### Interactive Graph Visualization
+### Interactive Literature Network Visualization
 
-Visualize your graph with interactive force-directed layout, automatic sizing and coloring by pagerank, and full control over every node for customization!
+Visualize your literature network with interactive force-directed layout, automatic sizing and coloring by pagerank, and full control over every node for customization!
 
 ![Argo Scholar visualization with force directed layout](img/video-layout.gif)
 
-![Argo Scholar visualization graph options](img/video-graph-options.gif)
+![Argo Scholar visualization options](img/video-graph-options.gif)
 
 ### Incremental Exploration
 
@@ -44,11 +37,11 @@ If you are working on sensitive or proprietary data, and prefer to set up a priv
 
 ![Argo Scholar sharing graph as link](img/video-share.gif)
 
-You will be able to load the snapshot from your saved file or from the shared link to work on them again. Note that each snapshot associated with a link is immutable, so if you modify a shared graph, you need to share again to get a new link. The original link will still point to the graph before your modification.
+You will be able to load the snapshot from your saved file or from the shared link to work on them again. Note that each snapshot associated with a link is immutable, so if you modify a shared literature network, you need to share again to get a new link. The original link will still point to the network before your modification.
 
 ### Embed into Web Pages
 
-Argo Scholar allows you to embed your interactive graph visualization snapshots into iframe-based web widgets! You can embed them into web articles, blog posts and even interactive notebooks such as Jupyter Notebooks. Tell a story with your graph!
+Argo Scholar allows you to embed your interactive literature exploration visualization snapshots into iframe-based web widgets! You can embed them into web articles, blog posts and even interactive notebooks such as Jupyter Notebooks. Tell a story with your network!
 
 <img src="/img/img-embedded.png" width=60% alt="Argo Scholar embedded widget mode">
 
