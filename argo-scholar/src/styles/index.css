@@ -68,15 +68,15 @@ html {
 .left-overlay-card {
   margin-top: -1em;
   padding-top: 1.1em;
-  overflow-y: auto;
+  overflow-y: overlay;
   max-height: 530px;
 }
 
 .zoom-buttons {
   margin-right: 20px;
   position: absolute;
-  bottom:0;
-  right:0;
+  bottom: 0;
+  right: 0;
   margin-bottom: 100px;
   pointer-events: all;
 }
@@ -92,20 +92,19 @@ html {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #212c34; 
+  background: #212c34;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #435a6a; 
+  background: #435a6a;
   border-radius: 10px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #495964; 
+  background: #495964;
 }
-
 
 .openbtn {
   margin-left: 8px;
@@ -127,7 +126,6 @@ html {
 
 .openbtn:active {
   background-color: #465d6e;
-
 }
 .openbtn2 {
   margin-left: 235px;
@@ -147,7 +145,6 @@ html {
 
 .openbtn2:active {
   color: rgb(106, 123, 158);
-
 }
 
 .legend-card {
@@ -178,7 +175,7 @@ html {
   left: 0px;
   width: 100vw;
   height: 25px;
-  background-color: #30404D; /* Fallback background color, please set color programmatically according to theme */
+  background-color: #30404d; /* Fallback background color, please set color programmatically according to theme */
   font-size: 14px;
   display: flex;
   flex-direction: row;

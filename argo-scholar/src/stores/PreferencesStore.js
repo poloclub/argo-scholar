@@ -20,7 +20,7 @@ export default class PreferencesStore {
   // won't be active until the app exits and starts
   // next time.
 
-  @observable darkMode = true;
+  @observable darkMode = false;
   @observable minimapShowing = !IS_IFRAME_WIDGET;
   @observable isStatusBarShowing = !IS_IFRAME_WIDGET;
   @observable isNavbarInMinimalMode = IS_IFRAME_WIDGET;
@@ -53,7 +53,7 @@ export default class PreferencesStore {
     } else {
       console.log("Frame not ready when trying to toggle minimap.");
     }
-    
+
   }
 
   turnOffMinimalMode() {
