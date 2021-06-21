@@ -4,7 +4,7 @@ An interactive literature exploration visualization system that runs in your web
 
 [**Live Demo** - Launch Argo Scholar in your browser](https://poloclub.github.io/argo-scholar/)
 
-<img src="img/argoscholar_README_Logo.png" width=60% alt="Argo Scholar logo">
+<img src="img/argoscholar_README_Logo2.png" width=60% alt="Argo Scholar logo">
 
 ## Documentations
 
