@@ -9,7 +9,7 @@ export const IS_IFRAME_WIDGET = window.location !== window.parent.location;
 
 export const FRONTEND_URL = "https://poloclub.github.io/argo-scholar";
 export const LOGO_URL = "https://poloclub.github.io/argo-scholar";
-export const GITHUB_URL = "https://poloclub.github.io/argo-scholar";
+export const GITHUB_URL = "https://github.com/poloclub/argo-scholar";
 // Argo-lite Graph Sharing backend Strapi Server:
 export const BACKEND_URL = "https://argo-share.herokuapp.com"; // for production
 // export const BACKEND_URL = "https://sleepy-brushlands-57948.herokuapp.com"; // for free heroku
