@@ -62,6 +62,8 @@ class AddPapersDialog extends React.Component {
             appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
             appState.graph.frame.updateNodesShowingLabels();
             appState.project.isAddPapersDialogOpen = false;
+            appState.graph.selectedNodes = [];
+            appState.graph.frame.selection = [];
             this.state.query = '';
           })
           .catch((error) => {
@@ -117,7 +119,7 @@ class AddPapersDialog extends React.Component {
               disabled={!this.state.query}
               intent={Intent.PRIMARY}
               onClick={() => {
-                this.handleSubmit();
+                this.handleSubmit(event);
               }}
               text="Submit"
             />

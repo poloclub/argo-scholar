@@ -550,6 +550,8 @@ export default class GraphStore {
                           this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, offset, 0);
                           appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
                           offset += 1;
+                          appState.graph.selectedNodes = [];
+                          appState.graph.frame.selection = [];
                         });
                       if (curcount >= 5) {
                         break;
@@ -595,6 +597,8 @@ export default class GraphStore {
                           this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, offset, 1);
                           appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
                           offset += 1;
+                          appState.graph.selectedNodes = [];
+                          appState.graph.frame.selection = [];
                         });
                       if (curcount >= 5) {
                         break;
