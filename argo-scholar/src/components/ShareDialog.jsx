@@ -83,7 +83,7 @@ class ShareDialog extends React.Component {
                         !this.state.selectedContinue && (
                             <div>
                                 <p style={{ display: "inline", marginRight: "20px" }}>You can share your snapshot as
-                        <b> a public URL</b>, an <b> HTML iframe</b>, or a <b>Jupyter Notebook IFrame</b></p>
+                                    <b> a public URL</b>, an <b> HTML iframe</b>, or a <b>Jupyter Notebook IFrame</b></p>
                                 {
                                     !this.state.selectedContinue && (
                                         <Button
@@ -123,25 +123,25 @@ class ShareDialog extends React.Component {
                                 }
                                 <hr />
                                 {/**pt-callout pt-intent-primary .modifier */}
-                                <div className="pt-callout pt-intent-warning" style={{marginBottom: "20px",}}>
+                                <div className="pt-callout pt-intent-warning" style={{ marginBottom: "20px", }}>
                                     <p className="pt-callout-title">This snapshot is “static”, like taking a photo of your visualization. This means that if your graph is changed in any ways (e.g., move nodes around) after creating a URL and you want to re-share those updates, you will need to create a new URL by selecting <b>Share Again to a new URL</b> in the next window.</p>
                                 </div>
                                 <div className="pt-callout pt-intent-danger">
-                                    <p className="pt-callout-title "><b>IMPORTANT!</b> This will make your graph snapshot public. If you are working with sensitive data (with custom access control), or large data (>400MB), please follow our guide on Github to easily deploy your own sharing server.</p>
+                                    <p className="pt-callout-title "><b>IMPORTANT!</b> This will make your graph snapshot public. If you are working with sensitive data (with custom access control), or large data ({">"}400MB), please follow our guide on Github to easily deploy your own sharing server.</p>
                                 </div>
                             </div>
                         )
                     }
                     {
                         this.state.isFetching && (
-                            <p style={{marginTop: "10px"}}><b>Sharing in progress. Please wait...</b></p>
+                            <p style={{ marginTop: "10px" }}><b>Sharing in progress. Please wait...</b></p>
                         )
                     }
                     {
                         this.state.selectedContinue && (
                             <div>
                                 {/** graph URL */}
-                        Your current snapshot has been shared to
+                                Your current snapshot has been shared to
                                 <br />
                                 <input
                                     id="snapshot-textarea"
@@ -161,12 +161,12 @@ class ShareDialog extends React.Component {
                                     className="copy-to-clipboard"
                                 >
                                     Copy to Clipboard
-                        </button>
+                                </button>
                                 <br />
                                 <hr />
 
                                 {/** Embedding as HTML iframe */}
-                        Embed as an <b>HTML iframe</b>:
+                                Embed as an <b>HTML iframe</b>:
                                 <br />
                                 <input
                                     id="iframe-html-textarea"
@@ -186,12 +186,12 @@ class ShareDialog extends React.Component {
                                     className="copy-to-clipboard"
                                 >
                                     Copy to Clipboard
-                        </button>
+                                </button>
                                 <br />
                                 <hr />
 
                                 {/** Embedding as Jupyter Notebook IFrame */}
-                        Embed as a <b>Jupyter Notebook IFrame</b>:
+                                Embed as a <b>Jupyter Notebook IFrame</b>:
                                 <br />
                                 <textarea
                                     id="iframe-jupyter-textarea"
@@ -217,7 +217,7 @@ class ShareDialog extends React.Component {
                                     }}
                                 >
                                     Copy to Clipboard
-                        </button>
+                                </button>
                             </div>
                         )
                     }
