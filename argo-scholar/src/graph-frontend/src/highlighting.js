@@ -27,7 +27,13 @@ module.exports = function(self) {
   self.highlightEdges = function(node, toggle) {
     const froms = [];
     const tos = [];
+    if (self.selection == null) {
+      return;
+    }
     for (var i = 0; i < self.selection.length; i++) {
+      if (self.selection[i].links == null) {
+        continue; 
+      }
       for (var j = 0; j < self.selection[i].links.length; j++) {
         froms.push(self.selection[i].links[j].fromId);
         tos.push(self.selection[i].links[j].toId);
