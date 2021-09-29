@@ -186,28 +186,28 @@ module.exports = function(self) {
    */
   self.updateCamera = function() {
     self.controls.target.x -=
-      self.controls.object.position.x -
+      self.controls.camera.position.x -
       Math.max(
         -self.renderWidth,
-        Math.min(self.renderWidth, self.controls.object.position.x)
+        Math.min(self.renderWidth, self.controls.camera.position.x)
       );
-    self.controls.object.position.x -=
-      self.controls.object.position.x -
+    self.controls.camera.position.x -=
+      self.controls.camera.position.x -
       Math.max(
         -self.renderWidth,
-        Math.min(self.renderWidth, self.controls.object.position.x)
+        Math.min(self.renderWidth, self.controls.camera.position.x)
       );
     self.controls.target.y -=
-      self.controls.object.position.y -
+      self.controls.camera.position.y -
       Math.max(
         -self.renderHeight,
-        Math.min(self.renderHeight, self.controls.object.position.y)
+        Math.min(self.renderHeight, self.controls.camera.position.y)
       );
-    self.controls.object.position.y -=
-      self.controls.object.position.y -
+    self.controls.camera.position.y -=
+      self.controls.camera.position.y -
       Math.max(
         -self.renderHeight,
-        Math.min(self.renderHeight, self.controls.object.position.y)
+        Math.min(self.renderHeight, self.controls.camera.position.y)
       );
     self.setViewPortSize(self.ccamera);
   };

@@ -9,19 +9,25 @@ module.exports = function(THREE) {
    * @author erich666 / http://erichaines.com
    */
 
-  // This set of controls performs orbiting, dollying (zooming), and panning.
-  // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
-  //
-  //    Orbit - left mouse / touch: one finger move
-  //    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
-  //    Pan - right mouse, or arrow keys / touch: three finter swipe
-
-  function OrbitControls(object, domElement, appState) {
+  
+  /**
+   * This set of controls performs orbiting, dollying (zooming), and panning.
+   * Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
+   * 
+   * Orbit - left mouse / touch: one finger move
+   * Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
+   * Pan - right mouse, or arrow keys / touch: three finter swipe
+   * 
+   * @param {THREE.PerspectiveCamera} camera 
+   * @param {HTMLElement} domElement 
+   * @param {AppState} appState 
+   */
+  function OrbitControls(camera, domElement, appState) {
 
     
     this.appState = appState;
 
-    this.object = object;
+    this.camera = camera;
 
     this.domElement = domElement !== undefined ? domElement : document;
 
@@ -87,8 +93,8 @@ module.exports = function(THREE) {
 
     // for reset
     this.target0 = this.target.clone();
-    this.position0 = this.object.position.clone();
-    this.zoom0 = this.object.zoom;
+    this.position0 = this.camera.position.clone();
+    this.zoom0 = this.camera.zoom;
 
     // for space panning
     this.spacePan = false;
@@ -108,10 +114,10 @@ module.exports = function(THREE) {
 
     this.reset = function() {
       scope.target.copy(scope.target0);
-      scope.object.position.copy(scope.position0);
-      scope.object.zoom = scope.zoom0;
+      scope.camera.position.copy(scope.position0);
+      scope.camera.zoom = scope.zoom0;
 
-      scope.object.updateProjectionMatrix();
+      scope.camera.updateProjectionMatrix();
       scope.dispatchEvent(changeEvent);
 
       scope.update();
@@ -125,7 +131,7 @@ module.exports = function(THREE) {
 
       // so camera.up is the orbit axis
       var quat = new THREE.Quaternion().setFromUnitVectors(
-        object.up,
+        camera.up,
         new THREE.Vector3(0, 1, 0)
       );
       var quatInverse = quat.clone().inverse();
@@ -134,7 +140,7 @@ module.exports = function(THREE) {
       var lastQuaternion = new THREE.Quaternion();
 
       return function update() {
-        var position = scope.object.position;
+        var position = scope.camera.position;
 
         offset.copy(position).sub(scope.target);
 
@@ -183,7 +189,7 @@ module.exports = function(THREE) {
 
         position.copy(scope.target).add(offset);
 
-        scope.object.lookAt(scope.target);
+        scope.camera.lookAt(scope.target);
 
         if (scope.enableDamping === true) {
           sphericalDelta.theta *= 1 - scope.dampingFactor;
@@ -201,13 +207,13 @@ module.exports = function(THREE) {
 
         if (
           zoomChanged ||
-          lastPosition.distanceToSquared(scope.object.position) > EPS ||
-          8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS
+          lastPosition.distanceToSquared(scope.camera.position) > EPS ||
+          8 * (1 - lastQuaternion.dot(scope.camera.quaternion)) > EPS
         ) {
           scope.dispatchEvent(changeEvent);
 
-          lastPosition.copy(scope.object.position);
-          lastQuaternion.copy(scope.object.quaternion);
+          lastPosition.copy(scope.camera.position);
+          lastQuaternion.copy(scope.camera.quaternion);
           zoomChanged = false;
 
           return true;
@@ -325,39 +331,39 @@ module.exports = function(THREE) {
             ? scope.domElement.body
             : scope.domElement;
 
-        if (scope.object instanceof THREE.PerspectiveCamera) {
+        if (scope.camera instanceof THREE.PerspectiveCamera) {
           // perspective
-          var position = scope.object.position;
+          var position = scope.camera.position;
           offset.copy(position).sub(scope.target);
           var targetDistance = offset.length();
 
           // half of the fov is center to top of screen
           targetDistance *= Math.tan(
-            ((scope.object.fov / 2) * Math.PI) / 180.0
+            ((scope.camera.fov / 2) * Math.PI) / 180.0
           );
 
           // we actually don't use screenWidth, since perspective camera is fixed to screen height
           panLeft(
             (2 * deltaX * targetDistance) / element.clientHeight,
-            scope.object.matrix
+            scope.camera.matrix
           );
           panUp(
             (2 * deltaY * targetDistance) / element.clientHeight,
-            scope.object.matrix
+            scope.camera.matrix
           );
-        } else if (scope.object instanceof THREE.OrthographicCamera) {
+        } else if (scope.camera instanceof THREE.OrthographicCamera) {
           // orthographic
           panLeft(
-            (deltaX * (scope.object.right - scope.object.left)) /
-              scope.object.zoom /
+            (deltaX * (scope.camera.right - scope.camera.left)) /
+              scope.camera.zoom /
               element.clientWidth,
-            scope.object.matrix
+            scope.camera.matrix
           );
           panUp(
-            (deltaY * (scope.object.top - scope.object.bottom)) /
-              scope.object.zoom /
+            (deltaY * (scope.camera.top - scope.camera.bottom)) /
+              scope.camera.zoom /
               element.clientHeight,
-            scope.object.matrix
+            scope.camera.matrix
           );
         } else {
           // camera neither orthographic nor perspective
@@ -374,14 +380,14 @@ module.exports = function(THREE) {
 
 
     function dollyIn(dollyScale, mousePos, event) {
-      if (scope.object instanceof THREE.PerspectiveCamera) {
+      if (scope.camera instanceof THREE.PerspectiveCamera) {
         scale /= dollyScale;
-      } else if (scope.object instanceof THREE.OrthographicCamera) {
-        scope.object.zoom = Math.max(
+      } else if (scope.camera instanceof THREE.OrthographicCamera) {
+        scope.camera.zoom = Math.max(
           scope.minZoom,
-          Math.min(scope.maxZoom, scope.object.zoom * dollyScale)
+          Math.min(scope.maxZoom, scope.camera.zoom * dollyScale)
         );
-        scope.object.updateProjectionMatrix();
+        scope.camera.updateProjectionMatrix();
         zoomChanged = true;
       } else {
         console.warn(
@@ -392,14 +398,14 @@ module.exports = function(THREE) {
     }
 
     function dollyOut(dollyScale, mousePos) {
-      if (scope.object instanceof THREE.PerspectiveCamera) {
+      if (scope.camera instanceof THREE.PerspectiveCamera) {
         scale *= dollyScale;
-      } else if (scope.object instanceof THREE.OrthographicCamera) {
-        scope.object.zoom = Math.max(
+      } else if (scope.camera instanceof THREE.OrthographicCamera) {
+        scope.camera.zoom = Math.max(
           scope.minZoom,
-          Math.min(scope.maxZoom, scope.object.zoom / dollyScale)
+          Math.min(scope.maxZoom, scope.camera.zoom / dollyScale)
         );
-        scope.object.updateProjectionMatrix();
+        scope.camera.updateProjectionMatrix();
         zoomChanged = true;
       } else {
         console.warn(
