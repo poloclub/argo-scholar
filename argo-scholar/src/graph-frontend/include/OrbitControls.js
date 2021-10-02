@@ -28,6 +28,26 @@ module.exports = function(THREE) {
     this.appState = appState;
 
     this.camera = camera;
+    const originalCameraDistance = this.camera.position.z;
+
+    /**
+     * 1.0 means graph visualization is at its "original" zoom level.
+     * <1.0 means zoomed out.
+     * >1.0 means zoomed in.
+     */
+    this.visZoom = {
+      // value: 1.0,
+      get value(){
+        // console.log("GET visZoom: " + originalCameraDistance / camera.position.z);
+        return  originalCameraDistance / camera.position.z;
+      },
+      set value(val){
+        // console.log("SET visZoom: " + val);
+        value = val;
+        camera.position.z = originalCameraDistance * 1.0  / val;
+      }
+    }
+
 
     this.domElement = domElement !== undefined ? domElement : document;
 

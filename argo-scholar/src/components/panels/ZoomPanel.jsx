@@ -34,10 +34,9 @@ class ZoomPanel extends React.Component {
             className={classnames([Classes.BUTTON])} 
             iconName="plus"
             onClick={() => {
-              let controls = appState.controls;
               anime({
-                targets: controls.camera.position,
-                z: controls.camera.position.z * 0.5,
+                targets: appState.controls.visZoom,
+                value: appState.controls.visZoom.value * 1.5,
               });
             }}
             ></Button>
@@ -51,10 +50,9 @@ class ZoomPanel extends React.Component {
             className={classnames([Classes.BUTTON])} 
             iconName="minus"
             onClick={() => {
-              let controls = appState.controls
               anime({
-                targets: controls.camera.position,
-                z: controls.camera.position.z / 0.5,
+                targets: appState.controls.visZoom,
+                value: appState.controls.visZoom.value * 0.5,
               });
             }}></Button>
 
