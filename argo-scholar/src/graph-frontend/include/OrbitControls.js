@@ -61,10 +61,6 @@ module.exports = function(THREE) {
     this.minDistance = 0;
     this.maxDistance = Infinity;
 
-    // How far you can zoom in and out ( OrthographicCamera only )
-    this.minZoom = 0;
-    this.maxZoom = Infinity;
-
     // How far you can orbit vertically, upper and lower limits.
     // Range is 0 to Math.PI radians.
     this.minPolarAngle = 0; // radians
@@ -351,47 +347,27 @@ module.exports = function(THREE) {
             ? scope.domElement.body
             : scope.domElement;
 
-        if (scope.camera instanceof THREE.PerspectiveCamera) {
-          // perspective
-          var position = scope.camera.position;
-          offset.copy(position).sub(scope.target);
-          var targetDistance = offset.length();
 
-          // half of the fov is center to top of screen
-          targetDistance *= Math.tan(
-            ((scope.camera.fov / 2) * Math.PI) / 180.0
-          );
+        // perspective
+        var position = scope.camera.position;
+        offset.copy(position).sub(scope.target);
+        var targetDistance = offset.length();
 
-          // we actually don't use screenWidth, since perspective camera is fixed to screen height
-          panLeft(
-            (2 * deltaX * targetDistance) / element.clientHeight,
-            scope.camera.matrix
-          );
-          panUp(
-            (2 * deltaY * targetDistance) / element.clientHeight,
-            scope.camera.matrix
-          );
-        } else if (scope.camera instanceof THREE.OrthographicCamera) {
-          // orthographic
-          panLeft(
-            (deltaX * (scope.camera.right - scope.camera.left)) /
-              scope.camera.zoom /
-              element.clientWidth,
-            scope.camera.matrix
-          );
-          panUp(
-            (deltaY * (scope.camera.top - scope.camera.bottom)) /
-              scope.camera.zoom /
-              element.clientHeight,
-            scope.camera.matrix
-          );
-        } else {
-          // camera neither orthographic nor perspective
-          console.warn(
-            "WARNING: OrbitControls.js encountered an unknown camera type - pan disabled."
-          );
-          scope.enablePan = false;
-        }
+        // half of the fov is center to top of screen
+        targetDistance *= Math.tan(
+          ((scope.camera.fov / 2) * Math.PI) / 180.0
+        );
+
+        // we actually don't use screenWidth, since perspective camera is fixed to screen height
+        panLeft(
+          (2 * deltaX * targetDistance) / element.clientHeight,
+          scope.camera.matrix
+        );
+        panUp(
+          (2 * deltaY * targetDistance) / element.clientHeight,
+          scope.camera.matrix
+        );
+        
       };
     })();
 
@@ -400,39 +376,11 @@ module.exports = function(THREE) {
 
 
     function dollyIn(dollyScale, mousePos, event) {
-      if (scope.camera instanceof THREE.PerspectiveCamera) {
-        scale /= dollyScale;
-      } else if (scope.camera instanceof THREE.OrthographicCamera) {
-        scope.camera.zoom = Math.max(
-          scope.minZoom,
-          Math.min(scope.maxZoom, scope.camera.zoom * dollyScale)
-        );
-        scope.camera.updateProjectionMatrix();
-        zoomChanged = true;
-      } else {
-        console.warn(
-          "WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled."
-        );
-        scope.enableZoom = false;
-      }
+      scale /= dollyScale;
     }
 
     function dollyOut(dollyScale, mousePos) {
-      if (scope.camera instanceof THREE.PerspectiveCamera) {
-        scale *= dollyScale;
-      } else if (scope.camera instanceof THREE.OrthographicCamera) {
-        scope.camera.zoom = Math.max(
-          scope.minZoom,
-          Math.min(scope.maxZoom, scope.camera.zoom / dollyScale)
-        );
-        scope.camera.updateProjectionMatrix();
-        zoomChanged = true;
-      } else {
-        console.warn(
-          "WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled."
-        );
-        scope.enableZoom = false;
-      }
+      scale *= dollyScale;
     }
 
     //public zoom in function, used when zoom in button clicked
