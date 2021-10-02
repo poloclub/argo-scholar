@@ -67,19 +67,7 @@ class ZoomPanel extends React.Component {
             className={classnames([Classes.BUTTON])} 
             iconName="home"
             onClick={() => {
-              let controls = appState.controls
-              controls.reset()
-
-              //reset to center of graph code:
-              // let xVal = 0
-              // let yVal = 0
-              // let pos = appState.graph.frame.getPositions();
-              // for(let n in pos) {
-              //   xVal = pos[n][0]
-              //   yVal = pos[n][1]
-              // }
-              // let len = Object.keys(pos).length
-              // appState.panToMousePosition(xVal,yVal);
+              appState.controls.reset();
             }}></Button>
       </div>
     );
