@@ -35,8 +35,8 @@ class ZoomPanel extends React.Component {
             iconName="plus"
             onClick={() => {
               anime({
-                targets: appState.controls.visZoom,
-                value: appState.controls.visZoom.value * 1.5,
+                targets: appState.controls.zoom,
+                absoluteScale: appState.controls.zoom.absoluteScale * 1.5,
               });
             }}
             ></Button>
@@ -51,8 +51,8 @@ class ZoomPanel extends React.Component {
             iconName="minus"
             onClick={() => {
               anime({
-                targets: appState.controls.visZoom,
-                value: appState.controls.visZoom.value * 0.5,
+                targets: appState.controls.zoom,
+                absoluteScale: appState.controls.zoom.absoluteScale * 0.5,
               });
             }}></Button>
 

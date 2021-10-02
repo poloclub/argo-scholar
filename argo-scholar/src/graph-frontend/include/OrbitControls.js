@@ -24,20 +24,18 @@ module.exports = function(THREE) {
     const originalCameraDistance = this.camera.position.z;
 
     /**
-     * 1.0 means graph visualization is at its "original" zoom level.
+     * An absolute scale of 1.0 means graph visualization is at its original scale.
      * <1.0 means zoomed out.
      * >1.0 means zoomed in.
      */
-    this.visZoom = {
-      // value: 1.0,
-      get value(){
+    this.zoom = {
+      get absoluteScale(){
         // console.log("GET visZoom: " + originalCameraDistance / camera.position.z);
         return  originalCameraDistance / camera.position.z;
       },
-      set value(val){
+      set absoluteScale(absoluteScale){
         // console.log("SET visZoom: " + val);
-        value = val;
-        camera.position.z = originalCameraDistance * 1.0  / val;
+        camera.position.z = originalCameraDistance * 1.0  / absoluteScale;
       }
     }
 
