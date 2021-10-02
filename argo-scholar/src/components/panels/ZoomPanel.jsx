@@ -36,7 +36,7 @@ class ZoomPanel extends React.Component {
             onClick={() => {
               anime({
                 targets: appState.controls.zoom,
-                absoluteScale: appState.controls.zoom.absoluteScale * 1.5,
+                percent: appState.controls.zoom.nextZoomInPercent
               });
             }}
             ></Button>
@@ -52,7 +52,7 @@ class ZoomPanel extends React.Component {
             onClick={() => {
               anime({
                 targets: appState.controls.zoom,
-                absoluteScale: appState.controls.zoom.absoluteScale * 0.5,
+                percent: appState.controls.zoom.nextZoomOutPercent
               });
             }}></Button>
 

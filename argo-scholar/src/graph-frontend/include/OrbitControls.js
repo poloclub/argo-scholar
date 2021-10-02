@@ -17,28 +17,9 @@ module.exports = function(THREE) {
    */
   function OrbitControls(camera, domElement, appState) {
 
-    
     this.appState = appState;
 
     this.camera = camera;
-    const originalCameraDistance = this.camera.position.z;
-
-    /**
-     * An absolute scale of 1.0 means graph visualization is at its original scale.
-     * <1.0 means zoomed out.
-     * >1.0 means zoomed in.
-     */
-    this.zoom = {
-      get absoluteScale(){
-        // console.log("GET visZoom: " + originalCameraDistance / camera.position.z);
-        return  originalCameraDistance / camera.position.z;
-      },
-      set absoluteScale(absoluteScale){
-        // console.log("SET visZoom: " + val);
-        camera.position.z = originalCameraDistance * 1.0  / absoluteScale;
-      }
-    }
-
 
     this.domElement = domElement !== undefined ? domElement : document;
 
@@ -106,6 +87,61 @@ module.exports = function(THREE) {
     // for space panning
     this.spacePan = false;
     this.bothPan = false;
+
+    /**
+     * Controls how graph visualization is zoomed in and out.
+     * 100% means no zoom. >100% means zoomed in. <100% means zoomed out.
+     * Also defines presets of zoom levels.
+     * 
+     * Zoom can be set via an absolute scale. 
+     * 1.0 means no zoom. <1.0 means zoomed out. >1.0 means zoomed in.
+     */
+     this.zoom = {
+      originalCameraDistance: camera.position.z,
+      percentPresets: [10, 25, 50, 75, 100, 150, 200, 300, 500],
+      defaultPercent: 100,
+
+      get percent(){
+        return Math.round(100 * this.originalCameraDistance / camera.position.z);
+      },
+
+      set percent(p){
+        camera.position.z = this.originalCameraDistance * 100 / p;
+      },
+
+      /**
+       * Gets the preset zoom % larger than the current zoom % (upper-bounded by largest presets).
+       */
+      get nextZoomInPercent(){
+        for (const p of this.percentPresets) {
+          if (p > this.percent) {
+            return p;
+          }
+        }
+        return this.percentPresets[this.percentPresets.length - 1];
+      },
+
+      /**
+       * Gets the preset zoom % samller than the current zoom % (lower-bounded by smallest preset).
+       */
+      get nextZoomOutPercent(){
+        for (const p of this.percentPresets.slice().reverse()) {
+          if (p < this.percent) {
+            return p;
+          }
+        }
+        return this.percentPresets[0];
+      },
+
+      get scale(){
+        return  this.originalCameraDistance / camera.position.z;
+      },
+      
+      set scale(s){
+        camera.position.z = this.originalCameraDistance * 1.0  / s;
+      }
+    }
+
 
     //
     // public methods
