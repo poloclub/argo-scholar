@@ -22,10 +22,10 @@ exports.default = {
   OrbitControls: OrbitControls,
   d3: d3,
   ee: ee,
-  NODE_COLOR: 0x0055aa,
-  NODE_HIGHLIGHT: 0x3498db,
-  ADJACENT_HIGHLIGHT: 0x95a5a6,
-  SEARCH_HIGHLIGHT: 0xe67e22,
+  NODE_COLOR: 0x0055aa, // dark blue
+  NODE_HIGHLIGHT: 0x3498db, // cyan
+  ADJACENT_HIGHLIGHT: 0x95a5a6, // close to gray
+  SEARCH_HIGHLIGHT: 0xe67e22, // orange
   NODE_HTEXTURE: "http://i.imgur.com/xzkxSIw.png",
   NODE_TEXTURE: "http://i.imgur.com/reTXqiM.png",
   NODE_NO_HTEX: true,
@@ -37,7 +37,7 @@ exports.default = {
   NODE_SHAPE: "square",
   NODE_HSHAPE: "square",
   NODE_SIZE: 5,
-  HIGHLIGHT_SIZE: 1.0,
+  HIGHLIGHT_SIZE: 1.0, // Border thickness of "highlighted" nodes (e.g., when hovered, selected)
   LAYOUT: "d3",
   LINES: "notfancy",
   MAP: !IS_IFRAME_WIDGET,
