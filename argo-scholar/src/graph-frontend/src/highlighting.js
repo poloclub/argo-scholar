@@ -57,29 +57,32 @@ module.exports = function(self) {
    */
   self.highlightNeighbors = function(node, froms, tos) {
     self.graph.forEachNode(n => {
-      if (self.selection.indexOf(n) != -1 || n == node) {
-        // If the node is selected or the node is the node to be highlighted
+      
+      // If the node is selected or the node is the node to be highlighted
+      if (self.selection.includes(n) || n == node) {
         self.colorNodeOpacity(n, 1);
         self.colorNodeEdge(n, true);
         for (var i = 0; n.linkObjs && i < n.linkObjs.length; i++) {
           n.linkObjs[i].linecolor = n.renderData.linecolor;
         }
-      } else if (
+      } 
+
+      // If the node is not selected or highlighted and
+      // if the node is present in either froms or tos arrays
+      else if (
         self.doHighlightNeighbors &&
-        (froms.indexOf(n.id) != -1 || tos.indexOf(n.id) != -1)
+        (froms.includes(n.id) || tos.includes(n.id))
       ) {
-        // If the node is not selected or highlighted and
-        // if the node is present in either froms or tos arrays
         self.colorNodeOpacity(n, 1);
         self.colorNodeEdge(n, false);
-      } else if (
-        !self.prevHighlights ||
-        self.prevHighlights.indexOf(n.id) == -1
-      ) {
+      } 
+      
+      else if (!self.prevHighlights.includes(n.id)) {
         self.colorNodeOpacity(n, 0.5);
         self.colorNodeEdge(n, false);
         self.highlightNode(n, false, def.ADJACENT_HIGHLIGHT);
       }
+      
     });
   };
 
