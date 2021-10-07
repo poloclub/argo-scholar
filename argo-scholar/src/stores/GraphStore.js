@@ -250,43 +250,47 @@ export default class GraphStore {
 
     if (!(paperJsonResponse.paperId in degreeDict)) {
       backEndgraph.addNode(paperJsonResponse.paperId);
-      let addedNode = {id: paperJsonResponse.paperId, degree: 0, pagerank: 0, paperName: paperJsonResponse.title, paperAbstract: (paperJsonResponse.abstract == null ? "n/a" : paperJsonResponse.abstract),
+      let addedNode = {
+        id: paperJsonResponse.paperId, degree: 0, pagerank: 0, paperName: paperJsonResponse.title, paperAbstract: (paperJsonResponse.abstract == null ? "n/a" : paperJsonResponse.abstract),
         authors: paperJsonResponse.authors.map(n => n.name).join(', '), citationCount: paperJsonResponse.citations.length, venue: (paperJsonResponse.venue == "" ? "n/a" : paperJsonResponse.venue),
-        year: paperJsonResponse.year, url: paperJsonResponse.url};
+        year: paperJsonResponse.year, url: paperJsonResponse.url
+      };
       degreeDict[paperJsonResponse.paperId] = 0;
       rawGraphNodes.push(addedNode);
     }
-    
+
     if (parentID != "null") {
       if (citationOrReference == 0) {
         backEndgraph.addLink(paperJsonResponse.paperId, parentID);
-        edgesArr.push({source_id: paperJsonResponse.paperId, target_id: parentID});
+        edgesArr.push({ source_id: paperJsonResponse.paperId, target_id: parentID });
       } else {
         backEndgraph.addLink(parentID, paperJsonResponse.paperId);
-        edgesArr.push({source_id: parentID, target_id: paperJsonResponse.paperId});
+        edgesArr.push({ source_id: parentID, target_id: paperJsonResponse.paperId });
       }
       degreeDict[paperJsonResponse.paperId] += 1;
       degreeDict[parentID] += 1;
     }
-    
+
     const rank = pageRank(backEndgraph);
 
-    let nodesArr = rawGraphNodes.map(n => ({ ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id], 
-      paperName: n.paperName, paperAbstract: n.paperAbstract, authors: n.authors, citationCount: n.citationCount, venue: n.venue, year: n.year, url: n.url}));
+    let nodesArr = rawGraphNodes.map(n => ({
+      ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id],
+      paperName: n.paperName, paperAbstract: n.paperAbstract, authors: n.authors, citationCount: n.citationCount, venue: n.venue, year: n.year, url: n.url
+    }));
 
     const nodesData = nodesArr.reduce((map, currentNode) => {
       map[currentNode.node_id] = currentNode;
       return map;
-    }, {}); 
-  
-    appState.graph.preprocessedRawGraph = {graph: backEndgraph, degreeDict: degreeDict, nodesPanelData: nodesData};
+    }, {});
+
+    appState.graph.preprocessedRawGraph = { graph: backEndgraph, degreeDict: degreeDict, nodesPanelData: nodesData };
 
     this.frame.updateFrontEndNodeGraphDataWithBackendRawgraph();
 
     appState.graph.rawGraph = { nodes: nodesArr, edges: edgesArr };
     appState.graph.metadata.fullNodes = nodesArr.length;
     appState.graph.metadata.fullEdges = edgesArr.length;
-    appState.graph.metadata.nodeProperties = Object.keys(nodesArr[0]); 
+    appState.graph.metadata.nodeProperties = Object.keys(nodesArr[0]);
   }
 
   showNodes(nodeids) {
@@ -408,8 +412,8 @@ export default class GraphStore {
     let nodesData = savedStates.rawGraph.nodes.reduce((map, currentNode) => {
       map[currentNode.node_id] = currentNode;
       return map;
-    }, {}); 
-  
+    }, {});
+
     this.preprocessedRawGraph.nodesPanelData = nodesData;
 
     let graph = createGraph();
@@ -433,9 +437,9 @@ export default class GraphStore {
 
   //resumes graph layout for a set duration before smart-pausing
   runActiveLayout() {
-    if(this.frame) {
+    if (this.frame) {
       this.frame.paused = false;
-    } 
+    }
     this.smartPause.defaultActive.isActive = true;
     this.smartPause.defaultActive.startTime = Date.now();
     this.smartPause.smartPaused = false;
@@ -452,6 +456,85 @@ export default class GraphStore {
         }
       });
       this.frame.setPinnedNodes(nodesToPin);
+    }
+  }
+
+  addCitationsorReferences(addType, sortType) {
+    if (this.frame.rightClickedNode) {
+      const jsdom = require("jsdom");
+      const rightClickedNodeId = this.frame.rightClickedNode.data.ref.id.toString();
+      let curcount = 0;
+      let offset = 0;
+      let citationsSortType = (addType == 'citations') ? sortType : 'relevance';
+      let referencesSortType = (addType == 'citations') ? 'relevance' : sortType;
+      let url =
+        'https://www.semanticscholar.org/paper/' +
+        rightClickedNodeId +
+        '?sort=' + citationsSortType + // sort options for citations: relevance, is-influential, total-citations, pub-date
+        '&page=1' + // page number of citations, each page showing 10 citations (as of Aug 4, 2021, cannot show more than 10 citations per page)
+        '&citedPapersSort=' + referencesSortType + // sort options for references: relevance, is-influential, year
+        '&citedPapersLimit=100&citedPapersOffset=0'; // show first 100 references (100 is largest possible, starting at reference 0)
+      console.log(url);
+
+
+      const paperIdAttribute = 'data-paper-id';
+      const citationsDiv = 'div#citing-papers div[' + paperIdAttribute + ']';
+      const referencesDiv = 'div#references div[' + paperIdAttribute + ']';
+
+      function getAllAttributeValuesInElement(dom, elementPath, attributeName) {
+        return Array.from(
+          dom.window.document.querySelectorAll(elementPath),
+          element => element.getAttribute(attributeName));
+
+      }
+      fetch(url)
+        .then(response => response.text()) // API call successful
+        .then((html) => {
+          // convert html to DOM
+          const dom = new jsdom.JSDOM(html);
+          let PaperIds;
+          if (addType == 'citations') {
+            PaperIds = getAllAttributeValuesInElement(dom, citationsDiv, paperIdAttribute);
+          } else {
+            PaperIds = getAllAttributeValuesInElement(dom, referencesDiv, paperIdAttribute);
+          }
+          let edgesArr = toJS(appState.graph.rawGraph.edges);
+          for (let i = 0; i < PaperIds.length; i++) {
+            if (!PaperIds[i].length) {
+              continue;
+            }
+            if (edgesArr.some(edge => edge.source_id == PaperIds[i] && edge.target_id == rightClickedNodeId)) {
+              console.log("Already containing keys!");
+              continue;
+            }
+            curcount += 1;
+            let citationAPI = "https://api.semanticscholar.org/v1/paper/" + PaperIds[i];
+            fetch(citationAPI)
+              .then((res) => {
+                if (res.ok) {
+                  return res.json();
+                } else {
+                  throw "error";
+                }
+              })
+              .then((response) => {
+                this.addNodetoGraph(response, rightClickedNodeId, 0);
+                this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, offset, 0);
+                appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
+                offset += 1;
+                appState.graph.selectedNodes = [];
+                appState.graph.frame.selection = [];
+              });
+            if (curcount >= 5) {
+              break;
+            }
+          }
+
+        }).catch(function (err) {
+          console.warn('Error when retrieving ' + url, err);
+        });
+
+      appState.graph.frame.updateNodesShowingLabels();
     }
   }
 
@@ -515,99 +598,67 @@ export default class GraphStore {
             key: 'Show 5 Neighbors with Highest PageRank'
           }),
           this.frame.rightClickedNode && MenuDividerFactory({
-            title: 'Argo Scholar',
-            key: 'Argo Scholar'
+            title: 'Add Citations or References',
+            key: 'Add Citations or References'
           }),
           this.frame.rightClickedNode && MenuItemFactory({
-            onClick: () => {
-              if (this.frame.rightClickedNode) {
-                const rightClickedNodeId = this.frame.rightClickedNode.data.ref.id.toString();
-                let curcount = 0;
-                let offset = 0;
-                let apiurl = "https://api.semanticscholar.org/v1/paper/" + rightClickedNodeId;
-                fetch(apiurl)
-                  .then((res) => {return res.json();})
-                  .then((response) => {return response.citations})
-                  .then((citations) => {
-                    let edgesArr = toJS(appState.graph.rawGraph.edges);
-                    for (let i = 0; i < citations.length; i++) {
-                      if (edgesArr.some(edge => edge.source_id == citations[i].paperId && edge.target_id == rightClickedNodeId)) {
-                        console.log("contains key");
-                        continue;
-                      }
-                      curcount += 1;
-                      let citationAPI = "https://api.semanticscholar.org/v1/paper/" + citations[i].paperId;
-                      fetch(citationAPI)
-                        .then((res) => {
-                          if (res.ok) {
-                            return res.json();
-                          } else {
-                            throw "error";
-                          }
-                        })
-                        .then((response) => {
-                          this.addNodetoGraph(response, rightClickedNodeId, 0);
-                          this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, offset, 0);
-                          appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
-                          offset += 1;
-                          appState.graph.selectedNodes = [];
-                          appState.graph.frame.selection = [];
-                        });
-                      if (curcount >= 5) {
-                        break;
-                      }
-                    }
-                  });
-                appState.graph.frame.updateNodesShowingLabels();
-              }
-            },
+            children: [
+              MenuItemFactory({
+                onClick: () => {
+                  this.addCitationsorReferences('citations', 'relevance');
+                },
+                text: 'Sort By Relevance',
+                key: 'Sort By Relevance'
+              }),
+              MenuItemFactory({
+                onClick: () => {
+                  this.addCitationsorReferences('citations', 'is-influential');
+                },
+                text: 'Sort By Most Infleunced Papers',
+                key: 'Sort By Most Infleunced Papers'
+              }),
+              MenuItemFactory({
+                onClick: () => {
+                  this.addCitationsorReferences('citations', 'total-citations');
+                },
+                text: 'Sort By Citation Count',
+                key: 'Sort By Citation Count'
+              }),
+              MenuItemFactory({
+                onClick: () => {
+                  this.addCitationsorReferences('citations', 'pub-date');
+                },
+                text: 'Sort By Recency',
+                key: 'Sort By Recency'
+              })
+            ],
             text: 'Add 5 Paper Citations',
             key: 'Add 5 Paper Citations'
           }),
           this.frame.rightClickedNode && MenuItemFactory({
-            onClick: () => {
-              if (this.frame.rightClickedNode) {
-                const rightClickedNodeId = this.frame.rightClickedNode.data.ref.id.toString();
-                let curcount = 0;
-                let offset = 0;
-                let apiurl = "https://api.semanticscholar.org/v1/paper/" + rightClickedNodeId;
-                fetch(apiurl)
-                  .then((res) => {return res.json();})
-                  .then((response) => {return response.references})
-                  .then((references) => {
-                    let edgesArr = toJS(appState.graph.rawGraph.edges);
-                    for (let i = 0; i < references.length; i++) {
-                      if (edgesArr.some(edge => edge.source_id == rightClickedNodeId && edge.target_id == references[i].paperId)) {
-                        console.log("contains key");
-                        continue;
-                      }
-                      curcount += 1;
-                      let citationAPI = "https://api.semanticscholar.org/v1/paper/" + references[i].paperId;
-                      fetch(citationAPI)
-                        .then((res) => {
-                          if (res.ok) {
-                            return res.json();
-                          } else {
-                            throw "error";
-                          }
-                        })
-                        .then((response) => {
-                          this.addNodetoGraph(response, rightClickedNodeId, 1);
-                          // console.log("add node curcount: ", offset);
-                          this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, offset, 1);
-                          appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
-                          offset += 1;
-                          appState.graph.selectedNodes = [];
-                          appState.graph.frame.selection = [];
-                        });
-                      if (curcount >= 5) {
-                        break;
-                      }
-                    }
-                  });
-                appState.graph.frame.updateNodesShowingLabels();
-              }
-            },
+            children: [
+              MenuItemFactory({
+                onClick: () => {
+                  this.addCitationsorReferences('references', 'relevance');
+                },
+                text: 'Sort By Relevance',
+                key: 'Sort By Relevance'
+              }),
+              MenuItemFactory({
+                onClick: () => {
+                  this.addCitationsorReferences('references', 'is-influential');
+                },
+                text: 'Sort By Most Infleunced Papers',
+                key: 'Sort By Most Infleunced Papers'
+              }),
+              MenuItemFactory({
+                onClick: () => {
+                  this.addCitationsorReferences('references', 'year');
+                },
+                text: 'Sort By Recency',
+                key: 'Sort By Recency'
+              })
+            ],
             text: 'Add 5 Paper References',
             key: 'Add 5 Paper References'
           }),
@@ -662,4 +713,6 @@ export default class GraphStore {
     };
     return exactGraphDiameter(snapshot);
   }
+
+
 }
