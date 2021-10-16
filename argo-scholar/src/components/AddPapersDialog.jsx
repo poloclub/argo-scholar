@@ -12,14 +12,17 @@ import { observer } from "mobx-react";
 import classnames from "classnames";
 import appState from "../stores/index";
 
+const corpusIDregex = /^[0-9]+$/; 
+
 @observer
 class AddPapersDialog extends React.Component {
   constructor(props) {
     super(props);
     this._isMounted = false;
     this.state = {
-      query: '',
-      id: 0
+      query: "",
+      id: 0,
+      searchBy: "corpusID",
     };
   }
 
@@ -36,11 +39,52 @@ class AddPapersDialog extends React.Component {
   // }
 
   handleSubmit(event) {
-    console.log('A CorpusID was submitted: ' + this.state.query);
-    const corpusIDregex = /^[0-9]+$/;
     if (this._isMounted) {
-      if (corpusIDregex.test(this.state.query)) {
-        let apiurl = "https://api.semanticscholar.org/v1/paper/CorpusID:" + this.state.query;
+      if (this.state.searchBy == "corpusID") {
+        console.log('A CorpusID was submitted: ' + this.state.query);
+        if (corpusIDregex.test(this.state.query)) {
+          let apiurl = "https://api.semanticscholar.org/v1/paper/CorpusID:" + this.state.query;
+  
+          fetch(apiurl)
+            .then((res) => {
+              if (res.ok) {
+                return res.json();
+              } else {
+                throw "error";
+              }
+            })
+            .then((response) => {
+              this.state.id = response.paperId;
+              if (response.paperId in appState.graph.preprocessedRawGraph.nodesPanelData) {
+                alert("Node already in graph");
+                return;
+              }
+              appState.graph.addNodetoGraph(response, "null", 0);
+              // appState.graph.process.graph.getNode(response.paperId).pinnedx = true;
+              // appState.graph.process.graph.getNode(response.paperId).pinnedy = true;
+              appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
+              appState.graph.frame.updateNodesShowingLabels();
+              appState.project.isAddPapersDialogOpen = false;
+              appState.graph.selectedNodes = [];
+              appState.graph.frame.selection = [];
+              this.state.query = '';
+            })
+            .catch((error) => {
+              alert("Issue occurred when fetching search results. This may be due to API issues or the CorpusID not being associated with a valid paper.");
+            });
+        } else {
+          alert("Not a valid CorpusID. Please try again.");
+        }
+      } else {
+
+
+
+        console.log('A key word query was submitted: ' + this.state.query);
+        var keywordQuery = this.state.query; 
+        keywordQuery = keywordQuery.trim().replace(/  +/g, ' ').replace(/ /g, '+');
+        console.log(keywordQuery)
+
+        let apiurl = "https://api.semanticscholar.org/graph/v1/paper/search?query=" + keywordQuery;
 
         fetch(apiurl)
           .then((res) => {
@@ -51,30 +95,22 @@ class AddPapersDialog extends React.Component {
             }
           })
           .then((response) => {
-            this.state.id = response.paperId;
-            if (response.paperId in appState.graph.preprocessedRawGraph.nodesPanelData) {
-              alert("Node already in graph");
-              return;
-            }
-            appState.graph.addNodetoGraph(response, "null", 0);
-            // appState.graph.process.graph.getNode(response.paperId).pinnedx = true;
-            // appState.graph.process.graph.getNode(response.paperId).pinnedy = true;
-            appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
-            appState.graph.frame.updateNodesShowingLabels();
-            appState.project.isAddPapersDialogOpen = false;
-            appState.graph.selectedNodes = [];
-            appState.graph.frame.selection = [];
-            this.state.query = '';
+            console.log(response);
           })
           .catch((error) => {
-            alert("Not a valid CorpusID. Please try again v1.");
+            alert("Issue occurred when fetching search results.");
           });
-      } else {
-        alert("Not a valid CorpusID. Please try again.");
+         
       }
+      
     }
     event.preventDefault();
   }
+
+  // handleChange(event) {
+  //   this.searchBy = event.target.value;
+  //   console.log("changed to: ", this.searchBy);
+  // }
 
   render() {
     return (
@@ -92,7 +128,11 @@ class AddPapersDialog extends React.Component {
         <div className={classnames(Classes.DIALOG_BODY)}>
           <label className="pt-label .modifier">
             <span>
-              Add by <i>Corpus ID</i>:
+              Add by 
+              <select value = {this.searchBy} onChange={event => this.setState({ searchBy: event.target.value })}> 
+                  <option value="corpusID">Corpus ID</option>
+                  <option value="keywords">Key Words</option>
+              </select>:
             </span>
             <input
               class="pt-input pt-fill"
