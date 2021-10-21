@@ -2,41 +2,51 @@ import { observable, computed, action, runInAction, toJS } from "mobx";
 import createGraph from "ngraph.graph";
 import { scales } from "../constants/index";
 import uniq from "lodash/uniq";
-import { averageClusteringCoefficient, connectedComponents, graphDensity, averageDegree, exactGraphDiameter } from "../services/AlgorithmUtils";
-import { ContextMenu, MenuFactory, MenuItemFactory, MenuDividerFactory } from "@blueprintjs/core";
+import {
+  averageClusteringCoefficient,
+  connectedComponents,
+  graphDensity,
+  averageDegree,
+  exactGraphDiameter,
+} from "../services/AlgorithmUtils";
+import {
+  ContextMenu,
+  MenuFactory,
+  MenuItemFactory,
+  MenuDividerFactory,
+} from "@blueprintjs/core";
 import { Frame, graph } from "../graph-frontend";
 
-import pageRank from 'ngraph.pagerank';
+import pageRank from "ngraph.pagerank";
 import appState from ".";
 
 export default class GraphStore {
-
   initialGlobalConfig = {
     nodes: {
       colorBy: "pagerank",
       color: {
         scale: "Linear Scale",
         from: "#448AFF",
-        to: "#E91E63"
+        to: "#E91E63",
       },
       sizeBy: "pagerank",
       size: {
         min: 2,
         max: 10,
-        scale: "Linear Scale"
+        scale: "Linear Scale",
       },
       labelBy: "paperName",
       shape: "circle",
       labelSize: 0.5,
-      labelLength: 30
+      labelLength: 30,
     },
     edges: {
-      color: "#7f7f7f"
-    }
-  }
+      color: "#7f7f7f",
+    },
+  };
 
   @observable nodes = this.initialGlobalConfig.nodes;
-  @observable edges = this.initialGlobalConfig.edges
+  @observable edges = this.initialGlobalConfig.edges;
 
   @observable enableDegree = true;
   @observable enableDensity = true;
@@ -53,12 +63,12 @@ export default class GraphStore {
   // Currently hovered node
   @observable currentlyHovered = undefined;
 
-
   /**
    * Stores data relevant to smart pause feature
    */
   @observable smartPause = {
-    defaultActive: { //data for when graph layout is resumed and smart pause is not in effect 
+    defaultActive: {
+      //data for when graph layout is resumed and smart pause is not in effect
       isActive: true, //true when layout is resumed and smart pause is not in effect
       startTime: Date.now(), //keeps track of most recent time graph was unpaused
       duration: 10000, //duration of resumed layout
@@ -66,8 +76,7 @@ export default class GraphStore {
     //lastUnpaused: undefined, //old code using lastUnpaused
     smartPaused: false, //true when resumed, but graph layout is paused due to inactivity
     interactingWithGraph: false, //true when node is clicked or dragged. TODO: refactor to more understandable name
-  }
-
+  };
 
   // Directed or not
   @observable directedOrNot = false;
@@ -93,7 +102,7 @@ export default class GraphStore {
     color: "#000",
     size: 5,
     label: "",
-    shape: "circle"
+    shape: "circle",
   };
 
   // preprocessed rawGraph
@@ -107,7 +116,7 @@ export default class GraphStore {
   @observable
   rawGraph = {
     nodes: [],
-    edges: []
+    edges: [],
   };
 
   //saved states from loaded graph snapshot
@@ -120,7 +129,7 @@ export default class GraphStore {
     nodeProperties: [],
     nodeComputed: ["pagerank", "degree"],
     edgeProperties: [],
-    snapshotName: "loading..." // Optional: for display in Argo-scholar only
+    snapshotName: "loading...", // Optional: for display in Argo-scholar only
   };
 
   // used for listing all the properties, either original or computed
@@ -128,8 +137,8 @@ export default class GraphStore {
   get allPropertiesKeyList() {
     return uniq([
       ...this.metadata.nodeProperties,
-      ...this.metadata.nodeComputed
-    ]).filter(k => k !== 'id'); // since node_id is already present
+      ...this.metadata.nodeComputed,
+    ]).filter((k) => k !== "id"); // since node_id is already present
   }
 
   @observable.ref frame = null;
@@ -154,7 +163,7 @@ export default class GraphStore {
     const ret = {};
     for (const p of [
       ...this.metadata.nodeProperties,
-      ...this.metadata.nodeComputed
+      ...this.metadata.nodeComputed,
     ]) {
       let min = Number.MAX_VALUE;
       let max = Number.MIN_VALUE;
@@ -187,7 +196,7 @@ export default class GraphStore {
   // excluding the node itself.
   getNeighborNodesFromRawGraph(selectedNodeId) {
     const setOfNeighborIds = new Set();
-    this.rawGraph.edges.forEach(e => {
+    this.rawGraph.edges.forEach((e) => {
       const source = e.source_id.toString();
       const target = e.target_id.toString();
       if (source === selectedNodeId && target !== selectedNodeId) {
@@ -197,14 +206,16 @@ export default class GraphStore {
         setOfNeighborIds.add(source);
       }
     });
-    return this.rawGraph.nodes.filter(node => setOfNeighborIds.has(node.id.toString()));
+    return this.rawGraph.nodes.filter((node) =>
+      setOfNeighborIds.has(node.id.toString())
+    );
   }
 
   // Triggers autorun in stores/index.js to sent computedGraph to graph-frontend.
   @computed
   get computedGraph() {
     const graph = createGraph();
-    this.rawGraph.nodes.forEach(n => {
+    this.rawGraph.nodes.forEach((n) => {
       // If isHidden flag is defined and true, ignore the node in graph-frontend.
       if (n.isHidden) {
         return;
@@ -219,14 +230,17 @@ export default class GraphStore {
           (override && override.get("color")) ||
           this.nodeColorScale(n[this.nodes.colorBy]),
         shape: (override && override.get("shape")) || n[this.nodes.shape],
-        ref: n
+        ref: n,
       });
     });
 
-    this.rawGraph.edges.forEach(e => {
+    this.rawGraph.edges.forEach((e) => {
       // If isHidden flag is defined and true on an associated node,
       // leave out its related edges.
-      if (graph.hasNode(e.source_id.toString()) && graph.hasNode(e.target_id.toString())) {
+      if (
+        graph.hasNode(e.source_id.toString()) &&
+        graph.hasNode(e.target_id.toString())
+      ) {
         graph.addLink(e.source_id.toString(), e.target_id.toString());
       }
     });
@@ -236,11 +250,11 @@ export default class GraphStore {
 
   @computed
   get numHiddenNodes() {
-    return this.rawGraph.nodes.filter(n => n.isHidden).length;
+    return this.rawGraph.nodes.filter((n) => n.isHidden).length;
   }
 
   /**
-   * citationOrReference: 0 if citation, 1 if reference 
+   * citationOrReference: 0 if citation, 1 if reference
    */
   addNodetoGraph(paperJsonResponse, parentID, citationOrReference) {
     let rawGraphNodes = toJS(appState.graph.rawGraph.nodes);
@@ -251,9 +265,19 @@ export default class GraphStore {
     if (!(paperJsonResponse.paperId in degreeDict)) {
       backEndgraph.addNode(paperJsonResponse.paperId);
       let addedNode = {
-        id: paperJsonResponse.paperId, degree: 0, pagerank: 0, paperName: paperJsonResponse.title, paperAbstract: (paperJsonResponse.abstract == null ? "n/a" : paperJsonResponse.abstract),
-        authors: paperJsonResponse.authors.map(n => n.name).join(', '), citationCount: paperJsonResponse.citations.length, venue: (paperJsonResponse.venue == "" ? "n/a" : paperJsonResponse.venue),
-        year: paperJsonResponse.year, url: paperJsonResponse.url
+        id: paperJsonResponse.paperId,
+        degree: 0,
+        pagerank: 0,
+        paperName: paperJsonResponse.title,
+        paperAbstract:
+          paperJsonResponse.abstract == null
+            ? "n/a"
+            : paperJsonResponse.abstract,
+        authors: paperJsonResponse.authors.map((n) => n.name).join(", "),
+        citationCount: paperJsonResponse.citations.length,
+        venue: paperJsonResponse.venue == "" ? "n/a" : paperJsonResponse.venue,
+        year: paperJsonResponse.year,
+        url: paperJsonResponse.url,
       };
       degreeDict[paperJsonResponse.paperId] = 0;
       rawGraphNodes.push(addedNode);
@@ -262,10 +286,16 @@ export default class GraphStore {
     if (parentID != "null") {
       if (citationOrReference == 0) {
         backEndgraph.addLink(paperJsonResponse.paperId, parentID);
-        edgesArr.push({ source_id: paperJsonResponse.paperId, target_id: parentID });
+        edgesArr.push({
+          source_id: paperJsonResponse.paperId,
+          target_id: parentID,
+        });
       } else {
         backEndgraph.addLink(parentID, paperJsonResponse.paperId);
-        edgesArr.push({ source_id: parentID, target_id: paperJsonResponse.paperId });
+        edgesArr.push({
+          source_id: parentID,
+          target_id: paperJsonResponse.paperId,
+        });
       }
       degreeDict[paperJsonResponse.paperId] += 1;
       degreeDict[parentID] += 1;
@@ -273,9 +303,18 @@ export default class GraphStore {
 
     const rank = pageRank(backEndgraph);
 
-    let nodesArr = rawGraphNodes.map(n => ({
-      ...n, node_id: n.id, pagerank: rank[n.id], degree: degreeDict[n.id],
-      paperName: n.paperName, paperAbstract: n.paperAbstract, authors: n.authors, citationCount: n.citationCount, venue: n.venue, year: n.year, url: n.url
+    let nodesArr = rawGraphNodes.map((n) => ({
+      ...n,
+      node_id: n.id,
+      pagerank: rank[n.id],
+      degree: degreeDict[n.id],
+      paperName: n.paperName,
+      paperAbstract: n.paperAbstract,
+      authors: n.authors,
+      citationCount: n.citationCount,
+      venue: n.venue,
+      year: n.year,
+      url: n.url,
     }));
 
     const nodesData = nodesArr.reduce((map, currentNode) => {
@@ -283,7 +322,11 @@ export default class GraphStore {
       return map;
     }, {});
 
-    appState.graph.preprocessedRawGraph = { graph: backEndgraph, degreeDict: degreeDict, nodesPanelData: nodesData };
+    appState.graph.preprocessedRawGraph = {
+      graph: backEndgraph,
+      degreeDict: degreeDict,
+      nodesPanelData: nodesData,
+    };
 
     this.frame.updateFrontEndNodeGraphDataWithBackendRawgraph();
 
@@ -294,8 +337,8 @@ export default class GraphStore {
   }
 
   showNodes(nodeids) {
-    runInAction('show hidden nodes by ids', () => {
-      this.rawGraph.nodes = this.rawGraph.nodes.map(n => {
+    runInAction("show hidden nodes by ids", () => {
+      this.rawGraph.nodes = this.rawGraph.nodes.map((n) => {
         if (nodeids.includes(n.id)) {
           return { ...n, isHidden: false };
         }
@@ -305,9 +348,9 @@ export default class GraphStore {
   }
 
   hideNodes(nodeids) {
-    runInAction('hide nodes by ids', () => {
+    runInAction("hide nodes by ids", () => {
       this.frame.removeNodesByIds(nodeids);
-      this.rawGraph.nodes = this.rawGraph.nodes.map(n => {
+      this.rawGraph.nodes = this.rawGraph.nodes.map((n) => {
         if (nodeids.includes(n.id)) {
           return { ...n, isHidden: true };
         }
@@ -317,13 +360,13 @@ export default class GraphStore {
   }
 
   removeNodes(nodeids) {
-    runInAction('remove nodes by ids', () => {
+    runInAction("remove nodes by ids", () => {
       this.frame.removeNodesByIds(nodeids);
       this.rawGraph.nodes = this.rawGraph.nodes.filter(
-        n => !nodeids.includes(n.id)
+        (n) => !nodeids.includes(n.id)
       );
       this.rawGraph.edges = this.rawGraph.edges.filter(
-        e => !nodeids.includes(e.source_id) && !nodeids.includes(e.target_id)
+        (e) => !nodeids.includes(e.source_id) && !nodeids.includes(e.target_id)
       );
     });
   }
@@ -347,7 +390,7 @@ export default class GraphStore {
 
   /**
    * [Argo-scholar] Saves graph snapshot as String
-   * 
+   *
    * Note that Argo-lite snapshot contains all graph data
    * and metadata except nodes/edges deleted by users.
    * This is different from Argo-electron snapshot.
@@ -381,7 +424,7 @@ export default class GraphStore {
     const savedOverrides = new Map(
       Object.entries(savedStates.overrides).map(([k, v]) => [
         k,
-        new Map(Object.entries(v))
+        new Map(Object.entries(v)),
       ])
     );
     this.overrides.clear();
@@ -392,7 +435,9 @@ export default class GraphStore {
     }
     if (savedStates.global) {
       this.nodes = savedStates.global.nodes;
-      this.edges = savedStates.global.edges ? savedStates.global.edges : this.edges;
+      this.edges = savedStates.global.edges
+        ? savedStates.global.edges
+        : this.edges;
     }
     // The following lines trigger autoruns.
     this.rawGraph = savedStates.rawGraph;
@@ -419,21 +464,20 @@ export default class GraphStore {
     let graph = createGraph();
     let degreeDict = {};
 
-    this.rawGraph.nodes.forEach(node => {
+    this.rawGraph.nodes.forEach((node) => {
       graph.addNode(node.id);
       degreeDict[node.id] = node.degree;
     });
 
-    this.rawGraph.edges.forEach(edge => {
+    this.rawGraph.edges.forEach((edge) => {
       graph.addLink(edge.source_id, edge.target_id);
-    })
+    });
 
     this.preprocessedRawGraph.graph = graph;
     this.preprocessedRawGraph.degreeDict = degreeDict;
 
     this.runActiveLayout();
   }
-
 
   //resumes graph layout for a set duration before smart-pausing
   runActiveLayout() {
@@ -459,210 +503,478 @@ export default class GraphStore {
     }
   }
 
-  addCitationsorReferences(addType, sortType) {
-    if (this.frame.rightClickedNode) {
-      const jsdom = require("jsdom");
-      const rightClickedNodeId = this.frame.rightClickedNode.data.ref.id.toString();
-      let curcount = 0;
-      let offset = 0;
-      let citationsSortType = (addType == 'citations') ? sortType : 'relevance';
-      let referencesSortType = (addType == 'citations') ? 'relevance' : sortType;
-      let url =
-        'https://www.semanticscholar.org/paper/' +
-        rightClickedNodeId +
-        '?sort=' + citationsSortType + // sort options for citations: relevance, is-influential, total-citations, pub-date
-        '&page=1' + // page number of citations, each page showing 10 citations (as of Aug 4, 2021, cannot show more than 10 citations per page)
-        '&citedPapersSort=' + referencesSortType + // sort options for references: relevance, is-influential, year
-        '&citedPapersLimit=100&citedPapersOffset=0'; // show first 100 references (100 is largest possible, starting at reference 0)
-      console.log(url);
+  //add sorted citaions to right clicked node
+  addSortedCitations(sortMethod) {
+    let curcount = 0;
+    let page = 1;
+    let pageSize = 10;
+    let node_offset = 0;
 
+    const rightClickedNodeId =
+      this.frame.rightClickedNode.data.ref.id.toString();
+    var requestURL =
+      "https://www.semanticscholar.org/api/1/search/paper/" +
+      rightClickedNodeId +
+      "/citations";
 
-      const paperIdAttribute = 'data-paper-id';
-      const citationsDiv = 'div#citing-papers div[' + paperIdAttribute + ']';
-      const referencesDiv = 'div#references div[' + paperIdAttribute + ']';
+    var requestBody = JSON.stringify({
+      page: page,
+      pageSize: pageSize,
+      sort: sortMethod,
+      authors: [],
+      coAuthors: [],
+      venues: [],
+      yearFilter: null,
+      requireViewablePdf: false,
+      publicationTypes: [],
+      externalContentTypes: [],
+      fieldsOfStudy: [],
+    });
 
-      function getAllAttributeValuesInElement(dom, elementPath, attributeName) {
-        return Array.from(
-          dom.window.document.querySelectorAll(elementPath),
-          element => element.getAttribute(attributeName));
-
-      }
-      fetch(url)
-        .then(response => response.text()) // API call successful
-        .then((html) => {
-          // convert html to DOM
-          const dom = new jsdom.JSDOM(html);
-          let PaperIds;
-          if (addType == 'citations') {
-            PaperIds = getAllAttributeValuesInElement(dom, citationsDiv, paperIdAttribute);
-          } else {
-            PaperIds = getAllAttributeValuesInElement(dom, referencesDiv, paperIdAttribute);
-          }
-          let edgesArr = toJS(appState.graph.rawGraph.edges);
-          for (let i = 0; i < PaperIds.length; i++) {
-            if (!PaperIds[i].length) {
-              continue;
-            }
-            if (edgesArr.some(edge => edge.source_id == PaperIds[i] && edge.target_id == rightClickedNodeId)) {
-              console.log("Already containing keys!");
-              continue;
-            }
-            curcount += 1;
-            let citationAPI = "https://api.semanticscholar.org/v1/paper/" + PaperIds[i];
-            fetch(citationAPI)
-              .then((res) => {
-                if (res.ok) {
-                  return res.json();
-                } else {
-                  throw "error";
-                }
-              })
-              .then((response) => {
-                this.addNodetoGraph(response, rightClickedNodeId, 0);
-                this.frame.addFrontEndNodeInARow(rightClickedNodeId, response.paperId, offset, 0);
-                appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
-                offset += 1;
-                appState.graph.selectedNodes = [];
-                appState.graph.frame.selection = [];
-              });
-            if (curcount >= 5) {
-              break;
-            }
-          }
-
-        }).catch(function (err) {
-          console.warn('Error when retrieving ' + url, err);
+    fetch(requestURL, {
+      method: "post",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      },
+      body: requestBody,
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw "Connection failed.";
+        }
+      })
+      .then((citations) => {
+        var PaperIds = citations.results.map(function (citation) {
+          return citation.id;
         });
-
-      appState.graph.frame.updateNodesShowingLabels();
-    }
+        console.log(PaperIds);
+        let edgesArr = toJS(appState.graph.rawGraph.edges);
+        for (let i = 0; i < PaperIds.length; i++) {
+          if (!PaperIds[i]) {
+            continue;
+          }
+          if (
+            edgesArr.some(
+              (edge) =>
+                edge.source_id == PaperIds[i] &&
+                edge.target_id == rightClickedNodeId
+            )
+          ) {
+            console.log("Already containing keys!");
+            continue;
+          }
+          curcount += 1;
+          let citationAPI =
+            "https://api.semanticscholar.org/v1/paper/" + PaperIds[i];
+          fetch(citationAPI)
+            .then((res) => {
+              if (res.ok) {
+                return res.json();
+              } else {
+                throw "Connection failed.";
+              }
+            })
+            .then((response) => {
+              this.addNodetoGraph(response, rightClickedNodeId, 0);
+              this.frame.addFrontEndNodeInARow(
+                rightClickedNodeId,
+                response.paperId,
+                node_offset,
+                0
+              );
+              appState.graph.process.graph.getNode(
+                response.paperId
+              ).renderData.textHolder.children[0].element.override = true;
+              node_offset += 1;
+              appState.graph.selectedNodes = [];
+              appState.graph.frame.selection = [];
+            })
+            .catch(function (err) {
+              console.warn(
+                "Error adding paper nodes through Semantic Scholar API. " +
+                  requestURL,
+                err
+              );
+            });
+          if (curcount >= 5) {
+            break;
+          }
+        }
+      })
+      .then(console.log("Web API results fetched."))
+      .catch((error) => {
+        console.error(
+          "Error when requesting sorted citations through web API. Adding random citations.",
+          error
+        );
+        this.addRandomCitations();
+      });
+    appState.graph.frame.updateNodesShowingLabels();
   }
 
+  addRandomCitations() {
+    const rightClickedNodeId =
+      this.frame.rightClickedNode.data.ref.id.toString();
+    let curcount = 0;
+    let offset = 0;
+    let apiurl =
+      "https://api.semanticscholar.org/v1/paper/" + rightClickedNodeId;
+    fetch(apiurl)
+      .then((res) => {
+        return res.json();
+      })
+      .then((response) => {
+        return response.citations;
+      })
+      .then((citations) => {
+        console.log(citations);
+        let edgesArr = toJS(appState.graph.rawGraph.edges);
+        for (let i = 0; i < citations.length; i++) {
+          if (
+            edgesArr.some(
+              (edge) =>
+                edge.source_id == citations[i].paperId &&
+                edge.target_id == rightClickedNodeId
+            )
+          ) {
+            console.log("contains key");
+            continue;
+          }
+          curcount += 1;
+          let citationAPI =
+            "https://api.semanticscholar.org/v1/paper/" + citations[i].paperId;
+          fetch(citationAPI)
+            .then((res) => {
+              if (res.ok) {
+                return res.json();
+              } else {
+                throw "Connection failed.";
+              }
+            })
+            .then((response) => {
+              this.addNodetoGraph(response, rightClickedNodeId, 0);
+              this.frame.addFrontEndNodeInARow(
+                rightClickedNodeId,
+                response.paperId,
+                offset,
+                0
+              );
+              appState.graph.process.graph.getNode(
+                response.paperId
+              ).renderData.textHolder.children[0].element.override = true;
+              offset += 1;
+              appState.graph.selectedNodes = [];
+              appState.graph.frame.selection = [];
+            });
+          if (curcount >= 5) {
+            break;
+          }
+        }
+      })
+      .then(console.log("Successfully added random paper nodes."));
+    appState.graph.frame.updateNodesShowingLabels();
+  }
+
+  //add sorted references to right clicked node
+  //add sorted citaions to right clicked node
+  addSortedReferences(sortMethod) {
+    let curcount = 0;
+    let pageSize = 10;
+    let node_offset = 0;
+    let offset = 0;
+
+    const rightClickedNodeId =
+      this.frame.rightClickedNode.data.ref.id.toString();
+    var requestURL =
+      "https://www.semanticscholar.org/api/1/paper/" +
+      rightClickedNodeId +
+      "/citations?sort=" +
+      sortMethod +
+      "&offset=" +
+      offset +
+      "&citationType=citedPapers&citationsPageSize=" +
+      pageSize;
+
+    fetch(requestURL, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw "Connection failed.";
+        }
+      })
+      .then((references) => {
+        var PaperIds = references.citations.map(function (reference) {
+          return reference.id;
+        });
+
+        let edgesArr = toJS(appState.graph.rawGraph.edges);
+        console.log(PaperIds);
+        for (let i = 0; i < PaperIds.length; i++) {
+          if (!PaperIds[i]) {
+            continue;
+          }
+          if (
+            edgesArr.some(
+              (edge) =>
+                edge.source_id == PaperIds[i] &&
+                edge.target_id == rightClickedNodeId
+            )
+          ) {
+            console.log("Already containing keys!");
+            continue;
+          }
+          curcount += 1;
+          let citationAPI =
+            "https://api.semanticscholar.org/v1/paper/" + PaperIds[i];
+          fetch(citationAPI)
+            .then((res) => {
+              if (res.ok) {
+                return res.json();
+              } else {
+                throw "Connection failed.";
+              }
+            })
+            .then((response) => {
+              this.addNodetoGraph(response, rightClickedNodeId, 0);
+              this.frame.addFrontEndNodeInARow(
+                rightClickedNodeId,
+                response.paperId,
+                node_offset,
+                0
+              );
+              appState.graph.process.graph.getNode(
+                response.paperId
+              ).renderData.textHolder.children[0].element.override = true;
+              node_offset += 1;
+              appState.graph.selectedNodes = [];
+              appState.graph.frame.selection = [];
+            })
+            .catch(function (err) {
+              console.warn(
+                "Error adding paper nodes through Semantic Scholar API. " +
+                  requestURL,
+                err
+              );
+            });
+          if (curcount >= 5) {
+            break;
+          }
+        }
+      })
+      .then(console.log("Web API results fetched."))
+      .catch((error) => {
+        console.error(
+          "Error when requesting sorted references through web API. Adding random references.",
+          error
+        );
+        this.addRandomReferences();
+      });
+    appState.graph.frame.updateNodesShowingLabels();
+  }
+
+  addRandomReferences() {
+    const rightClickedNodeId =
+      this.frame.rightClickedNode.data.ref.id.toString();
+    let curcount = 0;
+    let offset = 0;
+    let apiurl =
+      "https://api.semanticscholar.org/v1/paper/" + rightClickedNodeId;
+    fetch(apiurl)
+      .then((res) => {
+        return res.json();
+      })
+      .then((response) => {
+        return response.references;
+      })
+      .then((references) => {
+        console.log(references);
+        let edgesArr = toJS(appState.graph.rawGraph.edges);
+        for (let i = 0; i < references.length; i++) {
+          if (
+            edgesArr.some(
+              (edge) =>
+                edge.source_id == rightClickedNodeId &&
+                edge.target_id == references[i].paperId
+            )
+          ) {
+            console.log("contains key");
+            continue;
+          }
+          curcount += 1;
+          let citationAPI =
+            "https://api.semanticscholar.org/v1/paper/" + references[i].paperId;
+          fetch(citationAPI)
+            .then((res) => {
+              if (res.ok) {
+                return res.json();
+              } else {
+                throw "Connection failed.";
+              }
+            })
+            .then((response) => {
+              this.addNodetoGraph(response, rightClickedNodeId, 1);
+              // console.log("add node curcount: ", offset);
+              this.frame.addFrontEndNodeInARow(
+                rightClickedNodeId,
+                response.paperId,
+                offset,
+                1
+              );
+              appState.graph.process.graph.getNode(
+                response.paperId
+              ).renderData.textHolder.children[0].element.override = true;
+              offset += 1;
+              appState.graph.selectedNodes = [];
+              appState.graph.frame.selection = [];
+            });
+          if (curcount >= 5) {
+            break;
+          }
+        }
+      })
+      .then(console.log("Successfully added random paper nodes."));
+    appState.graph.frame.updateNodesShowingLabels();
+  }
   setUpFrame() {
     if (this.frame) {
-      this.frame.getGraph().clear()
+      this.frame.getGraph().clear();
     }
     const graphFrame = new Frame(this.computedGraph);
     graphFrame.init();
     graphFrame.display();
     this.frame = graphFrame;
-    graphFrame.ee.on("select-nodes", nodes => {
+    graphFrame.ee.on("select-nodes", (nodes) => {
       this.selectedNodes = nodes;
     });
-    graphFrame.ee.on("show-node-label", nodes => {
+    graphFrame.ee.on("show-node-label", (nodes) => {
       this.nodesShowingLabels = nodes;
     });
-    graphFrame.ee.on("right-click", data => {
+    graphFrame.ee.on("right-click", (data) => {
       const menu = MenuFactory({
         children: [
           MenuItemFactory({
             onClick: () => {
               this.frame.toggleSelectedLabels();
             },
-            text: 'Toggle Labels',
-            key: 'Toggle Labels'
+            text: "Toggle Labels",
+            key: "Toggle Labels",
           }),
           MenuItemFactory({
             onClick: () => {
               this.frame.unpinSelectedNodes();
             },
-            text: 'Unpin Selected',
-            key: 'Unpin Selected'
+            text: "Unpin Selected",
+            key: "Unpin Selected",
           }),
           MenuItemFactory({
             onClick: () => {
               this.frame.pinSelectedNodes();
             },
-            text: 'Pin Selected',
-            key: 'Pin Selected'
+            text: "Pin Selected",
+            key: "Pin Selected",
           }),
-          this.frame.rightClickedNode && MenuItemFactory({
-            onClick: () => {
-              if (this.frame.rightClickedNode) {
-                const rightClickedNodeId = this.frame.rightClickedNode.data.ref.id.toString();
-                const neighbors = this.getNeighborNodesFromRawGraph(rightClickedNodeId);
-                neighbors.sort((n1, n2) => {
-                  if (n1["pagerank"] && n2["pagerank"]) {
-                    return n2["pagerank"] - n1["pagerank"];
+          this.frame.rightClickedNode &&
+            MenuItemFactory({
+              onClick: () => {
+                if (this.frame.rightClickedNode) {
+                  const rightClickedNodeId =
+                    this.frame.rightClickedNode.data.ref.id.toString();
+                  const neighbors =
+                    this.getNeighborNodesFromRawGraph(rightClickedNodeId);
+                  neighbors.sort((n1, n2) => {
+                    if (n1["pagerank"] && n2["pagerank"]) {
+                      return n2["pagerank"] - n1["pagerank"];
+                    }
+                    return 0;
+                  });
+                  const ids = [];
+                  for (let i = 0; i < 5 && i < neighbors.length; i++) {
+                    ids.push(neighbors[i].id);
                   }
-                  return 0;
-                });
-                const ids = [];
-                for (let i = 0; i < 5 && i < neighbors.length; i++) {
-                  ids.push(neighbors[i].id);
+                  this.showNodes(ids);
                 }
-                this.showNodes(ids);
-              }
-            },
-            text: 'Show 5 Neighbors with Highest PageRank',
-            key: 'Show 5 Neighbors with Highest PageRank'
-          }),
-          this.frame.rightClickedNode && MenuDividerFactory({
-            title: 'Add Citations or References',
-            key: 'Add Citations or References'
-          }),
-          this.frame.rightClickedNode && MenuItemFactory({
-            children: [
-              MenuItemFactory({
-                onClick: () => {
-                  this.addCitationsorReferences('citations', 'relevance');
-                },
-                text: 'Sort By Relevance',
-                key: 'Sort By Relevance'
-              }),
-              MenuItemFactory({
-                onClick: () => {
-                  this.addCitationsorReferences('citations', 'is-influential');
-                },
-                text: 'Sort By Most Infleunced Papers',
-                key: 'Sort By Most Infleunced Papers'
-              }),
-              MenuItemFactory({
-                onClick: () => {
-                  this.addCitationsorReferences('citations', 'total-citations');
-                },
-                text: 'Sort By Citation Count',
-                key: 'Sort By Citation Count'
-              }),
-              MenuItemFactory({
-                onClick: () => {
-                  this.addCitationsorReferences('citations', 'pub-date');
-                },
-                text: 'Sort By Recency',
-                key: 'Sort By Recency'
-              })
-            ],
-            text: 'Add 5 Paper Citations',
-            key: 'Add 5 Paper Citations'
-          }),
-          this.frame.rightClickedNode && MenuItemFactory({
-            children: [
-              MenuItemFactory({
-                onClick: () => {
-                  this.addCitationsorReferences('references', 'relevance');
-                },
-                text: 'Sort By Relevance',
-                key: 'Sort By Relevance'
-              }),
-              MenuItemFactory({
-                onClick: () => {
-                  this.addCitationsorReferences('references', 'is-influential');
-                },
-                text: 'Sort By Most Infleunced Papers',
-                key: 'Sort By Most Infleunced Papers'
-              }),
-              MenuItemFactory({
-                onClick: () => {
-                  this.addCitationsorReferences('references', 'year');
-                },
-                text: 'Sort By Recency',
-                key: 'Sort By Recency'
-              })
-            ],
-            text: 'Add 5 Paper References',
-            key: 'Add 5 Paper References'
-          }),
-        ]
+              },
+              text: "Show 5 Neighbors with Highest PageRank",
+              key: "Show 5 Neighbors with Highest PageRank",
+            }),
+          this.frame.rightClickedNode &&
+            MenuDividerFactory({
+              title: "Add Citations or References",
+              key: "Add Citations or References",
+            }),
+          this.frame.rightClickedNode &&
+            MenuItemFactory({
+              children: [
+                MenuItemFactory({
+                  onClick: () => {
+                    this.addSortedCitations("relevance");
+                  },
+                  text: "Sort By Relevance",
+                  key: "Sort By Relevance",
+                }),
+                MenuItemFactory({
+                  onClick: () => {
+                    this.addSortedCitations("is-influential");
+                  },
+                  text: "Sort By Most Infleunced Papers",
+                  key: "Sort By Most Infleunced Papers",
+                }),
+                MenuItemFactory({
+                  onClick: () => {
+                    this.addSortedCitations("total-citations");
+                  },
+                  text: "Sort By Citation Count",
+                  key: "Sort By Citation Count",
+                }),
+                MenuItemFactory({
+                  onClick: () => {
+                    this.addSortedCitations("pub-date");
+                  },
+                  text: "Sort By Recency",
+                  key: "Sort By Recency",
+                }),
+              ],
+              text: "Add 5 Paper Citations",
+              key: "Add 5 Paper Citations",
+            }),
+          this.frame.rightClickedNode &&
+            MenuItemFactory({
+              children: [
+                MenuItemFactory({
+                  onClick: () => {
+                    this.addSortedReferences("relevance");
+                  },
+                  text: "Sort By Relevance",
+                  key: "Sort By Relevance",
+                }),
+                MenuItemFactory({
+                  onClick: () => {
+                    this.addSortedReferences("is-influential");
+                  },
+                  text: "Sort By Most Infleunced Papers",
+                  key: "Sort By Most Infleunced Papers",
+                }),
+                MenuItemFactory({
+                  onClick: () => {
+                    this.addSortedReferences("year");
+                  },
+                  text: "Sort By Recency",
+                  key: "Sort By Recency",
+                }),
+              ],
+              text: "Add 5 Paper References",
+              key: "Add 5 Paper References",
+            }),
+        ],
       });
       ContextMenu.show(menu, { left: data.pageX, top: data.pageY }, () => {
         // onMenuClose
@@ -681,7 +993,6 @@ export default class GraphStore {
     };
     return averageClusteringCoefficient(snapshot);
   }
-
 
   get components() {
     const snapshot = {
@@ -713,6 +1024,4 @@ export default class GraphStore {
     };
     return exactGraphDiameter(snapshot);
   }
-
-
 }
