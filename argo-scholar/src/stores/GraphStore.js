@@ -470,6 +470,8 @@ export default class GraphStore {
       this.nodesShowingLabels = nodes;
     });
     graphFrame.ee.on("right-click", data => {
+      this.process.onHover();
+      this.frame.rightClickedNode = this.currentlyHovered;
       const menu = MenuFactory({
         children: [
           MenuItemFactory({
@@ -616,6 +618,7 @@ export default class GraphStore {
       ContextMenu.show(menu, { left: data.pageX, top: data.pageY }, () => {
         // onMenuClose
         console.log("ContextMenu closed");
+        this.currentlyHovered = null;
       });
     });
   }
