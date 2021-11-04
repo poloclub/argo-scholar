@@ -16,11 +16,11 @@ module.exports = function (self) {
    * Mouse move event that selections nodes in selection box
    */
   self.onMouseMove = function (selection, mouseX, mouseY, button, ctrl) {  
+    self.onHover(selection);
     // check if left button is not down
     self.mouseX = mouseX;
     self.mouseY = mouseY;
     if (self.leftMouseDown && self.mouseDown) {
-      
       // left-clicked empty space (i.e., not clicking a node)
       if (!self.dragging && self.selection.indexOf(selection) == -1 && !ctrl) {
         self.clearSelection();
@@ -91,9 +91,14 @@ module.exports = function (self) {
       self.highlightNode(node, true);
       node.renderData.textHolder.children[0].element.hideme = false;
       self.highlightEdges(node, true);
+
       //set currently hovered node
       appState.graph.currentlyHovered = node;
+
     } else if (self.selection.length == 0) {
+      //set currently hovered node
+      appState.graph.currentlyHovered = null;
+
       self.graph.forEachNode(n => {
         self.colorNodeOpacity(n, 1);
         self.colorNodeEdge(n, 0.5, 0.5);
@@ -130,6 +135,9 @@ module.exports = function (self) {
 
     self.leftMouseDown = true;
     if (self.leftMouseDown) {
+
+      self.onHover(selection);
+
       self.mouseDown = true;
       self.mouseStart = new THREE.Vector3(mouseX, mouseY, 0);
       if (button == 0 && !self.dragging) {
