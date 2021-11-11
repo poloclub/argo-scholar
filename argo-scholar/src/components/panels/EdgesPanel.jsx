@@ -1,7 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react";
 import appState from "../../stores";
-import { Button, Checkbox, Classes, RangeSlider } from "@blueprintjs/core";
+import { Button, Checkbox, Classes, Slider } from "@blueprintjs/core";
 import { SketchPicker } from "react-color";
 import { Popover2, Select } from "@blueprintjs/labs";
 import classnames from "classnames";
@@ -100,52 +100,34 @@ class EdgesPanel extends React.Component {
                             <input 
                                  type="checkbox"
                                  onChange={it => {
-                                     console.log(appState.graph.directedOrNot);
                                      appState.graph.directedOrNot = !appState.graph.directedOrNot;
                                  }
                                  }
-                               />
+                               checked={appState.graph.directedOrNot}/>
                             </label>
                             </span>
-                            </div>
-                        
-                    </div>
-                </Collapsable>
-{/* 
-                <div>
-                     <section style = {{marginTop: "15px"}}>
-                         <p style={{display: "inline"}}>Show Edge Direction: </p>
-                         <div style={{display: "inline", float: "right"}}>
-                               <input 
-                                 type="checkbox"
-                                 onChange={it => {
-                                     appState.graph.directedOrNot = !appState.graph.directedOrNot;
-                                 }
-                                 }
-                               />
-                         </div>
-                     </section>
-                 </div> */}
-
-                {/* Collapsable Option: Thickness */}
-                {/* <Collapsable
-                    name="Thickness"
-                    isOpen={this.state.thicknessOptionOpen}
-                    onToggle={() =>
-                        this.setState({
-                            thicknessOptionOpen: !this.state.thicknessOptionOpen
-                        })
+                        </div>
+                        {appState.graph.directedOrNot && 
+                        <div>
+                            <br/>
+                            <p style={{display: "inline"}}>Arrow Size: </p>
+                            <Slider
+                                min={0.5}
+                                max={4}
+                                stepSize={0.01}
+                                onChange={value => {
+                                    appState.graph.arrowSize = value;
+                                }}
+                                value={appState.graph.arrowSize}
+                            />
+                        </div>
                     }
-                    >
-                    <div className={classnames(Classes.CARD, "sub-option")}>
-                        <section>
-                            <p>Select Edge Thickness: </p>
-                            <div style={{display: "inline", float: "right"}}>
-                               
-                            </div>
-                        </section>
                     </div>
-                </Collapsable> */}
+
+                    
+
+                </Collapsable>
+
             </div>
         );
     }

@@ -70,7 +70,11 @@ export default class GraphStore {
 
 
   // Directed or not
-  @observable directedOrNot = false;
+  @observable directedOrNot = true;
+  // directed graph arrow size
+  @observable arrowSize = 2;
+
+
 
   // Cache the single node that's been selected last time
   // and will not update unless exactly one node is selected again
