@@ -6,7 +6,7 @@ An interactive literature exploration visualization system that runs in your web
 
 <img src="img/argoscholar_README_Logo2.png" width=60% alt="Argo Scholar logo">
 
-## Documentations
+## Documentations 
 
 - [Quick Start (Visualization, Saving and Sharing Snapshots)](quickstart.md)
 - [Tutorial - Visualizing a citation network of Apolo (Initialize Network, Incremental Exploration, Saving Progress)](tutorial.md)
