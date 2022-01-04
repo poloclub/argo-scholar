@@ -11,8 +11,11 @@ import {
 import { observer } from "mobx-react";
 import classnames from "classnames";
 import appState from "../stores/index";
+import PaperResultsCards from "./PaperResultsCards";
 
 const corpusIDregex = /^[0-9]+$/; 
+const apiCorpusPrefix = "https://api.semanticscholar.org/v1/paper/CorpusID:";
+const apiKeywordPrefix = "https://api.semanticscholar.org/graph/v1/paper/search?query=";
 
 @observer
 class AddPapersDialog extends React.Component {
@@ -23,6 +26,8 @@ class AddPapersDialog extends React.Component {
       query: "",
       id: 0,
       searchBy: "corpusID",
+      searchResults: [],
+      search: "",
     };
   }
 
@@ -43,7 +48,7 @@ class AddPapersDialog extends React.Component {
       if (this.state.searchBy == "corpusID") {
         console.log('A CorpusID was submitted: ' + this.state.query);
         if (corpusIDregex.test(this.state.query)) {
-          let apiurl = "https://api.semanticscholar.org/v1/paper/CorpusID:" + this.state.query;
+          let apiurl = apiCorpusPrefix + this.state.query;
   
           fetch(apiurl)
             .then((res) => {
@@ -82,9 +87,12 @@ class AddPapersDialog extends React.Component {
         console.log('A key word query was submitted: ' + this.state.query);
         var keywordQuery = this.state.query; 
         keywordQuery = keywordQuery.trim().replace(/  +/g, ' ').replace(/ /g, '+');
+        this.setState({search: keywordQuery});
+        // this.state.search = keywordQuery;
+        // // this.state.query = keywordQuery;
         console.log(keywordQuery)
 
-        let apiurl = "https://api.semanticscholar.org/graph/v1/paper/search?query=" + keywordQuery;
+        let apiurl = apiKeywordPrefix + keywordQuery;
 
         fetch(apiurl)
           .then((res) => {
@@ -95,11 +103,17 @@ class AddPapersDialog extends React.Component {
             }
           })
           .then((response) => {
+            var searches = [];
+            for (var i = 0; i < response.data.length; i++) {
+              searches.push(response.data[i]);
+            }
             console.log(response);
+            this.setState({searchResults: searches});
+            // console.log("addpapersdialog: " + this.state.searchResults);
           })
-          .catch((error) => {
-            alert("Issue occurred when fetching search results.");
-          });
+          // .catch((error) => {
+          //   alert("Issue occurred when fetching search results.");
+          // });
          
       }
       
@@ -148,6 +162,9 @@ class AddPapersDialog extends React.Component {
             <a href="https://www.semanticscholar.org/"> Look up the <i>Corpus ID</i> of a paper</a>
 
           </div>
+          <div key={this.state.searchResults} style={{display: this.state.searchBy == "keywords" ? 'block' : 'none' }}>
+            <PaperResultsCards papers={this.state.searchResults} query={this.state.search} />
+          </div>
         </div>
 
         <div className={Classes.DIALOG_FOOTER}>
@@ -161,7 +178,7 @@ class AddPapersDialog extends React.Component {
               onClick={() => {
                 this.handleSubmit(event);
               }}
-              text="Submit"
+              text={this.state.searchBy == "corpusID" ? "Submit" : "Search"}
             />
           </div>
         </div>

@@ -240,6 +240,31 @@ td {
   white-space: nowrap;
 }
 
+td.search-result {
+  width: 100%;
+  padding-right: 5%;
+}
+
+td.search-add {
+  padding-right: 20px;
+  display: flex;
+}
+
+.paginate-pageClassName > a {
+  color:rgb(20, 23, 36);
+}
+
+.paginate-activeClassName > a {
+  font-weight: bold;
+  color:#106ba3;
+}
+
+.paginate-containerClassName {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+}
+
 .import-preview-table {
   height: 200px;
   margin-bottom: 15px;
