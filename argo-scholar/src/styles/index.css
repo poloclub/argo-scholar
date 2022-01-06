@@ -263,6 +263,8 @@ td.search-add {
   display: flex;
   justify-content: space-between;
   list-style: none;
+  padding-left: 0px;
+  padding-right: 10px;
 }
 
 .import-preview-table {

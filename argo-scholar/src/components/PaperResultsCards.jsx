@@ -12,6 +12,7 @@ import { observer } from "mobx-react";
 import classnames from "classnames";
 import appState from "../stores/index";
 import ReactPaginate from 'react-paginate';
+import { timeThursdays } from "d3";
 // import { data } from "jquery";
 
 const pageCount = 10;
@@ -24,7 +25,7 @@ class PaperResultsCards extends React.Component {
     this.state = {
         data: this.props.papers,
         query: this.props.query,
-        // page: 0,
+        page: null
     }
   }
 
@@ -80,13 +81,17 @@ class PaperResultsCards extends React.Component {
     
     // console.log(apiurl);
   };
+  
+  componentDidUpdate(prevProps) {
+    if (prevProps.query !== this.props.query) {
+      this.setState( {data: this.props.papers, query: this.props.query, page: 0} )
+    }
+  }
 
   render() {    
-    console.log("in here");
-    console.log(this.state.data);
+    console.log("in paperresultscard component");
     let cards = [];
     this.state.data.forEach(paper=> {
-      console.log((paper.paperId in appState.graph.preprocessedRawGraph.nodesPanelData));
       // console.log("paper: " + {paper});
       // cards.push(<p>{paper}</p>);
       cards.push(<tr id={paper.paperId}>
@@ -112,6 +117,8 @@ class PaperResultsCards extends React.Component {
               activeClassName={"paginate-activeClassName"}
               initialPage={0}
               onPageChange={this.handlePageChange}
+              forcePage={this.state.page}
+              prevRel={null}
             />
           </div>
           

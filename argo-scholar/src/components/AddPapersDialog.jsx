@@ -25,7 +25,6 @@ class AddPapersDialog extends React.Component {
     this.state = {
       query: "",
       id: 0,
-      searchBy: "corpusID",
       searchResults: [],
       search: "",
     };
@@ -45,49 +44,34 @@ class AddPapersDialog extends React.Component {
 
   handleSubmit(event) {
     if (this._isMounted) {
-      if (this.state.searchBy == "corpusID") {
-        console.log('A CorpusID was submitted: ' + this.state.query);
-        if (corpusIDregex.test(this.state.query)) {
-          let apiurl = apiCorpusPrefix + this.state.query;
-  
-          fetch(apiurl)
-            .then((res) => {
-              if (res.ok) {
-                return res.json();
-              } else {
-                throw "error";
-              }
-            })
-            .then((response) => {
-              this.state.id = response.paperId;
-              if (response.paperId in appState.graph.preprocessedRawGraph.nodesPanelData) {
-                alert("Node already in graph");
-                return;
-              }
-              appState.graph.addNodetoGraph(response, "null", 0);
-              // appState.graph.process.graph.getNode(response.paperId).pinnedx = true;
-              // appState.graph.process.graph.getNode(response.paperId).pinnedy = true;
-              appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
-              appState.graph.frame.updateNodesShowingLabels();
-              appState.project.isAddPapersDialogOpen = false;
-              appState.graph.selectedNodes = [];
-              appState.graph.frame.selection = [];
-              this.state.query = '';
-            })
-            .catch((error) => {
-              alert("Issue occurred when fetching search results. This may be due to API issues or the CorpusID not being associated with a valid paper.");
-            });
-        } else {
-          alert("Not a valid CorpusID. Please try again.");
-        }
+      if (corpusIDregex.test(this.state.query)) {
+        // CorpusID submitted
+        
+        let apiurl = apiCorpusPrefix + this.state.query;
+
+        fetch(apiurl)
+          .then((res) => {
+            if (res.ok) {
+              return res.json();
+            } else {
+              throw "error";
+            }
+          })
+          .then((response) => {
+            var searches = [];
+            searches.push(response)
+            // for (var i = 0; i < response.data.length; i++) {
+            //   searches.push(response.data[i]);
+            // }
+            this.setState({searchResults: searches, search: keywordQuery});
+          })
+          .catch((error) => {
+            alert("Issue occurred when fetching search results. This may be due to API issues or the CorpusID not being associated with a valid paper.");
+          });
       } else {
-
-
-
         console.log('A key word query was submitted: ' + this.state.query);
         var keywordQuery = this.state.query; 
         keywordQuery = keywordQuery.trim().replace(/  +/g, ' ').replace(/ /g, '+');
-        this.setState({search: keywordQuery});
         // this.state.search = keywordQuery;
         // // this.state.query = keywordQuery;
         console.log(keywordQuery)
@@ -103,20 +87,20 @@ class AddPapersDialog extends React.Component {
             }
           })
           .then((response) => {
+            console.log("keyword search:")
+            console.log(response)
             var searches = [];
             for (var i = 0; i < response.data.length; i++) {
               searches.push(response.data[i]);
             }
             console.log(response);
-            this.setState({searchResults: searches});
+            this.setState({searchResults: searches, search: keywordQuery});
             // console.log("addpapersdialog: " + this.state.searchResults);
           })
           // .catch((error) => {
           //   alert("Issue occurred when fetching search results.");
           // });
-         
       }
-      
     }
     event.preventDefault();
   }
@@ -141,17 +125,10 @@ class AddPapersDialog extends React.Component {
       >
         <div className={classnames(Classes.DIALOG_BODY)}>
           <label className="pt-label .modifier">
-            <span>
-              Add by 
-              <select value = {this.searchBy} onChange={event => this.setState({ searchBy: event.target.value })}> 
-                  <option value="corpusID">Corpus ID</option>
-                  <option value="keywords">Key Words</option>
-              </select>:
-            </span>
             <input
               class="pt-input pt-fill"
               type="text"
-              placeholder="Input Corpus ID here"
+              placeholder="Search by paper name or CorpusID"
               dir="auto"
               value={this.state.query}
               onChange={event => this.setState({ query: event.target.value })}
@@ -162,7 +139,7 @@ class AddPapersDialog extends React.Component {
             <a href="https://www.semanticscholar.org/"> Look up the <i>Corpus ID</i> of a paper</a>
 
           </div>
-          <div key={this.state.searchResults} style={{display: this.state.searchBy == "keywords" ? 'block' : 'none' }}>
+          <div key={this.state.searchResults}> 
             <PaperResultsCards papers={this.state.searchResults} query={this.state.search} />
           </div>
         </div>
@@ -178,7 +155,7 @@ class AddPapersDialog extends React.Component {
               onClick={() => {
                 this.handleSubmit(event);
               }}
-              text={this.state.searchBy == "corpusID" ? "Submit" : "Search"}
+              text={"Search"}
             />
           </div>
         </div>
