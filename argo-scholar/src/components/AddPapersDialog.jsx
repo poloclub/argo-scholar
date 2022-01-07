@@ -63,18 +63,18 @@ class AddPapersDialog extends React.Component {
             // for (var i = 0; i < response.data.length; i++) {
             //   searches.push(response.data[i]);
             // }
-            this.setState({searchResults: searches, search: keywordQuery});
+            this.setState({searchResults: searches, search: this.state.query});
           })
           .catch((error) => {
             alert("Issue occurred when fetching search results. This may be due to API issues or the CorpusID not being associated with a valid paper.");
           });
       } else {
-        console.log('A key word query was submitted: ' + this.state.query);
+        // Keyword query
+
         var keywordQuery = this.state.query; 
         keywordQuery = keywordQuery.trim().replace(/  +/g, ' ').replace(/ /g, '+');
         // this.state.search = keywordQuery;
         // // this.state.query = keywordQuery;
-        console.log(keywordQuery)
 
         let apiurl = apiKeywordPrefix + keywordQuery;
 
@@ -87,19 +87,16 @@ class AddPapersDialog extends React.Component {
             }
           })
           .then((response) => {
-            console.log("keyword search:")
-            console.log(response)
             var searches = [];
             for (var i = 0; i < response.data.length; i++) {
               searches.push(response.data[i]);
             }
-            console.log(response);
             this.setState({searchResults: searches, search: keywordQuery});
             // console.log("addpapersdialog: " + this.state.searchResults);
           })
-          // .catch((error) => {
-          //   alert("Issue occurred when fetching search results.");
-          // });
+          .catch((error) => {
+            alert("Issue occurred when fetching search results.");
+          });
       }
     }
     event.preventDefault();

@@ -16,7 +16,9 @@ import { timeThursdays } from "d3";
 // import { data } from "jquery";
 
 const pageCount = 10;
+const apiCorpusPrefix = "https://api.semanticscholar.org/v1/paper/CorpusID:";
 const apiKeywordPrefix = "https://api.semanticscholar.org/graph/v1/paper/search?query=";
+const corpusIDregex = /^[0-9]+$/; 
 
 @observer
 class PaperResultsCards extends React.Component {
@@ -31,7 +33,7 @@ class PaperResultsCards extends React.Component {
 
   handleClick(paperId) {
     let citationAPI = "https://api.semanticscholar.org/v1/paper/" + paperId;
-    console.log("call this " + citationAPI);
+    console.log("Adding selected paper");
     fetch(citationAPI)
       .then((res) => {
         if (res.ok) {
@@ -52,33 +54,31 @@ class PaperResultsCards extends React.Component {
 
   handlePageChange = (event) => {
     this.state.page = event.selected;
-    console.log("query: " + this.state.query)
-    
-    if (this.state.query) {
-      // console.log("12-2")
+    let apiurl; 
+    if (corpusIDregex.test(this.state.query)) {
+      apiurl = apiCorpusPrefix + this.state.query;
+    } else {
       var keywordQuery = this.state.query; 
       // keywordQuery = keywordQuery.trim().replace(/  +/g, ' ').replace(/ /g, '+');
-      let apiurl = apiKeywordPrefix + keywordQuery + "&offset=" + 10 * event.selected;
-      console.log(apiurl)
-      fetch(apiurl)
-          .then((res) => {
-            if (res.ok) {
-              return res.json();
-            } else {
-              throw "error";
-            }
-          })
-          .then((response) => {
-            var searches = [];
-            for (var i = 0; i < response.data.length; i++) {
-              searches.push(response.data[i]);
-            }
-            console.log(response);
-            this.setState({data: searches});
-            // console.log("addpapersdialog: " + this.state.searchResults);
-          })
+      apiurl = apiKeywordPrefix + keywordQuery + "&offset=" + 10 * event.selected;
     }
     
+    fetch(apiurl)
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw "error";
+          }
+        })
+        .then((response) => {
+          var searches = [];
+          for (var i = 0; i < response.data.length; i++) {
+            searches.push(response.data[i]);
+          }
+          this.setState({data: searches});
+          // console.log("addpapersdialog: " + this.state.searchResults);
+        })
     // console.log(apiurl);
   };
   
@@ -89,7 +89,6 @@ class PaperResultsCards extends React.Component {
   }
 
   render() {    
-    console.log("in paperresultscard component");
     let cards = [];
     this.state.data.forEach(paper=> {
       // console.log("paper: " + {paper});
@@ -106,7 +105,7 @@ class PaperResultsCards extends React.Component {
               {cards}
             </tbody>
           </table>
-          <div style={{display: this.props.query ? 'block' : 'none' }}>  
+          <div style={{display: this.props.query.length < 11 ? 'none' : 'block' }}>  
             <ReactPaginate
               pageCount={pageCount}
               marginPagesDisplayed={pageCount}
