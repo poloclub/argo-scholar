@@ -63,7 +63,7 @@ class AddPapersDialog extends React.Component {
             // for (var i = 0; i < response.data.length; i++) {
             //   searches.push(response.data[i]);
             // }
-            this.setState({searchResults: searches, search: this.state.query});
+            this.setState({searchResults: searches, search: null});
           })
           .catch((error) => {
             alert("Issue occurred when fetching search results. This may be due to API issues or the CorpusID not being associated with a valid paper.");

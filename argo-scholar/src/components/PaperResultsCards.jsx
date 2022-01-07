@@ -62,7 +62,7 @@ class PaperResultsCards extends React.Component {
       // keywordQuery = keywordQuery.trim().replace(/  +/g, ' ').replace(/ /g, '+');
       apiurl = apiKeywordPrefix + keywordQuery + "&offset=" + 10 * event.selected;
     }
-    
+    // console.log(apiurl)
     fetch(apiurl)
         .then((res) => {
           if (res.ok) {
@@ -83,8 +83,10 @@ class PaperResultsCards extends React.Component {
   };
   
   componentDidUpdate(prevProps) {
-    if (prevProps.query !== this.props.query) {
+    if (prevProps.papers !== this.props.papers) {
       this.setState( {data: this.props.papers, query: this.props.query, page: 0} )
+      // console.log("updated:")
+      // console.log(this.props.papers)
     }
   }
 
@@ -105,7 +107,7 @@ class PaperResultsCards extends React.Component {
               {cards}
             </tbody>
           </table>
-          <div style={{display: this.props.query.length < 11 ? 'none' : 'block' }}>  
+          <div style={{display: this.state.query ? 'block' : 'none' }}>  
             <ReactPaginate
               pageCount={pageCount}
               marginPagesDisplayed={pageCount}
@@ -114,7 +116,7 @@ class PaperResultsCards extends React.Component {
               previousLabel={null}
               nextLabel={null}
               activeClassName={"paginate-activeClassName"}
-              initialPage={0}
+              // initialPage={this.state.page}
               onPageChange={this.handlePageChange}
               forcePage={this.state.page}
               prevRel={null}
