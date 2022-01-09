@@ -513,7 +513,7 @@ export default class GraphStore {
     const rightClickedNodeId =
       this.frame.rightClickedNode.data.ref.id.toString();
     var requestURL =
-      "https://www.semanticscholar.org/api/1/search/paper/" +
+      "https://argo-cors-anywhere.herokuapp.com/https://www.semanticscholar.org/api/1/search/paper/" +
       rightClickedNodeId +
       "/citations";
 
@@ -679,7 +679,6 @@ export default class GraphStore {
   }
 
   //add sorted references to right clicked node
-  //add sorted citaions to right clicked node
   addSortedReferences(sortMethod) {
     let curcount = 0;
     let pageSize = 10;
@@ -689,7 +688,7 @@ export default class GraphStore {
     const rightClickedNodeId =
       this.frame.rightClickedNode.data.ref.id.toString();
     var requestURL =
-      "https://www.semanticscholar.org/api/1/paper/" +
+      "https://argo-cors-anywhere.herokuapp.com/https://www.semanticscholar.org/api/1/paper/" +
       rightClickedNodeId +
       "/citations?sort=" +
       sortMethod +
