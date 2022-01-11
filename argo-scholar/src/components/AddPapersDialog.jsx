@@ -133,7 +133,7 @@ class AddPapersDialog extends React.Component {
           </label>
           <div className="pt-callout pt-icon-info-sign">
             <i>Corpus ID</i>, also known as <i>S2CID</i> or <i>S2 corpus ID</i>, is a unique identifier for a paper in the <b>Semantic Scholar</b> database.<br />
-            <a href="https://www.semanticscholar.org/"> Look up the <i>Corpus ID</i> of a paper</a>
+            <a target="_blank" href="https://www.semanticscholar.org/"> Look up the <i>Corpus ID</i> of a paper</a>
 
           </div>
           <div key={this.state.searchResults}> 
