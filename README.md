@@ -6,7 +6,7 @@ An interactive literature exploration visualization system that runs in your web
 
 <img src="img/argoscholar_README_Logo2.png" width=60% alt="Argo Scholar logo">
 
-## Documentations
+## Documentations 
 
 - [Quick Start (Visualization, Saving and Sharing Snapshots)](quickstart.md)
 - [Tutorial - Visualizing a citation network of Apolo (Initialize Network, Incremental Exploration, Saving Progress)](tutorial.md)
@@ -44,6 +44,13 @@ You will be able to load the snapshot from your saved file or from the shared li
 Argo Scholar allows you to embed your interactive literature exploration visualization snapshots into iframe-based web widgets! You can embed them into web articles, blog posts and even interactive notebooks such as Jupyter Notebooks. Tell a story with your network!
 
 <img src="/img/img-embedded.png" width=60% alt="Argo Scholar embedded widget mode">
+
+---
+Argo Scholar uses the Semantic Scholar Open Research Corpus API which is licensed under [ODC-BY](https://opendatacommons.org/licenses/by/1.0/).
+More can be found here:
+
+*Waleed Ammar et al. 2018. Construction of the Literature Graph in Semantic Scholar. NAACL*
+https://www.semanticscholar.org/paper/09e3cf5704bcb16e6657f6ceed70e93373a54618
 
 ---
 
