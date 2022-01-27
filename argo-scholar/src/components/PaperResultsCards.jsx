@@ -107,7 +107,7 @@ class PaperResultsCards extends React.Component {
               {cards}
             </tbody>
           </table>
-          <div style={{display: this.state.query ? 'block' : 'none' }}>  
+          <div style={{display: corpusIDregex.test(this.state.query) ? 'none' : 'block' }}>  
             <ReactPaginate
               pageCount={pageCount}
               marginPagesDisplayed={pageCount}

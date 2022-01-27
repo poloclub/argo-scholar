@@ -23,14 +23,12 @@ class AddPapersDialog extends React.Component {
     super(props);
     this._isMounted = false;
     this.state = {
-      query: "",
       id: 0,
-      searchResults: [],
-      search: "",
     };
   }
 
   componentDidMount() {
+    // this.state.query = appState.project.currentQuery;
     this._isMounted = true;
   };
 
@@ -38,16 +36,13 @@ class AddPapersDialog extends React.Component {
     this._isMounted = false;
   };
 
-  // handleChange(event) {
-  //   this._isMounted && this.setState({query: event.target.value});
-  // }
-
   handleSubmit(event) {
+    let query = appState.project.currentQuery;
     if (this._isMounted) {
-      if (corpusIDregex.test(this.state.query)) {
+      if (corpusIDregex.test(query)) {
         // CorpusID submitted
         
-        let apiurl = apiCorpusPrefix + this.state.query;
+        let apiurl = apiCorpusPrefix + query;
 
         fetch(apiurl)
           .then((res) => {
@@ -63,7 +58,8 @@ class AddPapersDialog extends React.Component {
             // for (var i = 0; i < response.data.length; i++) {
             //   searches.push(response.data[i]);
             // }
-            this.setState({searchResults: searches, search: null});
+            appState.project.searchResults = searches;
+            // this.setState({searchResults: searches, search: null});
           })
           .catch((error) => {
             alert("Issue occurred when fetching search results. This may be due to API issues or the CorpusID not being associated with a valid paper.");
@@ -71,7 +67,7 @@ class AddPapersDialog extends React.Component {
       } else {
         // Keyword query
 
-        var keywordQuery = this.state.query; 
+        var keywordQuery = appState.project.currentQuery; 
         keywordQuery = keywordQuery.trim().replace(/  +/g, ' ').replace(/ /g, '+');
         // this.state.search = keywordQuery;
         // // this.state.query = keywordQuery;
@@ -91,7 +87,8 @@ class AddPapersDialog extends React.Component {
             for (var i = 0; i < response.data.length; i++) {
               searches.push(response.data[i]);
             }
-            this.setState({searchResults: searches, search: keywordQuery});
+            appState.project.searchResults = searches;
+            // this.setState({searchResults: searches, search: keywordQuery});
             // console.log("addpapersdialog: " + this.state.searchResults);
           })
           .catch((error) => {
@@ -127,8 +124,13 @@ class AddPapersDialog extends React.Component {
               type="text"
               placeholder="Search by paper name or CorpusID"
               dir="auto"
-              value={this.state.query}
-              onChange={event => this.setState({ query: event.target.value })}
+              value={appState.project.currentQuery}
+              // value={this.state.query}
+              onChange={event => {
+                appState.project.currentQuery = event.target.value;
+                // this.state.query = event.target.value;
+              }}
+              // onChange={event => this.setState({ query: event.target.value })}
             />
           </label>
           <div className="pt-callout pt-icon-info-sign">
@@ -136,8 +138,9 @@ class AddPapersDialog extends React.Component {
             <a target="_blank" href="https://www.semanticscholar.org/"> Look up the <i>Corpus ID</i> of a paper</a>
 
           </div>
-          <div key={this.state.searchResults}> 
-            <PaperResultsCards papers={this.state.searchResults} query={this.state.search} />
+          <div>
+            <PaperResultsCards papers={appState.project.searchResults} query={appState.project.currentQuery} />
+            {/* <PaperResultsCards papers={this.state.searchResults} query={this.state.search} /> */}
           </div>
         </div>
 
@@ -145,9 +148,9 @@ class AddPapersDialog extends React.Component {
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button
               className={classnames({
-                [Classes.DISABLED]: !this.state.query
+                [Classes.DISABLED]: !appState.project.currentQuery
               })}
-              disabled={!this.state.query}
+              disabled={!appState.project.currentQuery}
               intent={Intent.PRIMARY}
               onClick={() => {
                 this.handleSubmit(event);

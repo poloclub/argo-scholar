@@ -28,6 +28,9 @@ export default class ProjectStore {
   // Also used when refreshing WorkspaceView
   @observable isFetching = true;
 
+  @observable currentQuery = '';
+
+  @observable searchResults = [];
   /*
    * New project creation and import
    */
