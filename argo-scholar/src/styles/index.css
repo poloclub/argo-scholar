@@ -324,19 +324,28 @@ div.pt-card.sub-option.legend {
 }
 
 .transparent-frame {
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
+/* Hide scrollbar*/
 .node-details-table {
   overflow-x: auto;
   overflow-y: auto;
-  max-width: 400px;
-  max-height: 60vh;
+  max-width: 50vh;
+  width: 40vh;
+  max-height: 65vh;
   font-size: 0.4em;
   pointer-events: all;
   padding: 0;
+  /* Hide scrollbar*/
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
+/* Hide scrollbar*/
+.node-details-table::-webkit-scrollbar {
+  display: none;
+}
 .argo-menu-list-header {
   font-size: 1.5em;
   color: lightslategray;
@@ -372,3 +381,4 @@ div.pt-card.sub-option.legend {
 .pt-numeric-input.pt-control-group {
   display: inline-flex;
 }
+

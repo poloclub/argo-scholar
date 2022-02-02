@@ -29,15 +29,14 @@ class NodeDetail extends React.Component {
           "transparent-frame"
         )}
       >
-        <div className={classnames(Classes.CARD, "node-details-table")}>
+        <div className={classnames(Classes.CARD, "node-details-table","pt-elevation-3")}>
           <table
             className={classnames(Classes.TABLE, Classes.TABLE_STRIPED)}
             style={{
               width: "100%",
-              padding: '0',
+              padding: "0",
             }}
           >
-            
             <thead>
               <tr>
                 <th>Property</th>
@@ -47,8 +46,16 @@ class NodeDetail extends React.Component {
             <tbody>
               {appState.graph.allPropertiesKeyList.map((it, i) => (
                 <tr key={`${it}-${i}`}>
-                  <td style={{ padding: '5px 10px' }}>{it}</td>
-                  <td style={{ padding: '5px 10px', whiteSpace: 'normal' }}>{(it == "url") ? <a href={this.props.node[it]} target={"_blank"}>Link to Paper</a> : formatLongFloat(this.props.node[it])}</td>
+                  <td style={{ padding: "5px 10px" }}>{it}</td>
+                  <td style={{ padding: "5px 10px", whiteSpace: "normal" }}>
+                    {it == "url" ? (
+                      <a href={this.props.node[it]} target={"_blank"}>
+                        Link to Paper
+                      </a>
+                    ) : (
+                      formatLongFloat(this.props.node[it])
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
