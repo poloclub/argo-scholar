@@ -10,7 +10,7 @@ import EdgesPanel from "./panels/EdgesPanel";
 import LabelsPanel from "./panels/LabelsPanel";
 import NodeDetail from "./panels/NodeDetailPanel";
 import Legends from "./Legends";
-import StatusBar from './StatusBar';
+import StatusBar from "./StatusBar";
 import SelectionActionPanel from "./panels/SelectionActionPanel";
 import ZoomPanel from "./panels/ZoomPanel";
 
@@ -39,19 +39,26 @@ class RenderOptionsCard extends React.Component {
 @observer
 class FloatingCards extends React.Component {
   optionsVisible = {
-    left: '0em'
-  }
+    left: "0em",
+  };
   optionsInvisible = {
-    left: '-22em'
-  }
-  sideButtonVis = {
-    marginLeft: '50px'
-  }
+    left: "-22em",
+  };
+  // Differentiate the side button colors based on the color mode
+  sideButtonVisDark = {
+    marginLeft: "50px",
+    color: "#5C7080",
+  };
+  sideButtonVisWhite = {
+    marginLeft: "50px",
+    color: "#CED9E0",
+  };
   sideButtonInv = {
-    marginLeft: '-15px'
-  }
+    marginLeft: "-15px",
+  };
   toggleOptions = () => {
-    appState.preferences.isRenderOptionsCardHidden = !appState.preferences.isRenderOptionsCardHidden;
+    appState.preferences.isRenderOptionsCardHidden =
+      !appState.preferences.isRenderOptionsCardHidden;
   };
   render() {
     return (
@@ -70,7 +77,7 @@ class FloatingCards extends React.Component {
                 style={{
                   display: "flex",
                   justifyContent: "left",
-                  alignItems: "left"
+                  alignItems: "left",
                 }}
               >
                 <h4 style={{ width: 140 }}>
@@ -82,7 +89,7 @@ class FloatingCards extends React.Component {
                 <SimpleSelect
                   style={{ "margin-bottom": 10 }}
                   items={[...appState.graph.metadata.nodeComputed, "node_id"]}
-                  onSelect={it => (appState.graph.searchOrder = it)}
+                  onSelect={(it) => (appState.graph.searchOrder = it)}
                   value={appState.graph.searchOrder}
                 />
               </div>
@@ -94,7 +101,7 @@ class FloatingCards extends React.Component {
                 )}
                 style={{
                   width: "100%",
-                  userSelect: "none"
+                  userSelect: "none",
                 }}
               >
                 <tbody>
@@ -125,10 +132,12 @@ class FloatingCards extends React.Component {
                   onMouseDown={() => {
                     if (appState.search.pageNum > 0) {
                       appState.search.pageNum -= 1;
-                      appState.search.candidates = appState.search.allCands.slice(
-                        appState.search.pageNum * appState.search.nPerPage,
-                        (appState.search.pageNum + 1) * appState.search.nPerPage
-                      );
+                      appState.search.candidates =
+                        appState.search.allCands.slice(
+                          appState.search.pageNum * appState.search.nPerPage,
+                          (appState.search.pageNum + 1) *
+                            appState.search.nPerPage
+                        );
                     }
                   }}
                 >
@@ -139,10 +148,12 @@ class FloatingCards extends React.Component {
                   <a
                     onMouseDown={() => {
                       appState.search.pageNum = 0;
-                      appState.search.candidates = appState.search.allCands.slice(
-                        appState.search.pageNum * appState.search.nPerPage,
-                        (appState.search.pageNum + 1) * appState.search.nPerPage
-                      );
+                      appState.search.candidates =
+                        appState.search.allCands.slice(
+                          appState.search.pageNum * appState.search.nPerPage,
+                          (appState.search.pageNum + 1) *
+                            appState.search.nPerPage
+                        );
                     }}
                   >
                     1&nbsp;
@@ -152,14 +163,14 @@ class FloatingCards extends React.Component {
                     style={{
                       color: "#111111",
                       pointerEvents: "none",
-                      cursor: "default"
+                      cursor: "default",
                     }}
                   >
                     {appState.search.pageNum + 1}&nbsp;
                   </a>
                 )}
                 ...<b>&nbsp;</b>
-                {appState.search.pages.map(i => {
+                {appState.search.pages.map((i) => {
                   if (
                     i != 0 &&
                     i != appState.search.maxPage &&
@@ -171,7 +182,7 @@ class FloatingCards extends React.Component {
                         style={{
                           color: "#111111",
                           pointerEvents: "none",
-                          cursor: "default"
+                          cursor: "default",
                         }}
                       >
                         {appState.search.pageNum + 1}&nbsp;
@@ -191,11 +202,13 @@ class FloatingCards extends React.Component {
                         key={i}
                         onMouseDown={() => {
                           appState.search.pageNum = i;
-                          appState.search.candidates = appState.search.allCands.slice(
-                            appState.search.pageNum * appState.search.nPerPage,
-                            (appState.search.pageNum + 1) *
-                            appState.search.nPerPage
-                          );
+                          appState.search.candidates =
+                            appState.search.allCands.slice(
+                              appState.search.pageNum *
+                                appState.search.nPerPage,
+                              (appState.search.pageNum + 1) *
+                                appState.search.nPerPage
+                            );
                         }}
                       >
                         {i + 1}&nbsp;
@@ -208,10 +221,12 @@ class FloatingCards extends React.Component {
                   <a
                     onMouseDown={() => {
                       appState.search.pageNum = appState.search.maxPage;
-                      appState.search.candidates = appState.search.allCands.slice(
-                        appState.search.pageNum * appState.search.nPerPage,
-                        (appState.search.pageNum + 1) * appState.search.nPerPage
-                      );
+                      appState.search.candidates =
+                        appState.search.allCands.slice(
+                          appState.search.pageNum * appState.search.nPerPage,
+                          (appState.search.pageNum + 1) *
+                            appState.search.nPerPage
+                        );
                     }}
                   >
                     {appState.search.maxPage + 1}&nbsp;
@@ -221,7 +236,7 @@ class FloatingCards extends React.Component {
                     style={{
                       color: "#111111",
                       pointerEvents: "none",
-                      cursor: "default"
+                      cursor: "default",
                     }}
                   >
                     {appState.search.pageNum + 1}
@@ -232,10 +247,12 @@ class FloatingCards extends React.Component {
                   onMouseDown={() => {
                     if (appState.search.pageNum < appState.search.maxPage) {
                       appState.search.pageNum += 1;
-                      appState.search.candidates = appState.search.allCands.slice(
-                        appState.search.pageNum * appState.search.nPerPage,
-                        (appState.search.pageNum + 1) * appState.search.nPerPage
-                      );
+                      appState.search.candidates =
+                        appState.search.allCands.slice(
+                          appState.search.pageNum * appState.search.nPerPage,
+                          (appState.search.pageNum + 1) *
+                            appState.search.nPerPage
+                        );
                     }
                   }}
                 >
@@ -256,22 +273,50 @@ class FloatingCards extends React.Component {
               "transparent-frame",
               "left-cards"
             )}
-            style={appState.preferences.isRenderOptionsCardHidden ? this.optionsInvisible : this.optionsVisible}
+            style={
+              appState.preferences.isRenderOptionsCardHidden
+                ? this.optionsInvisible
+                : this.optionsVisible
+            }
           >
-            <button className="minimizeCardButton" onClick={this.toggleOptions}> &#8249;
+            <button className="minimizeCardButton" onClick={this.toggleOptions}>
+              {" "}
+              &#8249;
             </button>
             <br />
             <RenderOptionsCard />
           </div>
-          <div className={classnames(Classes.CARD, Classes.ELEVATION_2, "overlay-card",
-            "transparent-frame")} style={{ width: "1em", paddingTop: "1em", paddingRight: "0.7em", paddingBottom: "0.5em", marginLeft: "-5.4em" }}>
-            <button className={classnames({
-
-              "expandCardButtonDark": appState.preferences.darkMode,
-              "expandCardButtonLight": !appState.preferences.darkMode
-
-            })}
-              onClick={this.toggleOptions} style={appState.preferences.isRenderOptionsCardHidden ? this.sideButtonVis : this.sideButtonInv}>
+          <div
+            className={classnames(
+              Classes.CARD,
+              Classes.ELEVATION_4,
+              "overlay-card",
+              "transparent-frame"
+            )}
+            style={{
+              width: "1em",
+              paddingTop: "1em",
+              paddingRight: "0.7em",
+              paddingBottom: "0.5em",
+              marginLeft: "-5.4em",
+            }}
+          >
+            <button
+              className={classnames(
+                Classes.BUTTON,
+                "expandCardButton",
+                "pt-elevation-1"
+              )}
+              onClick={this.toggleOptions}
+              style={
+                //Nested ternary to check the two conditions
+                !appState.preferences.isRenderOptionsCardHidden
+                  ? this.sideButtonInv
+                  : appState.preferences.darkMode
+                  ? this.sideButtonVisWhite
+                  : this.sideButtonVisDark
+              }
+            >
               &#9776;
             </button>
           </div>
@@ -280,16 +325,19 @@ class FloatingCards extends React.Component {
           <NodeDetail node={appState.graph.selectedNodes[0].data.ref} />
         )}
 
-        {appState.graph.selectedNodes.length !== 1 && appState.graph.currentlyHovered && (
-          <NodeDetail node={appState.graph.currentlyHovered.data.ref} />
-        )}
-
-
+        {appState.graph.selectedNodes.length !== 1 &&
+          appState.graph.currentlyHovered && (
+            <NodeDetail node={appState.graph.currentlyHovered.data.ref} />
+          )}
 
         <Legends />
         <StatusBar />
-        {// This menu only shows when there are nodes selected
-          appState.graph.selectedNodes.length > 0 && !appState.preferences.isNavbarInMinimalMode && <SelectionActionPanel />
+        {
+          // This menu only shows when there are nodes selected
+          appState.graph.selectedNodes.length > 0 &&
+            !appState.preferences.isNavbarInMinimalMode && (
+              <SelectionActionPanel />
+            )
         }
 
         <ZoomPanel />
@@ -297,6 +345,5 @@ class FloatingCards extends React.Component {
     );
   }
 }
-
 
 export default FloatingCards;

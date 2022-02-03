@@ -29,7 +29,7 @@ class NodeDetail extends React.Component {
           "transparent-frame"
         )}
       >
-        <div className={classnames(Classes.CARD, "node-details-table","pt-elevation-3")}>
+        <div className={classnames(Classes.CARD, "node-details-table","pt-elevation-2")}>
           <table
             className={classnames(Classes.TABLE, Classes.TABLE_STRIPED)}
             style={{

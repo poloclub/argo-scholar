@@ -106,57 +106,16 @@ html {
   background: #495964;
 }
 
-.expandCardButtonLight {
-  margin-left: 0;
+.expandCardButton {
   margin-top: 1em;
   cursor: pointer;
   background-color: white;
-  padding: 10px 18px;
-  border: #6A8496;
-  border-width: 1.8px;
-  border-style: solid;
+  padding: 8px 15px;
   border-radius: 10%;
-  font-size: 18pt;
-  color: #6A8496;
+  font-size: 16pt;
   transition: margin-left 0.2s;
 }
 
-.expandCardButtonLight:hover {
-  background-color: #495964;
-}
-
-.expandCardButtonLight:active {
-  background-color: white;
-}
-.expandCardButtonDark {
-  margin-left: 0;
-  margin-top: 1em;
-  cursor: pointer;
-  background-color: #465d6e;
-  padding: 10px 18px;
-  border: #465d6e;
-  border-width: 1.8px;
-  border-style:solid;
-  border-radius: 10%;
-  font-size: 18pt;
-  color: white;
-  transition: margin-left 0.2s;
-}
-.expandCardButtonDark:hover {
-  background-color: rgb(20, 23, 36);
-  border: rgb(20, 23, 36);
-  border-width: 1.8px;
-  border-style:solid;
-  border-radius: 10%;
-}
-
-.expandCardButtonDark:active {
-  background-color: #465d6e;
-  border: #465d6e;
-  border-width: 1.8px;
-  border-style:solid;
-  border-radius: 10%;
-}
 .minimizeCardButton {
   margin-left: 235px;
   padding-top: 2.3em;
@@ -251,12 +210,12 @@ td.search-add {
 }
 
 .paginate-pageClassName > a {
-  color:rgb(20, 23, 36);
+  color: rgb(20, 23, 36);
 }
 
 .paginate-activeClassName > a {
   font-weight: bold;
-  color:#106ba3;
+  color: #106ba3;
 }
 
 .paginate-containerClassName {
@@ -338,8 +297,8 @@ div.pt-card.sub-option.legend {
   pointer-events: all;
   padding: 0;
   /* Hide scrollbar*/
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 /* Hide scrollbar*/
@@ -381,4 +340,3 @@ div.pt-card.sub-option.legend {
 .pt-numeric-input.pt-control-group {
   display: inline-flex;
 }
-
