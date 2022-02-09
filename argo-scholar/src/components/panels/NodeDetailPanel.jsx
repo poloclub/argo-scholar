@@ -36,6 +36,7 @@ class NodeDetail extends React.Component {
             "pt-elevation-2"
           )}
         >
+          {/* Old table style (deprecated) */}
           {/* <table
             className={classnames(Classes.TABLE, Classes.TABLE_STRIPED)}
             style={{
@@ -69,7 +70,9 @@ class NodeDetail extends React.Component {
               )}
             </tbody>
           </table> */}
+
           <div>
+            {/* Title */}
             <h5 style={{ lineHeight: "1.2em" }}>
               {
                 <a href={this.props.node["url"]} target={"_blank"}>
@@ -78,36 +81,68 @@ class NodeDetail extends React.Component {
               }
             </h5>
 
-            <MenuDivider style={{ width: "100em" }} />
-            <p>
-              <b>{this.props.node["authors"]}</b>
-            </p>
-            <MenuDivider style={{ width: "100em" }} />
-            <p>
-              <b>Venue: </b>
-              {this.props.node["venue"]}
-              <br />
-              <b>Year: </b>
-              {this.props.node["year"]}
-              <br />
-              <b>Citation count: </b>
-              {this.props.node["citationCount"]}
-              
-            </p>
-            <MenuDivider style={{ width: "100em" }} />
-            <p>
-              <b>Degree: </b>
-              {this.props.node["degree"]}
-              <br />
-              <b>Page rank: </b>
-              {this.props.node["pagerank"]}
-              <br />
-              <b>Node ID: </b>
-              {this.props.node["node_id"]}
-            </p>
-            <MenuDivider style={{ width: "100em" }} />
-            <b>Abstract: </b>
-              {this.props.node["paperAbstract"]}
+            {/* Authors */}
+            <MenuDivider />
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              <span
+                style={{ flexBasis: "7%" }}
+                className="pt-icon-standard pt-icon-people"
+              />
+              <div style={{ flexBasis: "93%" }}>
+                <b>{this.props.node["authors"]}</b>
+              </div>
+            </div>
+
+            {/* Publication Details */}
+            <MenuDivider />
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              <span
+                style={{ flexBasis: "7%" }}
+                className="pt-icon-standard pt-icon-book"
+              />
+              <div style={{ flexBasis: "93%" }}>
+                <b>Venue: </b>
+                {this.props.node["venue"]}
+                <br />
+                <b>Year: </b>
+                {this.props.node["year"]}
+                <br />
+                <b>Citation Count: </b>
+                {this.props.node["citationCount"]}
+              </div>
+            </div>
+
+            {/* Stats */}
+            <MenuDivider />
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              <span
+                style={{ flexBasis: "7%" }}
+                className="pt-icon-standard pt-icon-scatter-plot"
+              />
+              <div style={{ flexBasis: "93%" }}>
+                <b>Degree: </b>
+                {this.props.node["degree"]}
+                <br />
+                <b>Page Rank: </b>
+                {this.props.node["pagerank"]}
+                <br />
+                <b>Node ID: </b>
+                {this.props.node["node_id"]}
+              </div>
+            </div>
+
+            {/* Abstract */}
+            <MenuDivider />
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              <span
+                style={{ flexBasis: "7%" }}
+                className="pt-icon-standard pt-icon-manual"
+              />
+              <div style={{ flexBasis: "93%" }}>
+                <b>Abstract: </b>
+                {this.props.node["paperAbstract"]}
+              </div>
+            </div>
           </div>
         </div>
       </div>

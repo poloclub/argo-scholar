@@ -283,13 +283,13 @@ div.pt-card.sub-option.legend {
 }
 
 .transparent-frame {
-  opacity: 0.95;
+  opacity: 0.85;
 }
 
 .node-details-table {
   overflow-x: auto;
   overflow-y: auto;
-  max-width: 45vh;
+  max-width: 25vw;
   
   max-height: 60vh;
 
