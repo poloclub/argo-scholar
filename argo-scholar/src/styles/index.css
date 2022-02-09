@@ -87,23 +87,23 @@ html {
 
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 9px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #c0baba;
+  background: #e1e8ed;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #6a8496;
-  border-radius: 10px;
+  background: #8a9ba8;
+  border-radius: 20px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #495964;
+  background: #5c7080;
 }
 
 .expandCardButton {
@@ -142,7 +142,7 @@ html {
 
 .right-overlay-card {
   right: 2em;
-  top: 5em;
+  top: 6em;
   position: absolute;
 }
 
@@ -286,19 +286,20 @@ div.pt-card.sub-option.legend {
   opacity: 0.95;
 }
 
-/* Hide scrollbar*/
 .node-details-table {
   overflow-x: auto;
   overflow-y: auto;
-  max-width: 50vh;
-  width: 40vh;
-  max-height: 65vh;
-  font-size: 0.4em;
+  max-width: 45vh;
+  
+  max-height: 60vh;
+
   pointer-events: all;
-  padding: 0;
+
   /* Hide scrollbar*/
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  /* IE and Edge */
+  -ms-overflow-style: none;
+  /* Firefox */
+  scrollbar-width: none;
 }
 
 /* Hide scrollbar*/
