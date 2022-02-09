@@ -91,6 +91,12 @@ class RegularNavbar extends React.Component {
                 />
                 <MenuDivider />
                 <MenuItem
+                  iconName="pt-icon-map-create"
+                  text="New..."
+                  onClick={() => { appState.project.isNewProjectDialogOpen = true }}
+                />
+                <MenuDivider />
+                <MenuItem
                   iconName="download"
                   text="Save Snapshot"
                   onClick={() => {

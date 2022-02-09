@@ -14,6 +14,7 @@ import HelpDialog from './HelpDialog';
 import NeighborDialog from './NeighborDialog';
 import DataSheetDialog from './DataSheetDialog';
 import AddPapersDialog from "./AddPapersDialog";
+import NewNetworkDialog from "./NewNetworkDialog";
 
 export default class Dialogs extends React.Component {
   render() {
@@ -34,6 +35,7 @@ export default class Dialogs extends React.Component {
         <NeighborDialog />
         <DataSheetDialog />
         <AddPapersDialog />
+        <NewNetworkDialog />
       </div>
     );
   }
