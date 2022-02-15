@@ -84,11 +84,7 @@ class NodeDetail extends React.Component {
             {/* Authors */}
             <MenuDivider />
             <div style={{ display: "flex", flexWrap: "wrap" }}>
-              <span
-                style={{ flexBasis: "7%" }}
-                className="pt-icon-standard pt-icon-people"
-              />
-              <div style={{ flexBasis: "93%" }}>
+              <div>
                 <b>{this.props.node["authors"]}</b>
               </div>
             </div>
@@ -96,11 +92,7 @@ class NodeDetail extends React.Component {
             {/* Publication Details */}
             <MenuDivider />
             <div style={{ display: "flex", flexWrap: "wrap" }}>
-              <span
-                style={{ flexBasis: "7%" }}
-                className="pt-icon-standard pt-icon-book"
-              />
-              <div style={{ flexBasis: "93%" }}>
+              <div>
                 <b>Venue: </b>
                 {this.props.node["venue"]}
                 <br />
@@ -115,11 +107,7 @@ class NodeDetail extends React.Component {
             {/* Stats */}
             <MenuDivider />
             <div style={{ display: "flex", flexWrap: "wrap" }}>
-              <span
-                style={{ flexBasis: "7%" }}
-                className="pt-icon-standard pt-icon-scatter-plot"
-              />
-              <div style={{ flexBasis: "93%" }}>
+              <div>
                 <b>Degree: </b>
                 {this.props.node["degree"]}
                 <br />
@@ -134,12 +122,8 @@ class NodeDetail extends React.Component {
             {/* Abstract */}
             <MenuDivider />
             <div style={{ display: "flex", flexWrap: "wrap" }}>
-              <span
-                style={{ flexBasis: "7%" }}
-                className="pt-icon-standard pt-icon-manual"
-              />
-              <div style={{ flexBasis: "93%" }}>
-                <b>Abstract: </b>
+              <div>
+                <b>Abstract: </b><br/>
                 {this.props.node["paperAbstract"]}
               </div>
             </div>
