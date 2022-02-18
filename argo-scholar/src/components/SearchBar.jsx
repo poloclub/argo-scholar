@@ -19,6 +19,8 @@ import {
 } from "@blueprintjs/core";
 import { tree } from "d3";
 
+import AddNodes from "./panels/AddNodesPanel";
+
 const corpusIDregex = /^[0-9]+$/; 
 const apiCorpusPrefix = "https://api.semanticscholar.org/v1/paper/CorpusID:";
 const apiKeywordPrefix = "https://api.semanticscholar.org/graph/v1/paper/search?query=";
@@ -29,6 +31,7 @@ class SearchBar extends React.Component {
     this._isMounted = false; 
     this.state = {
         query: '', 
+        display: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -98,12 +101,12 @@ class SearchBar extends React.Component {
           }
           appState.project.searchResults = searches;
           appState.project.isAddPapersDialogOpen = true;
+          this.setState({display: true})
         })
         .catch((error) => {
           alert("Issue occurred when fetching search results.");
         });
     }
-    
     event.preventDefault();
   }
 
@@ -128,23 +131,21 @@ class SearchBar extends React.Component {
   render() {
     return (
       <div>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Search:
-            <input 
-              type="text" 
-              value={this.state.query} 
-              onChange={this.handleChange} 
-              placeholder="Search here" 
-          />
-          </label>
-          <button type="submit">
-            Submit
-          </button>
-        </form>
-
-
-
+        <InputGroup 
+          className={"search-bar-width"}
+          leftIconName={"search"} 
+          rightElement={
+            <Popover
+              content={<AddNodes />} 
+              target={<button onClick={this.handleSubmit} class="pt-button pt-minimal pt-intent-primary pt-icon-arrow-right"></button>}
+              position={Position.BOTTOM}
+              isOpen={this.state.display}
+              onClose={() => {this.setState({display: false})}}
+            /> 
+          }
+          onChange={this.handleChange}
+          placeholder={"Search"}
+        />
         {/* <Popover
           content={
             <Menu>

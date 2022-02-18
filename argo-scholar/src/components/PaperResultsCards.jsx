@@ -102,10 +102,8 @@ class PaperResultsCards extends React.Component {
     })
     return (
         <div>
-          <table>
-            <tbody>
+          <table class="search-paper-table">
               {cards}
-            </tbody>
           </table>
           <div style={{display: corpusIDregex.test(this.state.query) ? 'none' : 'block' }}>  
             <ReactPaginate

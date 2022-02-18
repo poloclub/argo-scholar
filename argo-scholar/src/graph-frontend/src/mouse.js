@@ -118,7 +118,7 @@ module.exports = function (self) {
 
 
   // vars to get time at mouse press and time at mouse release
-  var startTime = 0;
+  var startTime = 0; 
   var endTime = 0;
   /**
    * Mouse down event to start a selection box or start dragging a node
@@ -167,6 +167,7 @@ module.exports = function (self) {
         //when any node is clicked, un-smartpause if smartpaused
         //appState.graph.smartPause.lastUnpaused = Date.now(); //old code using lastUnpaused
         appState.graph.smartPause.interactingWithGraph = true;
+        // appState.project.isAddPapersDialogOpen = false;
       }
 
 
