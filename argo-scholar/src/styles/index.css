@@ -199,14 +199,32 @@ td {
   white-space: nowrap;
 }
 
+table.search-paper-table {
+  table-layout: auto;
+  border-collapse: collapse;
+  border-spacing: 0 10px;
+}
+
+tr.search-row {
+  border-bottom: 1px solid #ddd;
+}
+
 td.search-result {
   width: 100%;
   padding-right: 5%;
+  padding-left: 2%;
+  word-wrap: break-word;
+  white-space: normal;
+  overflow: auto;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 td.search-add {
   padding-right: 20px;
-  display: flex;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  /* display: flex; */
 }
 
 .paginate-pageClassName > a {
@@ -224,6 +242,10 @@ td.search-add {
   list-style: none;
   padding-left: 0px;
   padding-right: 10px;
+}
+
+.search-bar-width {
+  width: 25vw !important; 
 }
 
 .import-preview-table {
