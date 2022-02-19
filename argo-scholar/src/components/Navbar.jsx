@@ -52,6 +52,28 @@ class RegularNavbar extends React.Component {
           <Popover
             content={
               <Menu>
+                {/* Disabled in Argo Scholar */}
+                {/* <MenuItem
+                  iconName="import"
+                  text="Import from CSV..."
+                  onClick={() => (appState.import.dialogOpen = true)}
+                />
+                <MenuItem
+                  iconName="import"
+                  text="Import from GEXF..."
+                  onClick={() => (appState.import.gexfDialogOpen = true)}
+                /> */}
+                <MenuItem
+                  iconName="pt-icon-map-create"
+                  text="New..."
+                  onClick={() => { appState.project.isNewProjectDialogOpen = true }}
+                />
+                <MenuItem
+                  iconName="pt-icon-document-open"
+                  text="Open Snapshot"
+                  onClick={() => { appState.preferences.openSnapshotDialogOpen = true }}
+                />
+                <MenuDivider />
                 <MenuItem text="Load Sample" iconName="graph">
                   {
                     SAMPLE_GRAPH_SNAPSHOTS.map((sample) => {
@@ -72,29 +94,6 @@ class RegularNavbar extends React.Component {
                   }
 
                 </MenuItem>
-                <MenuDivider />
-                {/* Disabled in Argo Scholar */}
-                {/* <MenuItem
-                  iconName="import"
-                  text="Import from CSV..."
-                  onClick={() => (appState.import.dialogOpen = true)}
-                />
-                <MenuItem
-                  iconName="import"
-                  text="Import from GEXF..."
-                  onClick={() => (appState.import.gexfDialogOpen = true)}
-                /> */}
-                <MenuItem
-                  iconName="pt-icon-document-open"
-                  text="Open Snapshot"
-                  onClick={() => { appState.preferences.openSnapshotDialogOpen = true }}
-                />
-                <MenuDivider />
-                <MenuItem
-                  iconName="pt-icon-map-create"
-                  text="New..."
-                  onClick={() => { appState.project.isNewProjectDialogOpen = true }}
-                />
                 <MenuDivider />
                 <MenuItem
                   iconName="download"
