@@ -303,9 +303,10 @@ div.pt-card.sub-option.legend {
 }
 
 .node-details-table-numerals{
-  font-family: monospace;
+  font-weight: 550;
+  font-family: Courier New, monospace;
   word-break: break-all;
-  color: #394B59;
+  color: #5C7080;
 }
 
 
