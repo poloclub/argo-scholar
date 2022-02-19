@@ -287,7 +287,7 @@ div.pt-card.sub-option.legend {
 }
 
 .node-details-table {
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
   overflow-y: auto;
   max-width: 25vw;
   
@@ -300,6 +300,10 @@ div.pt-card.sub-option.legend {
   -ms-overflow-style: none;
   /* Firefox */
   scrollbar-width: none;
+}
+
+.node-details-table code{
+  word-break: break-all;
 }
 
 /* Hide scrollbar*/
