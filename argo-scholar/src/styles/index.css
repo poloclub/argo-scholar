@@ -290,7 +290,7 @@ div.pt-card.sub-option.legend {
   overflow-wrap: normal;
   overflow-y: auto;
   max-width: 25vw;
-  
+
   max-height: 60vh;
 
   pointer-events: all;
@@ -302,13 +302,12 @@ div.pt-card.sub-option.legend {
   scrollbar-width: none;
 }
 
-.node-details-table-numerals{
+.node-details-table-numerals {
   font-weight: 550;
-  font-family: Courier New, monospace;
+  font-family: 'Courier New', monospace;
   word-break: break-all;
-  color: #5C7080;
+  color: #5c7080;
 }
-
 
 /* Hide scrollbar*/
 .node-details-table::-webkit-scrollbar {
