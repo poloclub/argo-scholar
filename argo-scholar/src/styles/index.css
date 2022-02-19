@@ -216,8 +216,8 @@ td.search-result {
   word-wrap: break-word;
   white-space: normal;
   overflow: auto;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 td.search-add {

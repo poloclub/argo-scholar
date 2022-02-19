@@ -9,6 +9,14 @@ import PaperResultsSubPanel from "./PaperResultsSubPanel";
 
 @observer
 class AddNodes extends React.Component {
+  constructor(props) {
+    super(props);
+    this._isMounted = false; 
+    this.state = {
+        papers: this.props.papers,
+        query: this.props.query,
+    };
+  }
   render() {
     // If input is number,
     // currently format number between 0-1 (eg. pagerank)
@@ -20,7 +28,7 @@ class AddNodes extends React.Component {
         }}
       >
         <div style={{pointerEvents: "all"}}>
-          <PaperResultsSubPanel papers={appState.project.searchResults} query={appState.project.currentQuery}/>
+          <PaperResultsSubPanel papers={this.props.papers} query={this.state.query}/>
         </div>
         
       </div>
