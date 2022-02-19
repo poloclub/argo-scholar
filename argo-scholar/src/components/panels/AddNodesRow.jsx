@@ -98,7 +98,9 @@ class AddNodesRow extends React.Component {
               // // disabled={paper.paperId in appState.graph.preprocessedRawGraph.nodesPanelData}
               disabled={buttonDisabled} 
               onClick={() => this.handleClick(this.state.paper.paperId)}>
-              {nodeHidden ? "Unhide" : "Add"}
+              {nodeHidden ? "Unhide" 
+                : buttonDisabled
+                  ? "Added" : "Add"}
             </button>
           </td>
         </tr>

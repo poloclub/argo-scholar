@@ -35,7 +35,9 @@ class PaperResultsSubPanel extends React.Component {
     return (
         <div>
           <table class="search-paper-table">
-            {cards}
+            <tbody>
+              {cards}
+            </tbody>
           </table> 
         </div>
     );

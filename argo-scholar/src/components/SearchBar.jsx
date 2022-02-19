@@ -30,12 +30,15 @@ class SearchBar extends React.Component {
     super(props);
     this._isMounted = false; 
     this.state = {
+        searchResults: [],
         query: '', 
         display: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleEnter = this.handleEnter.bind(this);
   }
 
   componentDidMount() {
@@ -50,8 +53,23 @@ class SearchBar extends React.Component {
     this._isMounted && this.setState({query: event.target.value});
   }
 
+  handleClick(event) {
+    this.setState({display: true});
+    // event.preventDefault();
+  } 
+
+  handleEnter(event) {
+    if (event.which === 13) {
+      this.handleSubmit(event);
+    }
+   }
+
   handleSubmit(event) {
-    appState.project.currentQuery = this.state.query;
+    this.setState({display: false})
+    if (this.state.query == "") {
+      return
+    }
+    // appState.project.currentQuery = this.state.query;
     
     if (corpusIDregex.test(this.state.query)) {
       // CorpusID submitted
@@ -72,8 +90,9 @@ class SearchBar extends React.Component {
           // for (var i = 0; i < response.data.length; i++) {
           //   searches.push(response.data[i]);
           // }
-          appState.project.searchResults = searches;
-          appState.project.isAddPapersDialogOpen = true;
+          this.setState({searchResults: searches})
+          this.setState({display: true})
+          // appState.project.isAddPapersDialogOpen = true;
         })
         .catch((error) => {
           alert("Issue occurred when fetching search results. This may be due to API issues or the CorpusID not being associated with a valid paper.");
@@ -99,8 +118,8 @@ class SearchBar extends React.Component {
           for (var i = 0; i < response.data.length; i++) {
             searches.push(response.data[i]);
           }
-          appState.project.searchResults = searches;
-          appState.project.isAddPapersDialogOpen = true;
+          this.setState({searchResults: searches})
+          // appState.project.isAddPapersDialogOpen = true;
           this.setState({display: true})
         })
         .catch((error) => {
@@ -136,15 +155,19 @@ class SearchBar extends React.Component {
           leftIconName={"search"} 
           rightElement={
             <Popover
-              content={<AddNodes />} 
+              content={<AddNodes papers={this.state.searchResults} query={this.state.query}/>} 
               target={<button onClick={this.handleSubmit} class="pt-button pt-minimal pt-intent-primary pt-icon-arrow-right"></button>}
               position={Position.BOTTOM}
-              isOpen={this.state.display}
+              isOpen={this.state.display && this.state.searchResults.length > 0}
               onClose={() => {this.setState({display: false})}}
+              autoFocus={false}
+              enforceFocus={false}
             /> 
           }
           onChange={this.handleChange}
           placeholder={"Search"}
+          onKeyPress={(e) => this.handleEnter(e)}
+          onClick={this.handleClick}
         />
         {/* <Popover
           content={
