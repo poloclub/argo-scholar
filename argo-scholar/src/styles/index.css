@@ -303,8 +303,8 @@ div.pt-card.sub-option.legend {
 }
 
 .node-details-table-numerals {
-  font-weight: 550;
-  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-family: "Lucida Console", "Courier New", monospace;
   word-break: break-all;
   color: #5c7080;
 }
