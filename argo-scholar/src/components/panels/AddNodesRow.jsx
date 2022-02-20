@@ -62,7 +62,14 @@ class AddNodesRow extends React.Component {
         .then((response) => {
             appState.graph.addNodetoGraph(response, "null", 0);
             // console.log("add node curcount: ", offset);
-            appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
+            let paperNode = appState.graph.process.graph.getNode(response.paperId);
+            paperNode.renderData.textHolder.children[0].element.override = true;
+            paperNode.pinnedx = true;
+            paperNode.pinnedy = true;
+            paperNode.x = appState.controls.camera.position.x;
+            paperNode.y = appState.controls.camera.position.y;
+            paperNode.pinnedx = true;
+            paperNode.pinnedy = true;
             appState.graph.frame.updateNodesShowingLabels();
             appState.graph.selectedNodes = [];
             appState.graph.frame.selection = [];
