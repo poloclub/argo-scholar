@@ -309,10 +309,10 @@ div.pt-card.sub-option.legend {
 }
 
 .node-details-table {
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
   overflow-y: auto;
   max-width: 25vw;
-  
+
   max-height: 60vh;
 
   pointer-events: all;
@@ -322,6 +322,13 @@ div.pt-card.sub-option.legend {
   -ms-overflow-style: none;
   /* Firefox */
   scrollbar-width: none;
+}
+
+.node-details-table-numerals {
+  font-weight: bold;
+  font-family: "Lucida Console", "Courier New", monospace;
+  word-break: break-all;
+  color: #5c7080;
 }
 
 /* Hide scrollbar*/

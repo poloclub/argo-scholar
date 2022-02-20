@@ -109,13 +109,13 @@ class NodeDetail extends React.Component {
             <div style={{ display: "flex", flexWrap: "wrap" }}>
               <div>
                 <b>Degree: </b>
-                {this.props.node["degree"]}
+                <span className="node-details-table-numerals">{this.props.node["degree"]}</span>
                 <br />
                 <b>Page Rank: </b>
-                {this.props.node["pagerank"]}
+                <span className="node-details-table-numerals">{this.props.node["pagerank"]}</span>
                 <br />
                 <b>Node ID: </b>
-                {this.props.node["node_id"]}
+                <span className="node-details-table-numerals">{this.props.node["node_id"]}</span>
               </div>
             </div>
 
