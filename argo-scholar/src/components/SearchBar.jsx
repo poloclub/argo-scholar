@@ -15,7 +15,9 @@ import {
   Popover,
   Menu,
   MenuItem,
-  MenuDivider
+  MenuDivider,
+  Toaster,
+  IToastProps
 } from "@blueprintjs/core";
 import { tree } from "d3";
 
@@ -95,7 +97,8 @@ class SearchBar extends React.Component {
           // appState.project.isAddPapersDialogOpen = true;
         })
         .catch((error) => {
-          alert("Issue occurred when fetching search results. This may be due to API issues or the CorpusID not being associated with a valid paper.");
+          this.addToast("Issue occurred when fetching search results. This may be due to API issues or the CorpusID not being associated with a valid paper.");
+          // alert("Issue occurred when fetching search results. This may be due to API issues or the CorpusID not being associated with a valid paper.");
         });
     } else {
       // Keyword query
@@ -114,6 +117,10 @@ class SearchBar extends React.Component {
           }
         })
         .then((response) => {
+          if (response.data.length < 1) {
+            this.addToast(`Your search - ${this.state.query} - did not match any papers.`)
+            return
+          }
           var searches = [];
           for (var i = 0; i < response.data.length; i++) {
             searches.push(response.data[i]);
@@ -123,7 +130,7 @@ class SearchBar extends React.Component {
           this.setState({display: true})
         })
         .catch((error) => {
-          alert("Issue occurred when fetching search results.");
+          this.addToast("Issue occurred when fetching search results. This may be due to API issues.");
         });
     }
     event.preventDefault();
@@ -147,9 +154,18 @@ class SearchBar extends React.Component {
     appState.graph.currentlyHovered = null;
   }
 
+  addToast(message) {
+    this.toaster.show({ 
+      message: message,
+      intent: Intent.DANGER,
+      iconName: "warning-sign",
+    });
+  }
+
   render() {
     return (
       <div>
+        <Toaster position={Position.BOTTOM} ref={ref => this.toaster = ref} />
         <InputGroup 
           className={"search-bar-width"}
           leftIconName={"search"} 
