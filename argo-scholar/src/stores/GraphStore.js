@@ -627,6 +627,7 @@ export default class GraphStore {
     appState.graph.frame.updateNodesShowingLabels();
   }
 
+  //Backup: add random citaions to right clicked node
   addRandomCitations() {
     const rightClickedNodeId =
       this.frame.rightClickedNode.data.ref.id.toString();
@@ -822,6 +823,7 @@ export default class GraphStore {
     appState.graph.frame.updateNodesShowingLabels();
   }
 
+  //Backup: add random references to the right clicked node
   addRandomReferences() {
     const rightClickedNodeId =
       this.frame.rightClickedNode.data.ref.id.toString();
