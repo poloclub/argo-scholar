@@ -508,7 +508,7 @@ export default class GraphStore {
     let curcount = 0;
     let page = 1;
     let pageSize = 10;
-    let node_offset = 0;
+    let offset = 0;
 
     const rightClickedNodeId =
       this.frame.rightClickedNode.data.ref.id.toString();
@@ -713,7 +713,6 @@ export default class GraphStore {
   addSortedReferences(sortMethod) {
     let curcount = 0;
     let pageSize = 10;
-    let node_offset = 0;
     let offset = 0;
 
     const rightClickedNodeId =
