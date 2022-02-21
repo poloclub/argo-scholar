@@ -552,6 +552,8 @@ export default class GraphStore {
         });
         console.log(PaperIds);
         let edgesArr = toJS(appState.graph.rawGraph.edges);
+        let addedNodes = [];
+        let fetches = [];
         for (let i = 0; i < PaperIds.length; i++) {
           if (!PaperIds[i]) {
             continue;
@@ -569,40 +571,50 @@ export default class GraphStore {
           curcount += 1;
           let citationAPI =
             "https://api.semanticscholar.org/v1/paper/" + PaperIds[i];
-          fetch(citationAPI)
-            .then((res) => {
-              if (res.ok) {
-                return res.json();
-              } else {
-                throw "Connection failed.";
-              }
-            })
-            .then((response) => {
-              this.addNodetoGraph(response, rightClickedNodeId, 0);
-              this.frame.addFrontEndNodeInARow(
-                rightClickedNodeId,
-                response.paperId,
-                node_offset,
-                0
-              );
-              appState.graph.process.graph.getNode(
-                response.paperId
-              ).renderData.textHolder.children[0].element.override = true;
-              node_offset += 1;
-              appState.graph.selectedNodes = [];
-              appState.graph.frame.selection = [];
-            })
-            .catch(function (err) {
-              console.warn(
-                "Error adding paper nodes through Semantic Scholar API. " +
-                  requestURL,
-                err
-              );
-            });
+          fetches.push(
+            fetch(citationAPI)
+              .then((res) => {
+                if (res.ok) {
+                  return res.json();
+                } else {
+                  throw "Connection failed.";
+                }
+              })
+              .then((response) => {
+                this.addNodetoGraph(response, rightClickedNodeId, 0);
+                appState.graph.selectedNodes = [];
+                appState.graph.frame.selection = [];
+                this.frame.addFrontEndNodeInARow(
+                  rightClickedNodeId,
+                  response.paperId,
+                  offset,
+                  0
+                );
+                let paperNode = appState.graph.process.graph.getNode(
+                  response.paperId
+                );
+                addedNodes.push(paperNode);
+                paperNode.renderData.textHolder.children[0].element.override = true;
+                offset += 1;
+              })
+              .catch(function (err) {
+                console.warn(
+                  "Error adding paper nodes through Semantic Scholar API. " +
+                    requestURL,
+                  err
+                );
+              })
+          );
           if (curcount >= 5) {
             break;
           }
         }
+        Promise.all(fetches).then(() => {
+          addedNodes.forEach(node => {
+            appState.graph.selectedNodes.push(node);
+            appState.graph.frame.selection.push(node);
+          })
+        });
       })
       .then(console.log("Web API results fetched."))
       .catch((error) => {
@@ -615,6 +627,7 @@ export default class GraphStore {
     appState.graph.frame.updateNodesShowingLabels();
   }
 
+  //Backup: add random citaions to right clicked node
   addRandomCitations() {
     const rightClickedNodeId =
       this.frame.rightClickedNode.data.ref.id.toString();
@@ -632,6 +645,8 @@ export default class GraphStore {
       .then((citations) => {
         console.log(citations);
         let edgesArr = toJS(appState.graph.rawGraph.edges);
+        let addedNodes = [];
+        let fetches = [];
         for (let i = 0; i < citations.length; i++) {
           if (
             edgesArr.some(
@@ -646,33 +661,49 @@ export default class GraphStore {
           curcount += 1;
           let citationAPI =
             "https://api.semanticscholar.org/v1/paper/" + citations[i].paperId;
-          fetch(citationAPI)
-            .then((res) => {
-              if (res.ok) {
-                return res.json();
-              } else {
-                throw "Connection failed.";
-              }
-            })
-            .then((response) => {
-              this.addNodetoGraph(response, rightClickedNodeId, 0);
-              this.frame.addFrontEndNodeInARow(
-                rightClickedNodeId,
-                response.paperId,
-                offset,
-                0
-              );
-              appState.graph.process.graph.getNode(
-                response.paperId
-              ).renderData.textHolder.children[0].element.override = true;
-              offset += 1;
-              appState.graph.selectedNodes = [];
-              appState.graph.frame.selection = [];
-            });
+          fetches.push(
+            fetch(citationAPI)
+              .then((res) => {
+                if (res.ok) {
+                  return res.json();
+                } else {
+                  throw "Connection failed.";
+                }
+              })
+              .then((response) => {
+                this.addNodetoGraph(response, rightClickedNodeId, 0);
+                appState.graph.selectedNodes = [];
+                appState.graph.frame.selection = [];
+                this.frame.addFrontEndNodeInARow(
+                  rightClickedNodeId,
+                  response.paperId,
+                  offset,
+                  0
+                );
+                let paperNode = appState.graph.process.graph.getNode(
+                  response.paperId
+                );
+                addedNodes.push(paperNode);
+                paperNode.renderData.textHolder.children[0].element.override = true;
+                offset += 1;
+                // appState.graph.process.graph.getNode(
+                //   response.paperId
+                // ).renderData.textHolder.children[0].element.override = true;
+                // offset += 1;
+                // appState.graph.selectedNodes = [];
+                // appState.graph.frame.selection = [];
+              })
+            );
           if (curcount >= 5) {
             break;
           }
         }
+        Promise.all(fetches).then(() => {
+          addedNodes.forEach(node => {
+            appState.graph.selectedNodes.push(node);
+            appState.graph.frame.selection.push(node);
+          })
+        });
       })
       .then(console.log("Successfully added random paper nodes."));
     appState.graph.frame.updateNodesShowingLabels();
@@ -716,6 +747,8 @@ export default class GraphStore {
         });
 
         let edgesArr = toJS(appState.graph.rawGraph.edges);
+        let addedNodes = [];
+        let fetches = [];
         console.log(PaperIds);
         for (let i = 0; i < PaperIds.length; i++) {
           if (!PaperIds[i]) {
@@ -734,40 +767,50 @@ export default class GraphStore {
           curcount += 1;
           let citationAPI =
             "https://api.semanticscholar.org/v1/paper/" + PaperIds[i];
-          fetch(citationAPI)
-            .then((res) => {
-              if (res.ok) {
-                return res.json();
-              } else {
-                throw "Connection failed.";
-              }
+          fetches.push(
+            fetch(citationAPI)
+              .then((res) => {
+                if (res.ok) {
+                  return res.json();
+                } else {
+                  throw "Connection failed.";
+                }
+              })
+              .then((response) => {
+                this.addNodetoGraph(response, rightClickedNodeId, 0);
+                appState.graph.selectedNodes = [];
+                appState.graph.frame.selection = [];
+                this.frame.addFrontEndNodeInARow(
+                  rightClickedNodeId,
+                  response.paperId,
+                  offset,
+                  1
+                );
+                let paperNode = appState.graph.process.graph.getNode(
+                  response.paperId
+                );
+                addedNodes.push(paperNode)
+                paperNode.renderData.textHolder.children[0].element.override = true;
+                offset += 1;
+              })
+              .catch(function (err) {
+                console.warn(
+                  "Error adding paper nodes through Semantic Scholar API. " +
+                    requestURL,
+                  err
+                );
             })
-            .then((response) => {
-              this.addNodetoGraph(response, rightClickedNodeId, 0);
-              this.frame.addFrontEndNodeInARow(
-                rightClickedNodeId,
-                response.paperId,
-                node_offset,
-                0
-              );
-              appState.graph.process.graph.getNode(
-                response.paperId
-              ).renderData.textHolder.children[0].element.override = true;
-              node_offset += 1;
-              appState.graph.selectedNodes = [];
-              appState.graph.frame.selection = [];
-            })
-            .catch(function (err) {
-              console.warn(
-                "Error adding paper nodes through Semantic Scholar API. " +
-                  requestURL,
-                err
-              );
-            });
+          );
           if (curcount >= 5) {
             break;
           }
         }
+        Promise.all(fetches).then((response) => {
+          addedNodes.forEach(node => {
+            appState.graph.selectedNodes.push(node);
+            appState.graph.frame.selection.push(node);
+          })
+        });
       })
       .then(console.log("Web API results fetched."))
       .catch((error) => {
@@ -780,6 +823,7 @@ export default class GraphStore {
     appState.graph.frame.updateNodesShowingLabels();
   }
 
+  //Backup: add random references to the right clicked node
   addRandomReferences() {
     const rightClickedNodeId =
       this.frame.rightClickedNode.data.ref.id.toString();
@@ -797,6 +841,8 @@ export default class GraphStore {
       .then((references) => {
         console.log(references);
         let edgesArr = toJS(appState.graph.rawGraph.edges);
+        let addedNodes = [];
+        let fetches = [];
         for (let i = 0; i < references.length; i++) {
           if (
             edgesArr.some(
@@ -811,34 +857,43 @@ export default class GraphStore {
           curcount += 1;
           let citationAPI =
             "https://api.semanticscholar.org/v1/paper/" + references[i].paperId;
-          fetch(citationAPI)
-            .then((res) => {
-              if (res.ok) {
-                return res.json();
-              } else {
-                throw "Connection failed.";
-              }
-            })
-            .then((response) => {
-              this.addNodetoGraph(response, rightClickedNodeId, 1);
-              // console.log("add node curcount: ", offset);
-              this.frame.addFrontEndNodeInARow(
-                rightClickedNodeId,
-                response.paperId,
-                offset,
-                1
-              );
-              appState.graph.process.graph.getNode(
-                response.paperId
-              ).renderData.textHolder.children[0].element.override = true;
-              offset += 1;
-              appState.graph.selectedNodes = [];
-              appState.graph.frame.selection = [];
-            });
+          fetches.push(
+            fetch(citationAPI)
+              .then((res) => {
+                if (res.ok) {
+                  return res.json();
+                } else {
+                  throw "Connection failed.";
+                }
+              })
+              .then((response) => {
+                this.addNodetoGraph(response, rightClickedNodeId, 0);
+                appState.graph.selectedNodes = [];
+                appState.graph.frame.selection = [];
+                this.frame.addFrontEndNodeInARow(
+                  rightClickedNodeId,
+                  response.paperId,
+                  offset,
+                  1
+                );
+                let paperNode = appState.graph.process.graph.getNode(
+                  response.paperId
+                );
+                addedNodes.push(paperNode)
+                paperNode.renderData.textHolder.children[0].element.override = true;
+                offset += 1;
+              })
+          );
           if (curcount >= 5) {
             break;
           }
         }
+        Promise.all(fetches).then((response) => {
+          addedNodes.forEach(node => {
+            appState.graph.selectedNodes.push(node);
+            appState.graph.frame.selection.push(node);
+          })
+        });
       })
       .then(console.log("Successfully added random paper nodes."));
     appState.graph.frame.updateNodesShowingLabels();
