@@ -10,8 +10,8 @@ import parse from "csv-parse/lib/sync";
 import SearchStore from "./SearchStore";
 import { runSearch } from "../ipc/client";
 
-import { BACKEND_URL, SAMPLE_GRAPH_SNAPSHOTS} from "../constants";
-import { toaster } from '../notifications/client';
+import { BACKEND_URL, SAMPLE_GRAPH_SNAPSHOTS } from "../constants";
+import { toaster } from "../notifications/client";
 
 export class AppState {
   constructor() {
@@ -29,45 +29,53 @@ window.appState = appState;
 
 const loadSnapshotFromURL = (url) => {
   return fetch(url, {
-    method: 'GET',
-    mode: 'cors'
-  }).then(response => response.text()).catch(error => {
-    toaster.show({
-      message: 'Failed to fetch graph snapshot',
-      intent: Intent.DANGER,
-      timeout: -1
+    method: "GET",
+    mode: "cors",
+  })
+    .then((response) => response.text())
+    .catch((error) => {
+      toaster.show({
+        message: "Failed to fetch graph snapshot",
+        intent: Intent.DANGER,
+        timeout: -1,
+        iconName: "warning-sign",
+      });
+      console.error(error);
     });
-    console.error(error);
-  });
 };
 
 const loadSnapshotFromStrapi = (uuid) => {
   const url = `${BACKEND_URL}/snapshots?uuid=${uuid}`;
   return fetch(url, {
-    method: 'GET',
-    mode: 'cors'
-  }).then(response => response.json()).then(json => json[0].body).catch(error => {
-    toaster.show({
-      message: 'Failed to fetch graph snapshot',
-      intent: Intent.DANGER,
-      timeout: -1
+    method: "GET",
+    mode: "cors",
+  })
+    .then((response) => response.json())
+    .then((json) => json[0].body)
+    .catch((error) => {
+      toaster.show({
+        message: "Failed to fetch graph snapshot",
+        intent: Intent.DANGER,
+        timeout: -1,
+        iconName: "warning-sign",
+      });
+      console.error(error);
     });
-    console.error(error);
-  });
 };
 
 const loadAndDisplaySnapshotFromURL = (url) => {
-  loadSnapshotFromURL(url).then(snapshotString => {
+  loadSnapshotFromURL(url).then((snapshotString) => {
     // use filename/last segment of URL as title in Navbar
-    appState.graph.metadata.snapshotName = url.split('/').pop() || url.split('/').pop().pop();
+    appState.graph.metadata.snapshotName =
+      url.split("/").pop() || url.split("/").pop().pop();
     appState.graph.loadImmediateStates(snapshotString);
   });
 };
 
 const loadAndDisplaySnapshotFromStrapi = (uuid) => {
-  loadSnapshotFromStrapi(uuid).then(snapshotString => {
+  loadSnapshotFromStrapi(uuid).then((snapshotString) => {
     // TODO: use more sensible snapshot name
-    appState.graph.metadata.snapshotName = 'Shared';
+    appState.graph.metadata.snapshotName = "Shared";
     appState.graph.loadImmediateStates(snapshotString);
   });
 };
@@ -83,12 +91,12 @@ window.loadInitialSampleGraph = async () => {
   if (window.location.hash) {
     const hash = window.location.hash.substring(1);
     // If the hash component begins with http.
-    if (hash.length >= 4 && hash.startsWith('http')) {
+    if (hash.length >= 4 && hash.startsWith("http")) {
       try {
         url = decodeURIComponent(hash);
       } catch (e) {
         console.error(e);
-        alert('Provided URL is not valid.');
+        alert("Provided URL is not valid.");
       }
     } else {
       // If the hash component does not begin with http
@@ -96,7 +104,6 @@ window.loadInitialSampleGraph = async () => {
       loadAndDisplaySnapshotFromStrapi(hash);
       return;
     }
-    
   }
   // loadAndDisplaySnapshotFromURL(url)
   loadAndDisplaySnapshotFromStrapi(SAMPLE_GRAPH_SNAPSHOTS[0][1]);
@@ -108,7 +115,7 @@ window.saveSnapshotToString = () => {
 };
 
 // Load initial sample graph when Argo Lite is ready
-window.addEventListener('load', (event) => {
+window.addEventListener("load", (event) => {
   window.loadInitialSampleGraph();
 });
 
@@ -120,12 +127,15 @@ autorun(() => {
   if (!appState.graph.hasGraph && appState.graph.rawGraph.nodes.length > 0) {
     appState.graph.hasGraph = true;
   }
-}) 
+});
 
 autorun(() => {
   if (appState.graph.frame) {
     appState.graph.frame.updateGraph(appState.graph.computedGraph); //loads nodes on screen when snapshot loaded
-    appState.graph.frame.setAllNodesShapeWithOverride(appState.graph.nodes.shape, appState.graph.overrides);
+    appState.graph.frame.setAllNodesShapeWithOverride(
+      appState.graph.nodes.shape,
+      appState.graph.overrides
+    );
     appState.graph.frame.setLabelRelativeSize(appState.graph.nodes.labelSize);
     appState.graph.frame.setLabelLength(appState.graph.nodes.labelLength);
   }
@@ -139,8 +149,7 @@ autorun(() => {
     // If positions are saved in a snapshot, pause layout upon loading.
     appState.graph.frame.updatePositions(appState.graph.positions);
     appState.graph.positions = null;
-    console.log('[autorun] Positions updated.');
-
+    console.log("[autorun] Positions updated.");
   }
   if (appState.graph.frame && appState.graph.initialNodesShowingLabels) {
     appState.graph.frame.showLabels(appState.graph.initialNodesShowingLabels);
@@ -177,40 +186,50 @@ autorun(() => {
     // Read entire CSV into memory as string
     const fileAsString = reader.result;
     // Get top 20 lines. Or if there's less than 10 line, get all the lines.
-    const lines = fileAsString.split('\n');
+    const lines = fileAsString.split("\n");
     const lineNumber = lines.length;
-    const topLinesAsString = lines.map(l => l.trim()).filter((l, i) => i < 20).join('\n');
+    const topLinesAsString = lines
+      .map((l) => l.trim())
+      .filter((l, i) => i < 20)
+      .join("\n");
     console.log(topLinesAsString);
 
     // Parse the top lines
     try {
-      const it = hasHeader ? parse(topLinesAsString, {
-        comment: "#",
-        trim: true,
-        auto_parse: true,
-        skip_empty_lines: true,
-        columns: hasHeader,
-        delimiter
-      }) : parse(topLinesAsString, {
-        comment: "#",
-        trim: true,
-        auto_parse: true,
-        skip_empty_lines: true,
-        columns: undefined,
-        delimiter
-      });
+      const it = hasHeader
+        ? parse(topLinesAsString, {
+            comment: "#",
+            trim: true,
+            auto_parse: true,
+            skip_empty_lines: true,
+            columns: hasHeader,
+            delimiter,
+          })
+        : parse(topLinesAsString, {
+            comment: "#",
+            trim: true,
+            auto_parse: true,
+            skip_empty_lines: true,
+            columns: undefined,
+            delimiter,
+          });
       runInAction("preview top N lines of edge file", () => {
         appState.import.importConfig.edgeFile.topN = it;
-        appState.import.importConfig.edgeFile.columns = Object.keys(it[0]).map(key => `${key}`);
-        appState.import.importConfig.edgeFile.mapping.fromId = appState.import.importConfig.edgeFile.columns[0];
-        appState.import.importConfig.edgeFile.mapping.toId = appState.import.importConfig.edgeFile.columns[1];
+        appState.import.importConfig.edgeFile.columns = Object.keys(it[0]).map(
+          (key) => `${key}`
+        );
+        appState.import.importConfig.edgeFile.mapping.fromId =
+          appState.import.importConfig.edgeFile.columns[0];
+        appState.import.importConfig.edgeFile.mapping.toId =
+          appState.import.importConfig.edgeFile.columns[1];
         appState.import.importConfig.edgeFile.ready = true;
       });
     } catch {
       toaster.show({
-        message: 'Error: Fails to parse file',
+        message: "Error: Fails to parse file",
         intent: Intent.DANGER,
-        timeout: -1
+        timeout: -1,
+        iconName: "warning-sign",
       });
     }
   };
@@ -218,9 +237,10 @@ autorun(() => {
   reader.onerror = () => {
     console.error(reader.error);
     toaster.show({
-      message: 'Error: Fails to open file',
+      message: "Error: Fails to open file",
       intent: Intent.DANGER,
-      timeout: -1
+      timeout: -1,
+      iconName: "warning-sign",
     });
   };
 });
@@ -240,40 +260,49 @@ autorun(() => {
     // Read entire CSV into memory as string
     const fileAsString = reader.result;
     // Get top 20 lines. Or if there's less than 10 line, get all the lines.
-    const lines = fileAsString.split('\n');
+    const lines = fileAsString.split("\n");
     const lineNumber = lines.length;
-    const topLinesAsString = lines.map(l => l.trim()).filter((l, i) => i < 20).join('\n');
+    const topLinesAsString = lines
+      .map((l) => l.trim())
+      .filter((l, i) => i < 20)
+      .join("\n");
     console.log(topLinesAsString);
 
     // Parse the top lines
     try {
-      const it = hasHeader ? parse(topLinesAsString, {
-        comment: "#",
-        trim: true,
-        auto_parse: true,
-        skip_empty_lines: true,
-        columns: hasHeader,
-        delimiter
-      }) : parse(topLinesAsString, {
-        comment: "#",
-        trim: true,
-        auto_parse: true,
-        skip_empty_lines: true,
-        columns: undefined,
-        delimiter
-      });
+      const it = hasHeader
+        ? parse(topLinesAsString, {
+            comment: "#",
+            trim: true,
+            auto_parse: true,
+            skip_empty_lines: true,
+            columns: hasHeader,
+            delimiter,
+          })
+        : parse(topLinesAsString, {
+            comment: "#",
+            trim: true,
+            auto_parse: true,
+            skip_empty_lines: true,
+            columns: undefined,
+            delimiter,
+          });
 
       runInAction("preview top N lines of node file", () => {
         appState.import.importConfig.nodeFile.topN = it;
-        appState.import.importConfig.nodeFile.columns = Object.keys(it[0]).map(key => `${key}`);
-        appState.import.importConfig.nodeFile.mapping.id = appState.import.importConfig.nodeFile.columns[0];
+        appState.import.importConfig.nodeFile.columns = Object.keys(it[0]).map(
+          (key) => `${key}`
+        );
+        appState.import.importConfig.nodeFile.mapping.id =
+          appState.import.importConfig.nodeFile.columns[0];
         appState.import.importConfig.nodeFile.ready = true;
       });
     } catch {
       toaster.show({
-        message: 'Error: Fails to open file',
+        message: "Error: Fails to open file",
         intent: Intent.DANGER,
-        timeout: -1
+        timeout: -1,
+        iconName: "warning-sign",
       });
     }
   };
@@ -281,9 +310,10 @@ autorun(() => {
   reader.onerror = () => {
     console.error(reader.error);
     toaster.show({
-      message: 'Error: Fails to open file',
+      message: "Error: Fails to open file",
       intent: Intent.DANGER,
-      timeout: -1
+      timeout: -1,
+      iconName: "warning-sign",
     });
   };
 });
