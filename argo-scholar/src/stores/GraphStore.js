@@ -14,9 +14,10 @@ import {
   MenuFactory,
   MenuItemFactory,
   MenuDividerFactory,
+  Intent,
 } from "@blueprintjs/core";
 import { Frame, graph } from "../graph-frontend";
-
+import { toaster } from "../notifications/client";
 import pageRank from "ngraph.pagerank";
 import appState from ".";
 
@@ -543,7 +544,7 @@ export default class GraphStore {
         if (res.ok) {
           return res.json();
         } else {
-          throw "Connection failed.";
+          throw "Internet connection failed.";
         }
       })
       .then((citations) => {
@@ -591,6 +592,7 @@ export default class GraphStore {
               node_offset += 1;
               appState.graph.selectedNodes = [];
               appState.graph.frame.selection = [];
+              console.log("Sorted citations added!");
             })
             .catch(function (err) {
               console.warn(
@@ -604,14 +606,19 @@ export default class GraphStore {
           }
         }
       })
-      .then(console.log("Web API results fetched."))
       .catch((error) => {
         console.error(
-          "Error when requesting sorted citations through web API. Adding random citations.",
+          "Error occurred when requesting sorted citations through web API. Adding random citations. Reason:",
           error
         );
+        toaster.show({
+          message:
+            "Error occurred when requesting sorted citations. Adding random citations instead.",
+          intent: Intent.WARNING,
+        });
         this.addRandomCitations();
       });
+
     appState.graph.frame.updateNodesShowingLabels();
   }
 
@@ -673,8 +680,17 @@ export default class GraphStore {
             break;
           }
         }
+        console.log("Successfully added random paper nodes.");
       })
-      .then(console.log("Successfully added random paper nodes."));
+      .catch((error) => {
+        console.error("Cannot add random nodes. Reason:", error);
+        toaster.show({
+          message:
+            "Error occurred when adding random citation nodes. This may be due to connectivity issues.",
+          intent: Intent.DANGER,
+          iconName: "warning-sign",
+        });
+      });
     appState.graph.frame.updateNodesShowingLabels();
   }
 
@@ -769,12 +785,17 @@ export default class GraphStore {
           }
         }
       })
-      .then(console.log("Web API results fetched."))
+
       .catch((error) => {
         console.error(
-          "Error when requesting sorted references through web API. Adding random references.",
+          "Error occurred when requesting sorted references through web API. Adding random references. Reason:",
           error
         );
+        toaster.show({
+          message:
+            "Error occurred when requesting sorted references. Adding random references instead.",
+          intent: Intent.WARNING,
+        });
         this.addRandomReferences();
       });
     appState.graph.frame.updateNodesShowingLabels();
@@ -839,8 +860,18 @@ export default class GraphStore {
             break;
           }
         }
+        console.log("Successfully added random paper nodes.");
       })
-      .then(console.log("Successfully added random paper nodes."));
+      .catch((error) => {
+        console.error("Cannot add random nodes. Reason:", error);
+        toaster.show({
+          message:
+            "Error occurred when adding random referemce nodes. This may be due to connectivity issues.",
+          intent: Intent.DANGER,
+          iconName: "warning-sign",
+        });
+      });
+
     appState.graph.frame.updateNodesShowingLabels();
   }
   setUpFrame() {
