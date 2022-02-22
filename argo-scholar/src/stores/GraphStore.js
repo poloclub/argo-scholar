@@ -613,7 +613,7 @@ export default class GraphStore {
         );
         toaster.show({
           message:
-            "Error occurred when requesting sorted citations. Adding random citations instead.",
+            "Error getting sorted results. Adding unsorted results from Semantic Scholar instead.",
           intent: Intent.WARNING,
         });
         this.addRandomCitations();
@@ -686,7 +686,7 @@ export default class GraphStore {
         console.error("Cannot add random nodes. Reason:", error);
         toaster.show({
           message:
-            "Error occurred when adding random citation nodes. This may be due to connectivity issues.",
+            "Cannot load results. Please check network connection.",
           intent: Intent.DANGER,
           iconName: "warning-sign",
         });
@@ -793,7 +793,7 @@ export default class GraphStore {
         );
         toaster.show({
           message:
-            "Error occurred when requesting sorted references. Adding random references instead.",
+            "Error getting sorted results. Adding unsorted results from Semantic Scholar instead.",
           intent: Intent.WARNING,
         });
         this.addRandomReferences();
@@ -866,7 +866,7 @@ export default class GraphStore {
         console.error("Cannot add random nodes. Reason:", error);
         toaster.show({
           message:
-            "Error occurred when adding random referemce nodes. This may be due to connectivity issues.",
+            "Cannot load results. Please check network connection.",
           intent: Intent.DANGER,
           iconName: "warning-sign",
         });

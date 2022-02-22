@@ -119,7 +119,7 @@ class SearchBar extends React.Component {
         })
         .then((response) => {
           if (response.data.length < 1) {
-            this.addToast(`Your search "${this.state.query}" did not match any papers.`)
+            this.addToast(`No results found for "${this.state.query}".`)
             return
           }
           var searches = [];
