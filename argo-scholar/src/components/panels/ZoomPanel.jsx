@@ -1,4 +1,5 @@
 import React from "react";
+import anime from "animejs";
 import { observer } from "mobx-react";
 import classnames from "classnames";
 import {
@@ -33,8 +34,10 @@ class ZoomPanel extends React.Component {
             className={classnames([Classes.BUTTON])} 
             iconName="plus"
             onClick={() => {
-              let controls = appState.controls
-              controls.dollyIn(1.5)
+              anime({
+                targets: appState.controls.zoom,
+                percent: appState.controls.zoom.nextZoomInPercent
+              });
             }}
             ></Button>
             
@@ -47,8 +50,10 @@ class ZoomPanel extends React.Component {
             className={classnames([Classes.BUTTON])} 
             iconName="minus"
             onClick={() => {
-              let controls = appState.controls
-              controls.dollyIn(0.5)
+              anime({
+                targets: appState.controls.zoom,
+                percent: appState.controls.zoom.nextZoomOutPercent
+              });
             }}></Button>
 
 
@@ -60,19 +65,7 @@ class ZoomPanel extends React.Component {
             className={classnames([Classes.BUTTON])} 
             iconName="home"
             onClick={() => {
-              let controls = appState.controls
-              controls.reset()
-
-              //reset to center of graph code:
-              // let xVal = 0
-              // let yVal = 0
-              // let pos = appState.graph.frame.getPositions();
-              // for(let n in pos) {
-              //   xVal = pos[n][0]
-              //   yVal = pos[n][1]
-              // }
-              // let len = Object.keys(pos).length
-              // appState.panToMousePosition(xVal,yVal);
+              appState.controls.reset();
             }}></Button>
       </div>
     );

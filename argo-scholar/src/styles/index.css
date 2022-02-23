@@ -87,76 +87,35 @@ html {
 
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 9px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #c0baba;
+  background: #e1e8ed;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #6a8496;
-  border-radius: 10px;
+  background: #8a9ba8;
+  border-radius: 20px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #495964;
+  background: #5c7080;
 }
 
-.expandCardButtonLight {
-  margin-left: 0;
+.expandCardButton {
   margin-top: 1em;
   cursor: pointer;
   background-color: white;
-  padding: 10px 18px;
-  border: #6A8496;
-  border-width: 1.8px;
-  border-style: solid;
+  padding: 8px 15px;
   border-radius: 10%;
-  font-size: 18pt;
-  color: #6A8496;
+  font-size: 16pt;
   transition: margin-left 0.2s;
 }
 
-.expandCardButtonLight:hover {
-  background-color: #495964;
-}
-
-.expandCardButtonLight:active {
-  background-color: white;
-}
-.expandCardButtonDark {
-  margin-left: 0;
-  margin-top: 1em;
-  cursor: pointer;
-  background-color: #465d6e;
-  padding: 10px 18px;
-  border: #465d6e;
-  border-width: 1.8px;
-  border-style:solid;
-  border-radius: 10%;
-  font-size: 18pt;
-  color: white;
-  transition: margin-left 0.2s;
-}
-.expandCardButtonDark:hover {
-  background-color: rgb(20, 23, 36);
-  border: rgb(20, 23, 36);
-  border-width: 1.8px;
-  border-style:solid;
-  border-radius: 10%;
-}
-
-.expandCardButtonDark:active {
-  background-color: #465d6e;
-  border: #465d6e;
-  border-width: 1.8px;
-  border-style:solid;
-  border-radius: 10%;
-}
 .minimizeCardButton {
   margin-left: 235px;
   padding-top: 2.3em;
@@ -183,7 +142,7 @@ html {
 
 .right-overlay-card {
   right: 2em;
-  top: 5em;
+  top: 6em;
   position: absolute;
 }
 
@@ -238,6 +197,55 @@ td {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+table.search-paper-table {
+  table-layout: auto;
+  border-collapse: collapse;
+  border-spacing: 0 10px;
+}
+
+tr.search-row {
+  border-bottom: 1px solid #ddd;
+}
+
+td.search-result {
+  width: 100%;
+  padding-right: 5%;
+  padding-left: 2%;
+  word-wrap: break-word;
+  white-space: normal;
+  overflow: auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+td.search-add {
+  padding-right: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  /* display: flex; */
+}
+
+.paginate-pageClassName > a {
+  color: rgb(20, 23, 36);
+}
+
+.paginate-activeClassName > a {
+  font-weight: bold;
+  color: #106ba3;
+}
+
+.paginate-containerClassName {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding-left: 0px;
+  padding-right: 10px;
+}
+
+.search-bar-width {
+  width: 25vw !important; 
 }
 
 .import-preview-table {
@@ -297,19 +305,36 @@ div.pt-card.sub-option.legend {
 }
 
 .transparent-frame {
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 .node-details-table {
-  overflow-x: auto;
+  overflow-wrap: normal;
   overflow-y: auto;
-  max-width: 400px;
+  max-width: 25vw;
+
   max-height: 60vh;
-  font-size: 0.4em;
+
   pointer-events: all;
-  padding: 0;
+
+  /* Hide scrollbar*/
+  /* IE and Edge */
+  -ms-overflow-style: none;
+  /* Firefox */
+  scrollbar-width: none;
 }
 
+.node-details-table-numerals {
+  font-weight: bold;
+  font-family: "Lucida Console", "Courier New", monospace;
+  word-break: break-all;
+  color: #5c7080;
+}
+
+/* Hide scrollbar*/
+.node-details-table::-webkit-scrollbar {
+  display: none;
+}
 .argo-menu-list-header {
   font-size: 1.5em;
   color: lightslategray;

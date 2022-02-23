@@ -1,27 +1,25 @@
-var $ = require("jquery");
+// var $ = require("jquery");
 
 module.exports = function(THREE) {
+
+  
   /**
-   * @author qiao / https://github.com/qiao
-   * @author mrdoob / http://mrdoob.com
-   * @author alteredq / http://alteredqualia.com/
-   * @author WestLangley / http://github.com/WestLangley
-   * @author erich666 / http://erichaines.com
+   * This set of controls performs orbiting, dollying (zooming), and panning.
+   * Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
+   * 
+   * Orbit - left mouse / touch: one finger move
+   * Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
+   * Pan - right mouse, or arrow keys / touch: three finter swipe
+   * 
+   * @param {THREE.PerspectiveCamera} camera 
+   * @param {HTMLElement} domElement 
+   * @param {AppState} appState 
    */
+  function OrbitControls(camera, domElement, appState) {
 
-  // This set of controls performs orbiting, dollying (zooming), and panning.
-  // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
-  //
-  //    Orbit - left mouse / touch: one finger move
-  //    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
-  //    Pan - right mouse, or arrow keys / touch: three finter swipe
-
-  function OrbitControls(object, domElement, appState) {
-
-    
     this.appState = appState;
 
-    this.object = object;
+    this.camera = camera;
 
     this.domElement = domElement !== undefined ? domElement : document;
 
@@ -34,10 +32,6 @@ module.exports = function(THREE) {
     // How far you can dolly in and out ( PerspectiveCamera only )
     this.minDistance = 0;
     this.maxDistance = Infinity;
-
-    // How far you can zoom in and out ( OrthographicCamera only )
-    this.minZoom = 0;
-    this.maxZoom = Infinity;
 
     // How far you can orbit vertically, upper and lower limits.
     // Range is 0 to Math.PI radians.
@@ -87,12 +81,67 @@ module.exports = function(THREE) {
 
     // for reset
     this.target0 = this.target.clone();
-    this.position0 = this.object.position.clone();
-    this.zoom0 = this.object.zoom;
+    this.position0 = this.camera.position.clone();
+    this.zoom0 = this.camera.zoom;
 
     // for space panning
     this.spacePan = false;
     this.bothPan = false;
+
+    /**
+     * Controls how graph visualization is zoomed in and out.
+     * 100% means no zoom. >100% means zoomed in. <100% means zoomed out.
+     * Also defines presets of zoom levels.
+     * 
+     * Zoom can be set via an absolute scale. 
+     * 1.0 means no zoom. <1.0 means zoomed out. >1.0 means zoomed in.
+     */
+     this.zoom = {
+      originalCameraDistance: camera.position.z,
+      percentPresets: [10, 25, 50, 75, 100, 150, 200, 300, 500],
+      defaultPercent: 100,
+
+      get percent(){
+        return Math.round(100 * this.originalCameraDistance / camera.position.z);
+      },
+
+      set percent(p){
+        camera.position.z = this.originalCameraDistance * 100 / p;
+      },
+
+      /**
+       * Gets the preset zoom % larger than the current zoom % (upper-bounded by largest presets).
+       */
+      get nextZoomInPercent(){
+        for (const p of this.percentPresets) {
+          if (p > this.percent) {
+            return p;
+          }
+        }
+        return this.percentPresets[this.percentPresets.length - 1];
+      },
+
+      /**
+       * Gets the preset zoom % samller than the current zoom % (lower-bounded by smallest preset).
+       */
+      get nextZoomOutPercent(){
+        for (const p of this.percentPresets.slice().reverse()) {
+          if (p < this.percent) {
+            return p;
+          }
+        }
+        return this.percentPresets[0];
+      },
+
+      get scale(){
+        return  this.originalCameraDistance / camera.position.z;
+      },
+      
+      set scale(s){
+        camera.position.z = this.originalCameraDistance * 1.0  / s;
+      }
+    }
+
 
     //
     // public methods
@@ -108,10 +157,10 @@ module.exports = function(THREE) {
 
     this.reset = function() {
       scope.target.copy(scope.target0);
-      scope.object.position.copy(scope.position0);
-      scope.object.zoom = scope.zoom0;
+      scope.camera.position.copy(scope.position0);
+      scope.camera.zoom = scope.zoom0;
 
-      scope.object.updateProjectionMatrix();
+      scope.camera.updateProjectionMatrix();
       scope.dispatchEvent(changeEvent);
 
       scope.update();
@@ -125,7 +174,7 @@ module.exports = function(THREE) {
 
       // so camera.up is the orbit axis
       var quat = new THREE.Quaternion().setFromUnitVectors(
-        object.up,
+        camera.up,
         new THREE.Vector3(0, 1, 0)
       );
       var quatInverse = quat.clone().inverse();
@@ -134,7 +183,7 @@ module.exports = function(THREE) {
       var lastQuaternion = new THREE.Quaternion();
 
       return function update() {
-        var position = scope.object.position;
+        var position = scope.camera.position;
 
         offset.copy(position).sub(scope.target);
 
@@ -183,7 +232,7 @@ module.exports = function(THREE) {
 
         position.copy(scope.target).add(offset);
 
-        scope.object.lookAt(scope.target);
+        scope.camera.lookAt(scope.target);
 
         if (scope.enableDamping === true) {
           sphericalDelta.theta *= 1 - scope.dampingFactor;
@@ -201,13 +250,13 @@ module.exports = function(THREE) {
 
         if (
           zoomChanged ||
-          lastPosition.distanceToSquared(scope.object.position) > EPS ||
-          8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS
+          lastPosition.distanceToSquared(scope.camera.position) > EPS ||
+          8 * (1 - lastQuaternion.dot(scope.camera.quaternion)) > EPS
         ) {
           scope.dispatchEvent(changeEvent);
 
-          lastPosition.copy(scope.object.position);
-          lastQuaternion.copy(scope.object.quaternion);
+          lastPosition.copy(scope.camera.position);
+          lastQuaternion.copy(scope.camera.quaternion);
           zoomChanged = false;
 
           return true;
@@ -325,47 +374,27 @@ module.exports = function(THREE) {
             ? scope.domElement.body
             : scope.domElement;
 
-        if (scope.object instanceof THREE.PerspectiveCamera) {
-          // perspective
-          var position = scope.object.position;
-          offset.copy(position).sub(scope.target);
-          var targetDistance = offset.length();
 
-          // half of the fov is center to top of screen
-          targetDistance *= Math.tan(
-            ((scope.object.fov / 2) * Math.PI) / 180.0
-          );
+        // perspective
+        var position = scope.camera.position;
+        offset.copy(position).sub(scope.target);
+        var targetDistance = offset.length();
 
-          // we actually don't use screenWidth, since perspective camera is fixed to screen height
-          panLeft(
-            (2 * deltaX * targetDistance) / element.clientHeight,
-            scope.object.matrix
-          );
-          panUp(
-            (2 * deltaY * targetDistance) / element.clientHeight,
-            scope.object.matrix
-          );
-        } else if (scope.object instanceof THREE.OrthographicCamera) {
-          // orthographic
-          panLeft(
-            (deltaX * (scope.object.right - scope.object.left)) /
-              scope.object.zoom /
-              element.clientWidth,
-            scope.object.matrix
-          );
-          panUp(
-            (deltaY * (scope.object.top - scope.object.bottom)) /
-              scope.object.zoom /
-              element.clientHeight,
-            scope.object.matrix
-          );
-        } else {
-          // camera neither orthographic nor perspective
-          console.warn(
-            "WARNING: OrbitControls.js encountered an unknown camera type - pan disabled."
-          );
-          scope.enablePan = false;
-        }
+        // half of the fov is center to top of screen
+        targetDistance *= Math.tan(
+          ((scope.camera.fov / 2) * Math.PI) / 180.0
+        );
+
+        // we actually don't use screenWidth, since perspective camera is fixed to screen height
+        panLeft(
+          (2 * deltaX * targetDistance) / element.clientHeight,
+          scope.camera.matrix
+        );
+        panUp(
+          (2 * deltaY * targetDistance) / element.clientHeight,
+          scope.camera.matrix
+        );
+        
       };
     })();
 
@@ -374,39 +403,11 @@ module.exports = function(THREE) {
 
 
     function dollyIn(dollyScale, mousePos, event) {
-      if (scope.object instanceof THREE.PerspectiveCamera) {
-        scale /= dollyScale;
-      } else if (scope.object instanceof THREE.OrthographicCamera) {
-        scope.object.zoom = Math.max(
-          scope.minZoom,
-          Math.min(scope.maxZoom, scope.object.zoom * dollyScale)
-        );
-        scope.object.updateProjectionMatrix();
-        zoomChanged = true;
-      } else {
-        console.warn(
-          "WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled."
-        );
-        scope.enableZoom = false;
-      }
+      scale /= dollyScale;
     }
 
     function dollyOut(dollyScale, mousePos) {
-      if (scope.object instanceof THREE.PerspectiveCamera) {
-        scale *= dollyScale;
-      } else if (scope.object instanceof THREE.OrthographicCamera) {
-        scope.object.zoom = Math.max(
-          scope.minZoom,
-          Math.min(scope.maxZoom, scope.object.zoom / dollyScale)
-        );
-        scope.object.updateProjectionMatrix();
-        zoomChanged = true;
-      } else {
-        console.warn(
-          "WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled."
-        );
-        scope.enableZoom = false;
-      }
+      scale *= dollyScale;
     }
 
     //public zoom in function, used when zoom in button clicked
@@ -855,115 +856,7 @@ module.exports = function(THREE) {
   OrbitControls.prototype = Object.create(THREE.EventDispatcher.prototype);
   OrbitControls.prototype.constructor = OrbitControls;
 
-  Object.defineProperties(OrbitControls.prototype, {
-    center: {
-      get: function() {
-        console.warn(
-          "THREE.OrbitControls: .center has been renamed to .target"
-        );
-        return this.target;
-      }
-    },
-
-    // backward compatibility
-
-    noZoom: {
-      get: function() {
-        console.warn(
-          "THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead."
-        );
-        return !this.enableZoom;
-      },
-
-      set: function(value) {
-        console.warn(
-          "THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead."
-        );
-        this.enableZoom = !value;
-      }
-    },
-
-    noRotate: {
-      get: function() {
-        console.warn(
-          "THREE.OrbitControls: .noRotate has been deprecated. Use .enableRotate instead."
-        );
-        return !this.enableRotate;
-      },
-
-      set: function(value) {
-        console.warn(
-          "THREE.OrbitControls: .noRotate has been deprecated. Use .enableRotate instead."
-        );
-        this.enableRotate = !value;
-      }
-    },
-
-    noPan: {
-      get: function() {
-        console.warn(
-          "THREE.OrbitControls: .noPan has been deprecated. Use .enablePan instead."
-        );
-        return !this.enablePan;
-      },
-
-      set: function(value) {
-        console.warn(
-          "THREE.OrbitControls: .noPan has been deprecated. Use .enablePan instead."
-        );
-        this.enablePan = !value;
-      }
-    },
-
-    noKeys: {
-      get: function() {
-        console.warn(
-          "THREE.OrbitControls: .noKeys has been deprecated. Use .enableKeys instead."
-        );
-        return !this.enableKeys;
-      },
-
-      set: function(value) {
-        console.warn(
-          "THREE.OrbitControls: .noKeys has been deprecated. Use .enableKeys instead."
-        );
-        this.enableKeys = !value;
-      }
-    },
-
-    staticMoving: {
-      get: function() {
-        console.warn(
-          "THREE.OrbitControls: .staticMoving has been deprecated. Use .enableDamping instead."
-        );
-        return !this.enableDamping;
-      },
-
-      set: function(value) {
-        console.warn(
-          "THREE.OrbitControls: .staticMoving has been deprecated. Use .enableDamping instead."
-        );
-        this.enableDamping = !value;
-      }
-    },
-
-    dynamicDampingFactor: {
-      get: function() {
-        console.warn(
-          "THREE.OrbitControls: .dynamicDampingFactor has been renamed. Use .dampingFactor instead."
-        );
-        return this.dampingFactor;
-      },
-
-      set: function(value) {
-        console.warn(
-          "THREE.OrbitControls: .dynamicDampingFactor has been renamed. Use .dampingFactor instead."
-        );
-        this.dampingFactor = value;
-      }
-    }
-  });
-
+ 
   
 
   return OrbitControls;
