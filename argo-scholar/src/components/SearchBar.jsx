@@ -15,70 +15,127 @@ import {
   Popover,
   Menu,
   MenuItem,
-  MenuDivider
+  MenuDivider,
+  Toaster,
+  IToastProps
 } from "@blueprintjs/core";
+import { tree } from "d3";
+import { toaster } from '../notifications/client';
+
+import AddNodes from "./panels/AddNodesPanel";
+
+const corpusIDregex = /^[0-9]+$/; 
+const apiCorpusPrefix = "https://api.semanticscholar.org/v1/paper/CorpusID:";
+const apiKeywordPrefix = "https://api.semanticscholar.org/graph/v1/paper/search?query=";
 
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
-    // this._isMounted = false;  
-    // this.state = {
-    //     query: '', 
-    //     id: 0
-    // };
+    this._isMounted = false; 
+    this.state = {
+        searchResults: [],
+        query: '', 
+        display: false,
+    };
 
-    // this.handleChange = this.handleChange.bind(this);
-    // this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleEnter = this.handleEnter.bind(this);
   }
 
-  // componentDidMount() {
-  //   this._isMounted = true;
-  // };
+  componentDidMount() {
+    this._isMounted = true;
+  };
 
-  // componentWillUnmount() {
-  //   this._isMounted = false;
-  // };
+  componentWillUnmount() {
+    this._isMounted = false;
+  };
 
-  // handleChange(event) {
-  //   this._isMounted && this.setState({query: event.target.value});
-  // }
+  handleChange(event) {
+    this._isMounted && this.setState({query: event.target.value});
+  }
 
-  // handleSubmit(event) {
-  //   console.log('A CorpusID was submitted: ' + this.state.query);
-  //   const corpusIDregex = /^[0-9]+$/;
-  //   if (this._isMounted) {
-  //     if (corpusIDregex.test(this.state.query)) {
-  //         let apiurl = "https://api.semanticscholar.org/v1/paper/CorpusID:" + this.state.query;
+  handleClick(event) {
+    this.setState({display: true});
+    // event.preventDefault();
+  } 
 
-  //         fetch(apiurl)
-  //           .then((res) => {
-  //             if (res.ok) {
-  //               return res.json();
-  //             } else {
-  //               throw "error";
-  //             }
-  //           })
-  //           .then((response) => {
-  //             this.state.id = response.paperId;
-  //             if (response.paperId in appState.graph.preprocessedRawGraph.nodesPanelData) {
-  //               alert("Node already in graph");
-  //               return;
-  //             }
-  //             appState.graph.addNodetoGraph(response, "null", 0);
-  //             appState.graph.process.graph.getNode(response.paperId).pinnedx = true;
-  //             appState.graph.process.graph.getNode(response.paperId).pinnedy = true;
-  //             appState.graph.process.graph.getNode(response.paperId).renderData.textHolder.children[0].element.override = true;
-  //             appState.graph.frame.updateNodesShowingLabels();
-  //           })
-  //           .catch((error) => {
-  //             alert("Not a valid CorpusID. Please try again v1.");
-  //           });
-  //     } else {
-  //         alert("Not a valid CorpusID. Please try again.");
-  //     }
-  //   }
-  //   event.preventDefault();
-  // }
+  handleEnter(event) {
+    if (event.which === 13) {
+      this.handleSubmit(event);
+    }
+   }
+
+  handleSubmit(event) {
+    this.setState({display: false})
+    if (this.state.query == "") {
+      return
+    }
+    // appState.project.currentQuery = this.state.query;
+    
+    if (corpusIDregex.test(this.state.query)) {
+      // CorpusID submitted
+      
+      let apiurl = apiCorpusPrefix + this.state.query;
+
+      fetch(apiurl)
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw "error";
+          }
+        })
+        .then((response) => {
+          var searches = [];
+          searches.push(response)
+          // for (var i = 0; i < response.data.length; i++) {
+          //   searches.push(response.data[i]);
+          // }
+          this.setState({searchResults: searches})
+          this.setState({display: true})
+          // appState.project.isAddPapersDialogOpen = true;
+        })
+        .catch((error) => {
+          this.addToast("Error occurred when fetching search results. This may be due to API issues or the CorpusID not being associated with a valid paper.");
+          // alert("Issue occurred when fetching search results. This may be due to API issues or the CorpusID not being associated with a valid paper.");
+        });
+    } else {
+      // Keyword query
+
+      var keywordQuery = this.state.query; 
+      keywordQuery = keywordQuery.trim().replace(/  +/g, ' ').replace(/ /g, '+');
+
+      let apiurl = apiKeywordPrefix + keywordQuery;
+
+      fetch(apiurl)
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw "error";
+          }
+        })
+        .then((response) => {
+          if (response.data.length < 1) {
+            this.addToast(`No results found for "${this.state.query}".`)
+            return
+          }
+          var searches = [];
+          for (var i = 0; i < response.data.length; i++) {
+            searches.push(response.data[i]);
+          }
+          this.setState({searchResults: searches})
+          // appState.project.isAddPapersDialogOpen = true;
+          this.setState({display: true})
+        })
+        .catch((error) => {
+          this.addToast("Error occurred when fetching search results. This may be due to API issues.");
+        });
+    }
+    event.preventDefault();
+  }
 
   createEmptyGraph(event) {
     appState.graph.runActiveLayout();
@@ -98,25 +155,37 @@ class SearchBar extends React.Component {
     appState.graph.currentlyHovered = null;
   }
 
+  addToast(message) {
+    toaster.show({ 
+      message: message,
+      intent: Intent.DANGER,
+      iconName: "warning-sign",
+    });
+  }
+
   render() {
     return (
       <div>
-        {/* <form onSubmit={this.handleSubmit}>
-        <label>
-          CorpusID:
-          <input 
-            type="text" 
-            value={this.state.query} 
-            onChange={this.handleChange} 
-            placeholder="Input CorpusID here" 
+        <InputGroup 
+          className={"search-bar-width"}
+          leftIconName={"search"} 
+          rightElement={
+            <Popover
+              content={<AddNodes papers={this.state.searchResults} query={this.state.query}/>} 
+              target={<button onClick={this.handleSubmit} class="pt-button pt-minimal pt-intent-primary pt-icon-arrow-right"></button>}
+              position={Position.BOTTOM}
+              isOpen={this.state.display && this.state.searchResults.length > 0}
+              onClose={() => {this.setState({display: false})}}
+              autoFocus={false}
+              enforceFocus={false}
+            /> 
+          }
+          onChange={this.handleChange}
+          placeholder={"Search"}
+          onKeyPress={(e) => this.handleEnter(e)}
+          onClick={this.handleClick}
         />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>*/}
-
-
-
-        <Popover
+        {/* <Popover
           content={
             <Menu>
               <MenuItem
@@ -128,7 +197,7 @@ class SearchBar extends React.Component {
                 text="Clear all papers"
                 iconName="pt-icon-graph-remove"
                 onClick={this.createEmptyGraph}
-              /> */}
+              /> 
             </Menu>
           }
           position={Position.BOTTOM}
@@ -139,7 +208,7 @@ class SearchBar extends React.Component {
           >
             Papers
             </Button>
-        </Popover>
+        </Popover> */}
       </div>
     );
   }
