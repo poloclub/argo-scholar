@@ -528,39 +528,6 @@ module.exports = function(THREE) {
       }
     }
 
-    function handleKeyDown(event) {
-      //console.log( 'handleKeyDown' );
-
-      switch (event.keyCode) {
-        case scope.keys.UP:
-          pan(0, scope.keyPanSpeed);
-          scope.update();
-          break;
-
-        case scope.keys.BOTTOM:
-          pan(0, -scope.keyPanSpeed);
-          scope.update();
-          break;
-
-        case scope.keys.LEFT:
-          pan(scope.keyPanSpeed, 0);
-          scope.update();
-          break;
-
-        case scope.keys.RIGHT:
-          pan(-scope.keyPanSpeed, 0);
-          scope.update();
-          break;
-
-        case scope.keys.SPACE:
-          if (scope.spacePan == true) {
-            scope.spacePanStart = true;
-            state = STATE.PAN;
-          }
-          break;
-      }
-    }
-
     function handleTouchStartRotate(event) {
       //console.log( 'handleTouchStartRotate' );
 
