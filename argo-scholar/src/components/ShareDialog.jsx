@@ -55,7 +55,8 @@ class ShareDialog extends React.Component {
             toaster.show({
                 message: 'Failed to publish to sharing server. Unexpected error.',
                 intent: Intent.DANGER,
-                timeout: -1
+                timeout: -1,
+                iconName: "warning-sign"
             });
         });
     }
@@ -109,7 +110,8 @@ class ShareDialog extends React.Component {
                                                     toaster.show({
                                                         message: 'Failed to publish to sharing server. Please try again later.',
                                                         intent: Intent.DANGER,
-                                                        timeout: -1
+                                                        timeout: -1,
+                                                        iconName: "warning-sign"
                                                     });
                                                 }
                                                 this.setState({
@@ -252,7 +254,8 @@ class ShareDialog extends React.Component {
                                             toaster.show({
                                                 message: 'Failed to publish to sharing server. Please try again later.',
                                                 intent: Intent.DANGER,
-                                                timeout: -1
+                                                timeout: -1,
+                                                iconName: "warning-sign"
                                             });
                                         }
 
