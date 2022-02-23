@@ -193,11 +193,11 @@ class SearchBar extends React.Component {
                 iconName="pt-icon-new-object"
                 onClick={() => { appState.project.isAddPapersDialogOpen = true; }}
               />
-              <MenuItem
+              {/* <MenuItem
                 text="Clear all papers"
                 iconName="pt-icon-graph-remove"
                 onClick={this.createEmptyGraph}
-              />
+              /> */}
             </Menu>
           }
           position={Position.BOTTOM}

@@ -429,12 +429,13 @@ module.exports = function(self) {
     var parentnode = self.graph.getNode(sourcenodeid);
     var childnode = self.graph.getNode(spawnnodeid);
     if (citationOrReference == 0) {
+      //citation
       childnode.x = parentnode.x + 25;
     } else {
       childnode.x = parentnode.x - 25;
     }
-    childnode.y = parentnode.y - 25 * (numofnode + 1);
-    // childnode.pinnedx = true;
-    // childnode.pinnedy = true;
+    childnode.y = parentnode.y - 10 * (numofnode + 1);
+    childnode.pinnedx = true;
+    childnode.pinnedy = true;
   };
 };
