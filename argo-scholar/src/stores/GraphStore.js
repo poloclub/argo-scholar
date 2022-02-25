@@ -258,10 +258,10 @@ export default class GraphStore {
    * citationOrReference: 0 if citation, 1 if reference
    */
   addNodetoGraph(paperJsonResponse, parentID, citationOrReference) {
-    let rawGraphNodes = toJS(appState.graph.rawGraph.nodes);
-    let edgesArr = toJS(appState.graph.rawGraph.edges);
-    let backEndgraph = toJS(appState.graph.preprocessedRawGraph.graph);
-    let degreeDict = toJS(appState.graph.preprocessedRawGraph.degreeDict);
+    let rawGraphNodes = appState.graph.rawGraph.nodes;
+    let edgesArr = appState.graph.rawGraph.edges;
+    let backEndgraph = appState.graph.preprocessedRawGraph.graph;
+    let degreeDict = appState.graph.preprocessedRawGraph.degreeDict;
 
     if (!(paperJsonResponse.paperId in degreeDict)) {
       backEndgraph.addNode(paperJsonResponse.paperId);
@@ -302,6 +302,20 @@ export default class GraphStore {
       degreeDict[parentID] += 1;
     }
 
+    paperJsonResponse.citations.forEach(citation => {
+      if (citation.paperId in degreeDict && !backEndgraph.getLink(citation.paperId, paperJsonResponse.paperId)) {
+        this.addEdgetoGraph(citation.paperId, paperJsonResponse.paperId);
+      }
+    });
+
+    paperJsonResponse.references.forEach(reference => {
+      if (reference.paperId in degreeDict && !backEndgraph.getLink(paperJsonResponse.paperId, reference.paperId)) {
+        this.addEdgetoGraph(paperJsonResponse.paperId, reference.paperId);
+      }
+    });
+
+    backEndgraph = appState.graph.preprocessedRawGraph.graph;
+
     const rank = pageRank(backEndgraph);
 
     let nodesArr = rawGraphNodes.map((n) => ({
@@ -335,6 +349,16 @@ export default class GraphStore {
     appState.graph.metadata.fullNodes = nodesArr.length;
     appState.graph.metadata.fullEdges = edgesArr.length;
     appState.graph.metadata.nodeProperties = Object.keys(nodesArr[0]);
+  }
+
+   addEdgetoGraph(citingID, citedID) {
+    appState.graph.preprocessedRawGraph.graph.addLink(citingID, citedID);
+    appState.graph.rawGraph.edges.push({
+      source_id: citingID,
+      target_id: citedID,
+    });
+    appState.graph.preprocessedRawGraph.degreeDict[citingID] += 1;
+    appState.graph.preprocessedRawGraph.degreeDict[citedID] += 1;
   }
 
   showNodes(nodeids) {
@@ -792,7 +816,7 @@ export default class GraphStore {
                 }
               })
               .then((response) => {
-                this.addNodetoGraph(response, rightClickedNodeId, 0);
+                this.addNodetoGraph(response, rightClickedNodeId, 1);
                 appState.graph.selectedNodes = [];
                 appState.graph.frame.selection = [];
                 this.frame.addFrontEndNodeInARow(
@@ -888,7 +912,7 @@ export default class GraphStore {
                 }
               })
               .then((response) => {
-                this.addNodetoGraph(response, rightClickedNodeId, 0);
+                this.addNodetoGraph(response, rightClickedNodeId, 1);
                 appState.graph.selectedNodes = [];
                 appState.graph.frame.selection = [];
                 this.frame.addFrontEndNodeInARow(
