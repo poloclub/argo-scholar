@@ -21,11 +21,11 @@ export default class Dialogs extends React.Component {
     return (
       <div style={{ display: "none" }}>
         <PreferencesDialog />
-        <ImportDialog />
-        <GEXFImportDialog />
-        <OpenDialog />
+        {/* <ImportDialog />
+        <GEXFImportDialog /> */}
+        {/* <OpenDialog /> */}
         <OpenSnapshotDialog />
-        <NewProjectDialog />
+        {/* <NewProjectDialog /> */}
         <ProjectDetailDialog />
         <SaveSnapshotDialog />
         <RenameSnapshotDialog />

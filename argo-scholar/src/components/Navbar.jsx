@@ -66,7 +66,7 @@ class RegularNavbar extends React.Component {
                 <MenuItem
                   iconName="pt-icon-map-create"
                   text="New..."
-                  onClick={() => { appState.project.isNewProjectDialogOpen = true }}
+                  onClick={() => { appState.project.isNewNetworkDialogOpen = true }}
                 />
                 <MenuItem
                   iconName="pt-icon-document-open"
