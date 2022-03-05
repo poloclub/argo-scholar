@@ -302,14 +302,20 @@ export default class GraphStore {
       degreeDict[parentID] += 1;
     }
 
-    paperJsonResponse.citations.forEach(citation => {
-      if (citation.paperId in degreeDict && !backEndgraph.getLink(citation.paperId, paperJsonResponse.paperId)) {
+    paperJsonResponse.citations.forEach((citation) => {
+      if (
+        citation.paperId in degreeDict &&
+        !backEndgraph.getLink(citation.paperId, paperJsonResponse.paperId)
+      ) {
         this.addEdgetoGraph(citation.paperId, paperJsonResponse.paperId);
       }
     });
 
-    paperJsonResponse.references.forEach(reference => {
-      if (reference.paperId in degreeDict && !backEndgraph.getLink(paperJsonResponse.paperId, reference.paperId)) {
+    paperJsonResponse.references.forEach((reference) => {
+      if (
+        reference.paperId in degreeDict &&
+        !backEndgraph.getLink(paperJsonResponse.paperId, reference.paperId)
+      ) {
         this.addEdgetoGraph(paperJsonResponse.paperId, reference.paperId);
       }
     });
@@ -351,7 +357,7 @@ export default class GraphStore {
     appState.graph.metadata.nodeProperties = Object.keys(nodesArr[0]);
   }
 
-   addEdgetoGraph(citingID, citedID) {
+  addEdgetoGraph(citingID, citedID) {
     appState.graph.preprocessedRawGraph.graph.addLink(citingID, citedID);
     appState.graph.rawGraph.edges.push({
       source_id: citingID,
@@ -528,61 +534,90 @@ export default class GraphStore {
     }
   }
 
-  //add sorted citaions to right clicked node
+  /**
+   * Adding sorted citations from Semantic Scholar's backend API through multiple steps.
+   * Step 1: fetch multiple times in the for-loop and store the node id arrays in the promises array since maximum pageSize is 10 in order for the API to return ordered results.
+   * Step 2: use Promise.all() to concatenate all node ids in one array.
+   * Step 3: pick the first 5 non-duplicate ids and fetch node info with Semantic Scholar's public API.
+   * Backup Step: if backend API fails, call addRandomCitations() to add 5 unsorted nodes with Semantic Scholar's public API.
+   * @param {*} sortMethod
+   */
   addSortedCitations(sortMethod) {
+    // Fetch request body and params
     let curcount = 0;
-    let page = 1;
     let pageSize = 10;
     let offset = 0;
+    // Change this to query more pages
+    let pageLimit = 3;
 
     const rightClickedNodeId =
       this.frame.rightClickedNode.data.ref.id.toString();
     var requestURL =
-      "https://argo-cors-anywhere.herokuapp.com/https://www.semanticscholar.org/api/1/search/paper/" +
+      "https://www.semanticscholar.org/api/1/search/paper/" +
       rightClickedNodeId +
       "/citations";
 
-    var requestBody = JSON.stringify({
-      page: page,
-      pageSize: pageSize,
-      sort: sortMethod,
-      authors: [],
-      coAuthors: [],
-      venues: [],
-      yearFilter: null,
-      requireViewablePdf: false,
-      publicationTypes: [],
-      externalContentTypes: [],
-      fieldsOfStudy: [],
-    });
+    let promises = [];
+    // 30 ids in total, 10 each iteration
+    for (let page = 1; page <= pageLimit; page++) {
+      var requestBody = JSON.stringify({
+        page: page,
+        pageSize: pageSize,
+        sort: sortMethod,
+        authors: [],
+        coAuthors: [],
+        venues: [],
+        yearFilter: null,
+        requireViewablePdf: false,
+        publicationTypes: [],
+        externalContentTypes: [],
+        fieldsOfStudy: [],
+      });
+      promises.push(
+        fetch(requestURL, {
+          method: "post",
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json",
+          },
+          body: requestBody,
+        })
+          .then((res) => {
+            if (res.ok) {
+              return res.json();
+            } else {
+              throw "Connection to backend API failed.";
+            }
+          })
+          // Mapping ids onto an array
+          .then((citations) => {
+            var PaperIds = citations.results.map(function (citation) {
+              return citation.id;
+            });
+            return PaperIds;
+          })
+      );
+    }
 
-    fetch(requestURL, {
-      method: "post",
-      headers: {
-        Accept: "application/json, text/plain, */*",
-        "Content-Type": "application/json",
-      },
-      body: requestBody,
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          throw "Internet connection failed.";
-        }
-      })
-      .then((citations) => {
-        var PaperIds = citations.results.map(function (citation) {
-          return citation.id;
-        });
+    Promise.all(promises)
+      .then((result) => {
+        // Concatenate the ids into one long array
+        let PaperIds = result.flat();
         console.log(PaperIds);
+        console.log("Node array length: " + PaperIds.length);
+        // Creating nodes
         let edgesArr = toJS(appState.graph.rawGraph.edges);
         let addedNodes = [];
         let fetches = [];
+
+        let duplicateNodes = 0;
         for (let i = 0; i < PaperIds.length; i++) {
+          // Null check
           if (!PaperIds[i]) {
             continue;
           }
+
+          // Checking duplicate nodes
           if (
             edgesArr.some(
               (edge) =>
@@ -590,10 +625,15 @@ export default class GraphStore {
                 edge.target_id == rightClickedNodeId
             )
           ) {
-            console.log("Already containing keys!");
+            console.log("Already containing nodes!");
+            duplicateNodes += 1;
             continue;
           }
+
+         
           curcount += 1;
+
+          // Fetching node info from public API
           let citationAPI =
             "https://api.semanticscholar.org/v1/paper/" + PaperIds[i];
           fetches.push(
@@ -602,7 +642,7 @@ export default class GraphStore {
                 if (res.ok) {
                   return res.json();
                 } else {
-                  throw "Connection failed.";
+                  throw "Connection to public API failed.";
                 }
               })
               .then((response) => {
@@ -624,27 +664,51 @@ export default class GraphStore {
               })
               .catch(function (err) {
                 console.warn(
-                  "Error adding paper nodes through Semantic Scholar API. " +
+                  "Cannot fetch node info through Semantic Scholar's public API. " +
                     requestURL,
                   err
                 );
               })
           );
+
+          // Exit condition
           if (curcount >= 5) {
             break;
           }
         }
-        console.log("Sorted citations added!");
+        console.log("Graph contains " + duplicateNodes + " duplicate nodes.");
+
+        // Check for remaining nodes
+        if(PaperIds.length<pageLimit*pageSize &&PaperIds.length==duplicateNodes ){
+          console.log("All citations added");
+          toaster.show({
+            message:
+              "All the citations for this node have been added.",
+            intent: Intent.WARNING,
+          });
+        }
+
+        // Check for upper limit
+        if (duplicateNodes >=pageLimit*pageSize) {
+          console.log("Limit reached");
+          toaster.show({
+            message:
+              "Cannot exceed maximum number of citations allowed per node (30).",
+            intent: Intent.WARNING,
+          });
+        }
+
         Promise.all(fetches).then(() => {
-          addedNodes.forEach(node => {
+          addedNodes.forEach((node) => {
             appState.graph.selectedNodes.push(node);
             appState.graph.frame.selection.push(node);
-          })
+          });
         });
       })
+      // Error message, using backup method instead
       .catch((error) => {
         console.error(
-          "Error occurred when requesting sorted citations through web API. Adding random citations. Reason:",
+          "Error occurred when requesting sorted citations through Semantic Scholar's backend API. Adding random citations. Reason:",
           error
         );
         toaster.show({
@@ -724,24 +788,23 @@ export default class GraphStore {
                 // appState.graph.selectedNodes = [];
                 // appState.graph.frame.selection = [];
               })
-            );
+          );
           if (curcount >= 5) {
             break;
           }
         }
         console.log("Successfully added random citation nodes.");
         Promise.all(fetches).then(() => {
-          addedNodes.forEach(node => {
+          addedNodes.forEach((node) => {
             appState.graph.selectedNodes.push(node);
             appState.graph.frame.selection.push(node);
-          })
+          });
         });
       })
       .catch((error) => {
         console.error("Cannot add random nodes. Reason:", error);
         toaster.show({
-          message:
-            "Cannot load results. Please check network connection.",
+          message: "Cannot load results. Please check network connection.",
           intent: Intent.DANGER,
           iconName: "warning-sign",
         });
@@ -828,7 +891,7 @@ export default class GraphStore {
                 let paperNode = appState.graph.process.graph.getNode(
                   response.paperId
                 );
-                addedNodes.push(paperNode)
+                addedNodes.push(paperNode);
                 paperNode.renderData.textHolder.children[0].element.override = true;
                 offset += 1;
               })
@@ -838,7 +901,7 @@ export default class GraphStore {
                     requestURL,
                   err
                 );
-            })
+              })
           );
           if (curcount >= 5) {
             break;
@@ -846,10 +909,10 @@ export default class GraphStore {
         }
         console.log("Sorted references added!");
         Promise.all(fetches).then((response) => {
-          addedNodes.forEach(node => {
+          addedNodes.forEach((node) => {
             appState.graph.selectedNodes.push(node);
             appState.graph.frame.selection.push(node);
-          })
+          });
         });
       })
 
@@ -924,7 +987,7 @@ export default class GraphStore {
                 let paperNode = appState.graph.process.graph.getNode(
                   response.paperId
                 );
-                addedNodes.push(paperNode)
+                addedNodes.push(paperNode);
                 paperNode.renderData.textHolder.children[0].element.override = true;
                 offset += 1;
               })
@@ -935,17 +998,16 @@ export default class GraphStore {
         }
         console.log("Successfully added random reference nodes.");
         Promise.all(fetches).then((response) => {
-          addedNodes.forEach(node => {
+          addedNodes.forEach((node) => {
             appState.graph.selectedNodes.push(node);
             appState.graph.frame.selection.push(node);
-          })
+          });
         });
       })
       .catch((error) => {
         console.error("Cannot add random nodes. Reason:", error);
         toaster.show({
-          message:
-            "Cannot load results. Please check network connection.",
+          message: "Cannot load results. Please check network connection.",
           intent: Intent.DANGER,
           iconName: "warning-sign",
         });
