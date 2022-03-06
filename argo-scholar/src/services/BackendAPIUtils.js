@@ -7,7 +7,7 @@ import { Intent } from "@blueprintjs/core";
  * Change this to query more papers.
  * pageSize > 10 will return incorrect ranks.
  *  */
-const pageLimit = 1;
+const pageLimit = 10;
 const pageSize = 10;
 
 /**
@@ -26,7 +26,7 @@ export function addSortedCitations(sortMethod, graph) {
   const rightClickedNodeId =
     graph.frame.rightClickedNode.data.ref.id.toString();
   var requestURL =
-    "https://www.semanticscholar.org/api/1/search/paper/" +
+    "https://argo-cors-anywhere.herokuapp.com/https://www.semanticscholar.org/api/1/search/paper/" +
     rightClickedNodeId +
     "/citations";
 
@@ -85,11 +85,11 @@ export function addSortedCitations(sortMethod, graph) {
       let fetches = [];
 
       let duplicateNodes = 0;
-      let nonCorpusNodes=0;
+      let nonCorpusNodes = 0;
       for (let i = 0; i < PaperIds.length; i++) {
         // Null check
         if (!PaperIds[i]) {
-          nonCorpusNodes+=1;
+          nonCorpusNodes += 1;
           continue;
         }
 
@@ -196,14 +196,14 @@ export function addSortedCitations(sortMethod, graph) {
           "Error getting sorted results. Adding unsorted results from Semantic Scholar instead.",
         intent: Intent.WARNING,
       });
-      this.addRandomCitations(graph);
+      addRandomCitations(graph);
     });
 
   appState.graph.frame.updateNodesShowingLabels();
 }
 
 //Backup: add random citaions to right clicked node
-export function addRandomCitations(graph) {
+function addRandomCitations(graph) {
   // Fetch request body and params
   const rightClickedNodeId =
     graph.frame.rightClickedNode.data.ref.id.toString();
@@ -349,7 +349,7 @@ export function addSortedReferences(sortMethod, graph) {
   const rightClickedNodeId =
     graph.frame.rightClickedNode.data.ref.id.toString();
   var requestURL =
-    "https://www.semanticscholar.org/api/1/paper/" +
+    "https://argo-cors-anywhere.herokuapp.com/https://www.semanticscholar.org/api/1/paper/" +
     rightClickedNodeId +
     "/citations?sort=" +
     sortMethod +
@@ -384,11 +384,11 @@ export function addSortedReferences(sortMethod, graph) {
       let fetches = [];
 
       let duplicateNodes = 0;
-      let nonCorpusNodes =0;
+      let nonCorpusNodes = 0;
       for (let i = 0; i < PaperIds.length; i++) {
         // Null check
         if (!PaperIds[i]) {
-          nonCorpusNodes+=1;
+          nonCorpusNodes += 1;
           continue;
         }
 
@@ -396,8 +396,8 @@ export function addSortedReferences(sortMethod, graph) {
         if (
           edgesArr.some(
             (edge) =>
-              edge.source_id == rightClickedNodeId&&
-              edge.target_id == PaperIds[i] 
+              edge.source_id == rightClickedNodeId &&
+              edge.target_id == PaperIds[i]
           )
         ) {
           console.log("Already containing nodes!");
@@ -454,7 +454,7 @@ export function addSortedReferences(sortMethod, graph) {
       // Check for remaining nodes
       if (
         PaperIds.length < pageLimit * pageSize &&
-        PaperIds.length == (duplicateNodes+nonCorpusNodes)
+        PaperIds.length == duplicateNodes + nonCorpusNodes
       ) {
         console.log("All references added");
         toaster.show({
@@ -493,13 +493,13 @@ export function addSortedReferences(sortMethod, graph) {
           "Error getting sorted results. Adding unsorted results from Semantic Scholar instead.",
         intent: Intent.WARNING,
       });
-      this.addRandomReferences(graph);
+      addRandomReferences(graph);
     });
   appState.graph.frame.updateNodesShowingLabels();
 }
 
 //Backup: add random references to the right clicked node
-export function addRandomReferences(graph) {
+function addRandomReferences(graph) {
   // Fetch request body and params
   const rightClickedNodeId =
     graph.frame.rightClickedNode.data.ref.id.toString();
