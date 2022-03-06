@@ -3,14 +3,12 @@ import appState from "../stores/index";
 import { toaster } from "../notifications/client";
 import { Intent } from "@blueprintjs/core";
 
- /**
-   * Change this to query more papers.
-   * pageSize>10 will return incorrect ranks.
-   *  */
-  const pageLimit = 2;
-  const pageSize = 10;
-
-
+/**
+ * Change this to query more papers.
+ * pageSize > 10 will return incorrect ranks.
+ *  */
+const pageLimit = 1;
+const pageSize = 10;
 
 /**
  * Adding sorted citations from Semantic Scholar's backend API through multiple steps.
@@ -24,7 +22,7 @@ export function addSortedCitations(sortMethod, graph) {
   // Fetch request body and params
   let curcount = 0;
   let offset = 0;
- 
+
   const rightClickedNodeId =
     graph.frame.rightClickedNode.data.ref.id.toString();
   var requestURL =
@@ -87,9 +85,11 @@ export function addSortedCitations(sortMethod, graph) {
       let fetches = [];
 
       let duplicateNodes = 0;
+      let nonCorpusNodes=0;
       for (let i = 0; i < PaperIds.length; i++) {
         // Null check
         if (!PaperIds[i]) {
+          nonCorpusNodes+=1;
           continue;
         }
 
@@ -152,6 +152,7 @@ export function addSortedCitations(sortMethod, graph) {
         }
       }
       console.log("Graph contains " + duplicateNodes + " duplicate nodes.");
+      console.log("Graph contains " + nonCorpusNodes + " non-corpus nodes.");
 
       // Check for remaining nodes
       if (
@@ -170,9 +171,9 @@ export function addSortedCitations(sortMethod, graph) {
         console.log("Limit reached");
         toaster.show({
           message:
-            "Maximum number of citations (" +
+            "Maximum number of citations allowed (" +
             pageLimit * pageSize +
-            ") allowed reached.",
+            ") reached.",
           intent: Intent.WARNING,
         });
       }
@@ -243,6 +244,7 @@ export function addRandomCitations(graph) {
         curcount += 1;
         let citationAPI =
           "https://api.semanticscholar.org/v1/paper/" + citations[i].paperId;
+
         // Fetching node info from public API
         fetches.push(
           fetch(citationAPI)
@@ -307,9 +309,9 @@ export function addRandomCitations(graph) {
         console.log("Limit reached");
         toaster.show({
           message:
-            "Maximum number of citations (" +
+            "Maximum number of citations allowed (" +
             pageLimit * pageSize +
-            ") allowed reached.",
+            ") reached.",
           intent: Intent.WARNING,
         });
       }
@@ -334,29 +336,29 @@ export function addRandomCitations(graph) {
 
 /**
  * Adding sorted referenences from Semantic Scholar's backend API through multiple steps.
- * Step 1: fetch multiple times in the for-loop and store the node id arrays in the promises array since maximum pageSize is 10 in order for the API to return ordered results.
- * Step 2: use Promise.all() to concatenate all node ids in one array.
+ * Step 1: fetch the first pageLimit * pageSize results and store the node id arrays in the array.
  * Step 3: pick the first 5 non-duplicate ids and fetch node info with Semantic Scholar's public API.
  * Backup Step: if backend API fails, call addRandomReferences() to add 5 unsorted nodes with Semantic Scholar's public API.
  * @param {*} sortMethod
  */
 export function addSortedReferences(sortMethod, graph) {
+  // Fetch request body and params
   let curcount = 0;
-  let pageSize = 10;
   let offset = 0;
 
   const rightClickedNodeId =
     graph.frame.rightClickedNode.data.ref.id.toString();
   var requestURL =
-    "https://argo-cors-anywhere.herokuapp.com/https://www.semanticscholar.org/api/1/paper/" +
+    "https://www.semanticscholar.org/api/1/paper/" +
     rightClickedNodeId +
     "/citations?sort=" +
     sortMethod +
     "&offset=" +
     offset +
     "&citationType=citedPapers&citationsPageSize=" +
-    pageSize;
+    pageLimit * pageSize;
 
+  // Fetching node info from backend API
   fetch(requestURL, {
     method: "get",
     headers: {
@@ -374,26 +376,37 @@ export function addSortedReferences(sortMethod, graph) {
       var PaperIds = references.citations.map(function (reference) {
         return reference.id;
       });
+      console.log(PaperIds);
+      console.log("Node array length: " + PaperIds.length);
 
       let edgesArr = toJS(appState.graph.rawGraph.edges);
       let addedNodes = [];
       let fetches = [];
-      console.log(PaperIds);
+
+      let duplicateNodes = 0;
+      let nonCorpusNodes =0;
       for (let i = 0; i < PaperIds.length; i++) {
+        // Null check
         if (!PaperIds[i]) {
+          nonCorpusNodes+=1;
           continue;
         }
+
+        // Checking duplicate nodes
         if (
           edgesArr.some(
             (edge) =>
-              edge.source_id == PaperIds[i] &&
-              edge.target_id == rightClickedNodeId
+              edge.source_id == rightClickedNodeId&&
+              edge.target_id == PaperIds[i] 
           )
         ) {
-          console.log("Already containing keys!");
+          console.log("Already containing nodes!");
+          duplicateNodes += 1;
           continue;
         }
         curcount += 1;
+
+        // Fetching node info from public API
         let citationAPI =
           "https://api.semanticscholar.org/v1/paper/" + PaperIds[i];
         fetches.push(
@@ -402,7 +415,7 @@ export function addSortedReferences(sortMethod, graph) {
               if (res.ok) {
                 return res.json();
               } else {
-                throw "Connection failed.";
+                throw "Connection to public API failed.";
               }
             })
             .then((response) => {
@@ -430,11 +443,38 @@ export function addSortedReferences(sortMethod, graph) {
               );
             })
         );
+
+        // Exit condition
         if (curcount >= 5) {
           break;
         }
       }
-      console.log("Sorted references added!");
+      console.log("Graph contains " + duplicateNodes + " duplicate nodes.");
+      console.log("Graph contains " + nonCorpusNodes + " non-corpus nodes.");
+      // Check for remaining nodes
+      if (
+        PaperIds.length < pageLimit * pageSize &&
+        PaperIds.length == (duplicateNodes+nonCorpusNodes)
+      ) {
+        console.log("All references added");
+        toaster.show({
+          message: "All the references for this node have been added.",
+          intent: Intent.WARNING,
+        });
+      }
+
+      // Check for upper limit
+      if (duplicateNodes >= pageLimit * pageSize) {
+        console.log("Limit reached");
+        toaster.show({
+          message:
+            "Maximum number of references allowed (" +
+            pageLimit * pageSize +
+            ") reached.",
+          intent: Intent.WARNING,
+        });
+      }
+
       Promise.all(fetches).then((response) => {
         addedNodes.forEach((node) => {
           appState.graph.selectedNodes.push(node);
@@ -442,7 +482,7 @@ export function addSortedReferences(sortMethod, graph) {
         });
       });
     })
-
+    // Error message, using backup method instead
     .catch((error) => {
       console.error(
         "Error occurred when requesting sorted references through web API. Adding random references. Reason:",
@@ -460,10 +500,14 @@ export function addSortedReferences(sortMethod, graph) {
 
 //Backup: add random references to the right clicked node
 export function addRandomReferences(graph) {
-  const rightClickedNodeId = this.frame.rightClickedNode.data.ref.id.toString();
+  // Fetch request body and params
+  const rightClickedNodeId =
+    graph.frame.rightClickedNode.data.ref.id.toString();
   let curcount = 0;
   let offset = 0;
   let apiurl = "https://api.semanticscholar.org/v1/paper/" + rightClickedNodeId;
+
+  // Fetching node ids from public API
   fetch(apiurl)
     .then((res) => {
       return res.json();
@@ -476,6 +520,8 @@ export function addRandomReferences(graph) {
       let edgesArr = toJS(appState.graph.rawGraph.edges);
       let addedNodes = [];
       let fetches = [];
+
+      let duplicateNodes = 0;
       for (let i = 0; i < references.length; i++) {
         if (
           edgesArr.some(
@@ -484,19 +530,22 @@ export function addRandomReferences(graph) {
               edge.target_id == references[i].paperId
           )
         ) {
-          console.log("contains key");
+          console.log("Already containing nodes!");
+          duplicateNodes += 1;
           continue;
         }
         curcount += 1;
-        let citationAPI =
+        let referenceAPI =
           "https://api.semanticscholar.org/v1/paper/" + references[i].paperId;
+
+        // Fetching node info from public API
         fetches.push(
-          fetch(citationAPI)
+          fetch(referenceAPI)
             .then((res) => {
               if (res.ok) {
                 return res.json();
               } else {
-                throw "Connection failed.";
+                throw "Connection to public API failed.";
               }
             })
             .then((response) => {
@@ -521,7 +570,31 @@ export function addRandomReferences(graph) {
           break;
         }
       }
-      console.log("Successfully added random reference nodes.");
+      console.log("Graph contains " + duplicateNodes + " duplicate nodes.");
+
+      // Check for remaining nodes
+      if (
+        references.length < pageLimit * pageSize &&
+        references.length == duplicateNodes
+      ) {
+        console.log("All references added");
+        toaster.show({
+          message: "All the references for this node have been added.",
+          intent: Intent.WARNING,
+        });
+      }
+
+      // Check for upper limit
+      if (duplicateNodes >= pageLimit * pageSize) {
+        console.log("Limit reached");
+        toaster.show({
+          message:
+            "Maximum number of references allowed (" +
+            pageLimit * pageSize +
+            ") reached.",
+          intent: Intent.WARNING,
+        });
+      }
       Promise.all(fetches).then((response) => {
         addedNodes.forEach((node) => {
           appState.graph.selectedNodes.push(node);
