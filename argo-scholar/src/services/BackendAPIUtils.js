@@ -3,6 +3,15 @@ import appState from "../stores/index";
 import { toaster } from "../notifications/client";
 import { Intent } from "@blueprintjs/core";
 
+ /**
+   * Change this to query more papers.
+   * pageSize>10 will return incorrect ranks.
+   *  */
+  const pageLimit = 2;
+  const pageSize = 10;
+
+
+
 /**
  * Adding sorted citations from Semantic Scholar's backend API through multiple steps.
  * Step 1: fetch multiple times in the for-loop and store the node id arrays in the promises array since maximum pageSize is 10 in order for the API to return ordered results.
@@ -14,11 +23,8 @@ import { Intent } from "@blueprintjs/core";
 export function addSortedCitations(sortMethod, graph) {
   // Fetch request body and params
   let curcount = 0;
-  let pageSize = 10;
   let offset = 0;
-  // Change this to query more pages
-  let pageLimit = 3;
-
+ 
   const rightClickedNodeId =
     graph.frame.rightClickedNode.data.ref.id.toString();
   var requestURL =
@@ -42,6 +48,7 @@ export function addSortedCitations(sortMethod, graph) {
       externalContentTypes: [],
       fieldsOfStudy: [],
     });
+    //Fetching node info from backend API
     promises.push(
       fetch(requestURL, {
         method: "post",
@@ -163,7 +170,9 @@ export function addSortedCitations(sortMethod, graph) {
         console.log("Limit reached");
         toaster.show({
           message:
-            "Cannot exceed maximum number of citations allowed per node (30).",
+            "Maximum number of citations (" +
+            pageLimit * pageSize +
+            ") allowed reached.",
           intent: Intent.WARNING,
         });
       }
@@ -194,11 +203,14 @@ export function addSortedCitations(sortMethod, graph) {
 
 //Backup: add random citaions to right clicked node
 export function addRandomCitations(graph) {
+  // Fetch request body and params
   const rightClickedNodeId =
     graph.frame.rightClickedNode.data.ref.id.toString();
   let curcount = 0;
   let offset = 0;
   let apiurl = "https://api.semanticscholar.org/v1/paper/" + rightClickedNodeId;
+
+  // Fetching node ids from public API
   fetch(apiurl)
     .then((res) => {
       return res.json();
@@ -211,7 +223,12 @@ export function addRandomCitations(graph) {
       let edgesArr = toJS(appState.graph.rawGraph.edges);
       let addedNodes = [];
       let fetches = [];
+
+      let duplicateNodes = 0;
       for (let i = 0; i < citations.length; i++) {
+        if (duplicateNodes >= pageLimit * pageSize) {
+          break;
+        }
         if (
           edgesArr.some(
             (edge) =>
@@ -219,19 +236,21 @@ export function addRandomCitations(graph) {
               edge.target_id == rightClickedNodeId
           )
         ) {
-          console.log("contains key");
+          console.log("Already containing nodes!");
+          duplicateNodes += 1;
           continue;
         }
         curcount += 1;
         let citationAPI =
           "https://api.semanticscholar.org/v1/paper/" + citations[i].paperId;
+        // Fetching node info from public API
         fetches.push(
           fetch(citationAPI)
             .then((res) => {
               if (res.ok) {
                 return res.json();
               } else {
-                throw "Connection failed.";
+                throw "Connection to public API failed.";
               }
             })
             .then((response) => {
@@ -257,12 +276,44 @@ export function addRandomCitations(graph) {
               // appState.graph.selectedNodes = [];
               // appState.graph.frame.selection = [];
             })
+            .catch(function (err) {
+              console.warn(
+                "Cannot fetch node info through Semantic Scholar's public API. " +
+                  requestURL,
+                err
+              );
+            })
         );
         if (curcount >= 5) {
           break;
         }
       }
-      console.log("Successfully added random citation nodes.");
+      console.log("Graph contains " + duplicateNodes + " duplicate nodes.");
+
+      // Check for remaining nodes
+      if (
+        citations.length < pageLimit * pageSize &&
+        citations.length == duplicateNodes
+      ) {
+        console.log("All citations added");
+        toaster.show({
+          message: "All the citations for this node have been added.",
+          intent: Intent.WARNING,
+        });
+      }
+
+      // Check for upper limit
+      if (duplicateNodes >= pageLimit * pageSize) {
+        console.log("Limit reached");
+        toaster.show({
+          message:
+            "Maximum number of citations (" +
+            pageLimit * pageSize +
+            ") allowed reached.",
+          intent: Intent.WARNING,
+        });
+      }
+
       Promise.all(fetches).then(() => {
         addedNodes.forEach((node) => {
           appState.graph.selectedNodes.push(node);
@@ -281,7 +332,14 @@ export function addRandomCitations(graph) {
   appState.graph.frame.updateNodesShowingLabels();
 }
 
-//add sorted references to right clicked node
+/**
+ * Adding sorted referenences from Semantic Scholar's backend API through multiple steps.
+ * Step 1: fetch multiple times in the for-loop and store the node id arrays in the promises array since maximum pageSize is 10 in order for the API to return ordered results.
+ * Step 2: use Promise.all() to concatenate all node ids in one array.
+ * Step 3: pick the first 5 non-duplicate ids and fetch node info with Semantic Scholar's public API.
+ * Backup Step: if backend API fails, call addRandomReferences() to add 5 unsorted nodes with Semantic Scholar's public API.
+ * @param {*} sortMethod
+ */
 export function addSortedReferences(sortMethod, graph) {
   let curcount = 0;
   let pageSize = 10;
