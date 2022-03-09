@@ -50,7 +50,7 @@ Argo Scholar allows you to embed your interactive literature exploration visuali
 
 <img src="/img/img-embedded.png" width=60% alt="Argo Scholar embedded widget mode">
 
-##Credits
+## Credits
 ♥ Argo Scholar was developed and maintained by [Kevin Li](https://github.com/kevinli573), [Alex Yang](https://github.com/AlexanderHYang), [Anish Upadhayay](https://github.com/aupadhayay3), [Zhiyan Zhou](https://github.com/FZ2000), [Jon Saad-Falcon](https://github.com/jonsaadfalcon), [Duen Horng Chau](https://github.com/polochau) from [Polo Club of Data Science](https://poloclub.github.io/) at Georgia Tech.
 ##Citations
 ```bibTeX
@@ -63,11 +63,11 @@ Argo Scholar allows you to embed your interactive literature exploration visuali
 }
 ```
 
-##License
+## License
 Argo Scholar is available under the  [MIT License](LICENSE).
 Argo Scholar uses the Semantic Scholar Open Research Corpus API, which is licensed under [ODC-BY](https://opendatacommons.org/licenses/by/1.0/).
 More can be found here: [*Waleed Ammar et al. 2018. Construction of the Literature Graph in Semantic Scholar. NAACL*](https://www.semanticscholar.org/paper/09e3cf5704bcb16e6657f6ceed70e93373a54618)
 
-##Contact
+## Contact
 If you have any questions or would like to learn more about the project, feel free to contact [Kevin Li](mailto:kevin.li@gatech.edu) or [Alex Yang](https://alexanderyang.me).
 
