@@ -17,9 +17,9 @@ import {
   Intent,
 } from "@blueprintjs/core";
 import { Frame, graph } from "../graph-frontend";
-import { toaster } from "../notifications/client";
 import pageRank from "ngraph.pagerank";
 import appState from ".";
+import * as BackendAPIUtils from "../services/BackendAPIUtils";
 
 export default class GraphStore {
   initialGlobalConfig = {
@@ -302,14 +302,20 @@ export default class GraphStore {
       degreeDict[parentID] += 1;
     }
 
-    paperJsonResponse.citations.forEach(citation => {
-      if (citation.paperId in degreeDict && !backEndgraph.getLink(citation.paperId, paperJsonResponse.paperId)) {
+    paperJsonResponse.citations.forEach((citation) => {
+      if (
+        citation.paperId in degreeDict &&
+        !backEndgraph.getLink(citation.paperId, paperJsonResponse.paperId)
+      ) {
         this.addEdgetoGraph(citation.paperId, paperJsonResponse.paperId);
       }
     });
 
-    paperJsonResponse.references.forEach(reference => {
-      if (reference.paperId in degreeDict && !backEndgraph.getLink(paperJsonResponse.paperId, reference.paperId)) {
+    paperJsonResponse.references.forEach((reference) => {
+      if (
+        reference.paperId in degreeDict &&
+        !backEndgraph.getLink(paperJsonResponse.paperId, reference.paperId)
+      ) {
         this.addEdgetoGraph(paperJsonResponse.paperId, reference.paperId);
       }
     });
@@ -351,7 +357,7 @@ export default class GraphStore {
     appState.graph.metadata.nodeProperties = Object.keys(nodesArr[0]);
   }
 
-   addEdgetoGraph(citingID, citedID) {
+  addEdgetoGraph(citingID, citedID) {
     appState.graph.preprocessedRawGraph.graph.addLink(citingID, citedID);
     appState.graph.rawGraph.edges.push({
       source_id: citingID,
@@ -528,431 +534,6 @@ export default class GraphStore {
     }
   }
 
-  //add sorted citaions to right clicked node
-  addSortedCitations(sortMethod) {
-    let curcount = 0;
-    let page = 1;
-    let pageSize = 10;
-    let offset = 0;
-
-    const rightClickedNodeId =
-      this.frame.rightClickedNode.data.ref.id.toString();
-    var requestURL =
-      "https://argo-cors-anywhere.herokuapp.com/https://www.semanticscholar.org/api/1/search/paper/" +
-      rightClickedNodeId +
-      "/citations";
-
-    var requestBody = JSON.stringify({
-      page: page,
-      pageSize: pageSize,
-      sort: sortMethod,
-      authors: [],
-      coAuthors: [],
-      venues: [],
-      yearFilter: null,
-      requireViewablePdf: false,
-      publicationTypes: [],
-      externalContentTypes: [],
-      fieldsOfStudy: [],
-    });
-
-    fetch(requestURL, {
-      method: "post",
-      headers: {
-        Accept: "application/json, text/plain, */*",
-        "Content-Type": "application/json",
-      },
-      body: requestBody,
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          throw "Internet connection failed.";
-        }
-      })
-      .then((citations) => {
-        var PaperIds = citations.results.map(function (citation) {
-          return citation.id;
-        });
-        console.log(PaperIds);
-        let edgesArr = toJS(appState.graph.rawGraph.edges);
-        let addedNodes = [];
-        let fetches = [];
-        for (let i = 0; i < PaperIds.length; i++) {
-          if (!PaperIds[i]) {
-            continue;
-          }
-          if (
-            edgesArr.some(
-              (edge) =>
-                edge.source_id == PaperIds[i] &&
-                edge.target_id == rightClickedNodeId
-            )
-          ) {
-            console.log("Already containing keys!");
-            continue;
-          }
-          curcount += 1;
-          let citationAPI =
-            "https://api.semanticscholar.org/v1/paper/" + PaperIds[i];
-          fetches.push(
-            fetch(citationAPI)
-              .then((res) => {
-                if (res.ok) {
-                  return res.json();
-                } else {
-                  throw "Connection failed.";
-                }
-              })
-              .then((response) => {
-                this.addNodetoGraph(response, rightClickedNodeId, 0);
-                appState.graph.selectedNodes = [];
-                appState.graph.frame.selection = [];
-                this.frame.addFrontEndNodeInARow(
-                  rightClickedNodeId,
-                  response.paperId,
-                  offset,
-                  0
-                );
-                let paperNode = appState.graph.process.graph.getNode(
-                  response.paperId
-                );
-                addedNodes.push(paperNode);
-                paperNode.renderData.textHolder.children[0].element.override = true;
-                offset += 1;
-              })
-              .catch(function (err) {
-                console.warn(
-                  "Error adding paper nodes through Semantic Scholar API. " +
-                    requestURL,
-                  err
-                );
-              })
-          );
-          if (curcount >= 5) {
-            break;
-          }
-        }
-        console.log("Sorted citations added!");
-        Promise.all(fetches).then(() => {
-          addedNodes.forEach(node => {
-            appState.graph.selectedNodes.push(node);
-            appState.graph.frame.selection.push(node);
-          })
-        });
-      })
-      .catch((error) => {
-        console.error(
-          "Error occurred when requesting sorted citations through web API. Adding random citations. Reason:",
-          error
-        );
-        toaster.show({
-          message:
-            "Error getting sorted results. Adding unsorted results from Semantic Scholar instead.",
-          intent: Intent.WARNING,
-        });
-        this.addRandomCitations();
-      });
-
-    appState.graph.frame.updateNodesShowingLabels();
-  }
-
-  //Backup: add random citaions to right clicked node
-  addRandomCitations() {
-    const rightClickedNodeId =
-      this.frame.rightClickedNode.data.ref.id.toString();
-    let curcount = 0;
-    let offset = 0;
-    let apiurl =
-      "https://api.semanticscholar.org/v1/paper/" + rightClickedNodeId;
-    fetch(apiurl)
-      .then((res) => {
-        return res.json();
-      })
-      .then((response) => {
-        return response.citations;
-      })
-      .then((citations) => {
-        console.log(citations);
-        let edgesArr = toJS(appState.graph.rawGraph.edges);
-        let addedNodes = [];
-        let fetches = [];
-        for (let i = 0; i < citations.length; i++) {
-          if (
-            edgesArr.some(
-              (edge) =>
-                edge.source_id == citations[i].paperId &&
-                edge.target_id == rightClickedNodeId
-            )
-          ) {
-            console.log("contains key");
-            continue;
-          }
-          curcount += 1;
-          let citationAPI =
-            "https://api.semanticscholar.org/v1/paper/" + citations[i].paperId;
-          fetches.push(
-            fetch(citationAPI)
-              .then((res) => {
-                if (res.ok) {
-                  return res.json();
-                } else {
-                  throw "Connection failed.";
-                }
-              })
-              .then((response) => {
-                this.addNodetoGraph(response, rightClickedNodeId, 0);
-                appState.graph.selectedNodes = [];
-                appState.graph.frame.selection = [];
-                this.frame.addFrontEndNodeInARow(
-                  rightClickedNodeId,
-                  response.paperId,
-                  offset,
-                  0
-                );
-                let paperNode = appState.graph.process.graph.getNode(
-                  response.paperId
-                );
-                addedNodes.push(paperNode);
-                paperNode.renderData.textHolder.children[0].element.override = true;
-                offset += 1;
-                // appState.graph.process.graph.getNode(
-                //   response.paperId
-                // ).renderData.textHolder.children[0].element.override = true;
-                // offset += 1;
-                // appState.graph.selectedNodes = [];
-                // appState.graph.frame.selection = [];
-              })
-            );
-          if (curcount >= 5) {
-            break;
-          }
-        }
-        console.log("Successfully added random citation nodes.");
-        Promise.all(fetches).then(() => {
-          addedNodes.forEach(node => {
-            appState.graph.selectedNodes.push(node);
-            appState.graph.frame.selection.push(node);
-          })
-        });
-      })
-      .catch((error) => {
-        console.error("Cannot add random nodes. Reason:", error);
-        toaster.show({
-          message:
-            "Cannot load results. Please check network connection.",
-          intent: Intent.DANGER,
-          iconName: "warning-sign",
-        });
-      });
-    appState.graph.frame.updateNodesShowingLabels();
-  }
-
-  //add sorted references to right clicked node
-  addSortedReferences(sortMethod) {
-    let curcount = 0;
-    let pageSize = 10;
-    let offset = 0;
-
-    const rightClickedNodeId =
-      this.frame.rightClickedNode.data.ref.id.toString();
-    var requestURL =
-      "https://argo-cors-anywhere.herokuapp.com/https://www.semanticscholar.org/api/1/paper/" +
-      rightClickedNodeId +
-      "/citations?sort=" +
-      sortMethod +
-      "&offset=" +
-      offset +
-      "&citationType=citedPapers&citationsPageSize=" +
-      pageSize;
-
-    fetch(requestURL, {
-      method: "get",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          throw "Connection failed.";
-        }
-      })
-      .then((references) => {
-        var PaperIds = references.citations.map(function (reference) {
-          return reference.id;
-        });
-
-        let edgesArr = toJS(appState.graph.rawGraph.edges);
-        let addedNodes = [];
-        let fetches = [];
-        console.log(PaperIds);
-        for (let i = 0; i < PaperIds.length; i++) {
-          if (!PaperIds[i]) {
-            continue;
-          }
-          if (
-            edgesArr.some(
-              (edge) =>
-                edge.source_id == PaperIds[i] &&
-                edge.target_id == rightClickedNodeId
-            )
-          ) {
-            console.log("Already containing keys!");
-            continue;
-          }
-          curcount += 1;
-          let citationAPI =
-            "https://api.semanticscholar.org/v1/paper/" + PaperIds[i];
-          fetches.push(
-            fetch(citationAPI)
-              .then((res) => {
-                if (res.ok) {
-                  return res.json();
-                } else {
-                  throw "Connection failed.";
-                }
-              })
-              .then((response) => {
-                this.addNodetoGraph(response, rightClickedNodeId, 1);
-                appState.graph.selectedNodes = [];
-                appState.graph.frame.selection = [];
-                this.frame.addFrontEndNodeInARow(
-                  rightClickedNodeId,
-                  response.paperId,
-                  offset,
-                  1
-                );
-                let paperNode = appState.graph.process.graph.getNode(
-                  response.paperId
-                );
-                addedNodes.push(paperNode)
-                paperNode.renderData.textHolder.children[0].element.override = true;
-                offset += 1;
-              })
-              .catch(function (err) {
-                console.warn(
-                  "Error adding paper nodes through Semantic Scholar API. " +
-                    requestURL,
-                  err
-                );
-            })
-          );
-          if (curcount >= 5) {
-            break;
-          }
-        }
-        console.log("Sorted references added!");
-        Promise.all(fetches).then((response) => {
-          addedNodes.forEach(node => {
-            appState.graph.selectedNodes.push(node);
-            appState.graph.frame.selection.push(node);
-          })
-        });
-      })
-
-      .catch((error) => {
-        console.error(
-          "Error occurred when requesting sorted references through web API. Adding random references. Reason:",
-          error
-        );
-        toaster.show({
-          message:
-            "Error getting sorted results. Adding unsorted results from Semantic Scholar instead.",
-          intent: Intent.WARNING,
-        });
-        this.addRandomReferences();
-      });
-    appState.graph.frame.updateNodesShowingLabels();
-  }
-
-  //Backup: add random references to the right clicked node
-  addRandomReferences() {
-    const rightClickedNodeId =
-      this.frame.rightClickedNode.data.ref.id.toString();
-    let curcount = 0;
-    let offset = 0;
-    let apiurl =
-      "https://api.semanticscholar.org/v1/paper/" + rightClickedNodeId;
-    fetch(apiurl)
-      .then((res) => {
-        return res.json();
-      })
-      .then((response) => {
-        return response.references;
-      })
-      .then((references) => {
-        console.log(references);
-        let edgesArr = toJS(appState.graph.rawGraph.edges);
-        let addedNodes = [];
-        let fetches = [];
-        for (let i = 0; i < references.length; i++) {
-          if (
-            edgesArr.some(
-              (edge) =>
-                edge.source_id == rightClickedNodeId &&
-                edge.target_id == references[i].paperId
-            )
-          ) {
-            console.log("contains key");
-            continue;
-          }
-          curcount += 1;
-          let citationAPI =
-            "https://api.semanticscholar.org/v1/paper/" + references[i].paperId;
-          fetches.push(
-            fetch(citationAPI)
-              .then((res) => {
-                if (res.ok) {
-                  return res.json();
-                } else {
-                  throw "Connection failed.";
-                }
-              })
-              .then((response) => {
-                this.addNodetoGraph(response, rightClickedNodeId, 1);
-                appState.graph.selectedNodes = [];
-                appState.graph.frame.selection = [];
-                this.frame.addFrontEndNodeInARow(
-                  rightClickedNodeId,
-                  response.paperId,
-                  offset,
-                  1
-                );
-                let paperNode = appState.graph.process.graph.getNode(
-                  response.paperId
-                );
-                addedNodes.push(paperNode)
-                paperNode.renderData.textHolder.children[0].element.override = true;
-                offset += 1;
-              })
-          );
-          if (curcount >= 5) {
-            break;
-          }
-        }
-        console.log("Successfully added random reference nodes.");
-        Promise.all(fetches).then((response) => {
-          addedNodes.forEach(node => {
-            appState.graph.selectedNodes.push(node);
-            appState.graph.frame.selection.push(node);
-          })
-        });
-      })
-      .catch((error) => {
-        console.error("Cannot add random nodes. Reason:", error);
-        toaster.show({
-          message:
-            "Cannot load results. Please check network connection.",
-          intent: Intent.DANGER,
-          iconName: "warning-sign",
-        });
-      });
-
-    appState.graph.frame.updateNodesShowingLabels();
-  }
   setUpFrame() {
     if (this.frame) {
       this.frame.getGraph().clear();
@@ -1027,28 +608,28 @@ export default class GraphStore {
               children: [
                 MenuItemFactory({
                   onClick: () => {
-                    this.addSortedCitations("relevance");
+                    BackendAPIUtils.addSortedCitations("relevance", this);
                   },
                   text: "Sort By Relevance",
                   key: "Sort By Relevance",
                 }),
                 MenuItemFactory({
                   onClick: () => {
-                    this.addSortedCitations("is-influential");
+                    BackendAPIUtils.addSortedCitations("is-influential", this);
                   },
                   text: "Sort By Most Infleunced Papers",
                   key: "Sort By Most Infleunced Papers",
                 }),
                 MenuItemFactory({
                   onClick: () => {
-                    this.addSortedCitations("total-citations");
+                    BackendAPIUtils.addSortedCitations("total-citations", this);
                   },
                   text: "Sort By Citation Count",
                   key: "Sort By Citation Count",
                 }),
                 MenuItemFactory({
                   onClick: () => {
-                    this.addSortedCitations("pub-date");
+                    BackendAPIUtils.addSortedCitations("pub-date", this);
                   },
                   text: "Sort By Recency",
                   key: "Sort By Recency",
@@ -1062,21 +643,21 @@ export default class GraphStore {
               children: [
                 MenuItemFactory({
                   onClick: () => {
-                    this.addSortedReferences("relevance");
+                    BackendAPIUtils.addSortedReferences("relevance", this);
                   },
                   text: "Sort By Relevance",
                   key: "Sort By Relevance",
                 }),
                 MenuItemFactory({
                   onClick: () => {
-                    this.addSortedReferences("is-influential");
+                    BackendAPIUtils.addSortedReferences("is-influential", this);
                   },
                   text: "Sort By Most Infleunced Papers",
                   key: "Sort By Most Infleunced Papers",
                 }),
                 MenuItemFactory({
                   onClick: () => {
-                    this.addSortedReferences("year");
+                    BackendAPIUtils.addSortedReferences("year", this);
                   },
                   text: "Sort By Recency",
                   key: "Sort By Recency",

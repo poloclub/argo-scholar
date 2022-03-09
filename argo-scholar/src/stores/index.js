@@ -35,7 +35,7 @@ const loadSnapshotFromURL = (url) => {
     .then((response) => response.text())
     .catch((error) => {
       toaster.show({
-        message: "Failed to fetch graph snapshot",
+        message: "Failed to fetch graph snapshot.",
         intent: Intent.DANGER,
         timeout: -1,
         iconName: "warning-sign",
@@ -54,7 +54,7 @@ const loadSnapshotFromStrapi = (uuid) => {
     .then((json) => json[0].body)
     .catch((error) => {
       toaster.show({
-        message: "Failed to fetch graph snapshot",
+        message: "Failed to fetch graph snapshot.",
         intent: Intent.DANGER,
         timeout: -1,
         iconName: "warning-sign",
