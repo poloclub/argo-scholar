@@ -1,11 +1,16 @@
 # Argo Scholar
 
+[![Build Status](https://app.travis-ci.com/poloclub/argo-scholar.svg?branch=main)](https://app.travis-ci.com/poloclub/argo-scholar)
+[![arxiv badge](https://img.shields.io/badge/arXic-2110.14060-red)](https://arxiv.org/abs/2110.14060)
+[![GitHub](https://img.shields.io/github/license/poloclub/argo-scholar?color=blue)](https://github.com/poloclub/argo-scholar/blob/main/LICENSE)
+
 An interactive literature exploration visualization system that runs in your web browsers. No installation needed.
 
-[**Live Demo** - Launch Argo Scholar in your browser](https://poloclub.github.io/argo-scholar/)
+
 
 <img src="img/readme-logo.png" width=100% alt="Argo Scholar logo">
 
+[**Live Demo** - Launch Argo Scholar in your browser](https://poloclub.github.io/argo-scholar/)
 ## Documentations 
 
 - [Quick Start (Visualization, Saving and Sharing Snapshots)](quickstart.md)
@@ -45,13 +50,24 @@ Argo Scholar allows you to embed your interactive literature exploration visuali
 
 <img src="/img/img-embedded.png" width=60% alt="Argo Scholar embedded widget mode">
 
----
-Argo Scholar uses the Semantic Scholar Open Research Corpus API which is licensed under [ODC-BY](https://opendatacommons.org/licenses/by/1.0/).
-More can be found here:
+##Credits
+♥ Argo Scholar was developed and maintained by [Kevin Li](https://github.com/kevinli573), [Alex Yang](https://github.com/AlexanderHYang), [Anish Upadhayay](https://github.com/aupadhayay3), [Zhiyan Zhou](https://github.com/FZ2000), [Jon Saad-Falcon](https://github.com/jonsaadfalcon), [Duen Horng Chau](https://github.com/polochau) from [Polo Club of Data Science](https://poloclub.github.io/) at Georgia Tech.
+##Citations
+```bibTeX
+@inproceedings{li2021argoscholar,
+  title={Argo Scholar: Interactive Visual Exploration of Literature in Browser},
+  author={Kevin Li, Haoyang Yang, Anish Upadhayay, Zhiyan Zhou, Jon Saad-Falcon, 
+  Duen Horng (Polo) Chau},
+  booktitle = {IEEE Visualization Conference (VIS), Poster},
+  year={2021}
+}
+```
 
-*Waleed Ammar et al. 2018. Construction of the Literature Graph in Semantic Scholar. NAACL*
-https://www.semanticscholar.org/paper/09e3cf5704bcb16e6657f6ceed70e93373a54618
+##License
+Argo Scholar is available under the  [MIT License](LICENSE).
+Argo Scholar uses the Semantic Scholar Open Research Corpus API, which is licensed under [ODC-BY](https://opendatacommons.org/licenses/by/1.0/).
+More can be found here: [*Waleed Ammar et al. 2018. Construction of the Literature Graph in Semantic Scholar. NAACL*](https://www.semanticscholar.org/paper/09e3cf5704bcb16e6657f6ceed70e93373a54618)
 
----
+##Contact
+If you have any questions or would like to learn more about the project, feel free to contact [Kevin Li](mailto:kevin.li@gatech.edu) or [Alex Yang](https://alexanderyang.me).
 
-♥ Developed and maintained by [Polo Club of Data Science](https://poloclub.github.io/). [MIT License](LICENSE).
