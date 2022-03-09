@@ -657,7 +657,7 @@ export default class GraphStore {
                 }),
                 MenuItemFactory({
                   onClick: () => {
-                    BackendAPIUtilsZ.addSortedReferences("year", this);
+                    BackendAPIUtils.addSortedReferences("year", this);
                   },
                   text: "Sort By Recency",
                   key: "Sort By Recency",
