@@ -49,9 +49,9 @@ class NewNetworkDialog extends React.Component {
           [Classes.DARK]: appState.preferences.darkMode
         })}
         iconName="map-create"
-        isOpen={appState.project.isNewProjectDialogOpen}
+        isOpen={appState.project.isNewNetworkDialogOpen}
         onClose={() => {
-          appState.project.isNewProjectDialogOpen = false;
+          appState.project.isNewNetworkDialogOpen = false;
         }}
         title={'Create New Graph'}
       >
@@ -68,7 +68,7 @@ class NewNetworkDialog extends React.Component {
               //   [Classes.DISABLED]: !this.state.name
               // })}
               intent={Intent.PRIMARY}
-              onClick={() => appState.project.isNewProjectDialogOpen = false}
+              onClick={() => appState.project.isNewNetworkDialogOpen = false}
               text="Cancel"
             />
 
@@ -79,7 +79,7 @@ class NewNetworkDialog extends React.Component {
               intent={Intent.NONE}
               onClick={(event) => {
                 this.createEmptyGraph(event);
-                appState.project.isNewProjectDialogOpen = false;
+                appState.project.isNewNetworkDialogOpen = false;
               }}
               text="Create"
             />

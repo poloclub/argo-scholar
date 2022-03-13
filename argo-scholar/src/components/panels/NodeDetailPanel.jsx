@@ -109,13 +109,40 @@ class NodeDetail extends React.Component {
             <div style={{ display: "flex", flexWrap: "wrap" }}>
               <div>
                 <b>Degree: </b>
-                <span className="node-details-table-numerals">{this.props.node["degree"]}</span>
+                <span
+                  style={{
+                    color: appState.preferences.darkMode
+                      ? "#BFCCD6"
+                      : "#5C7080",
+                  }}
+                  className="node-details-table-numerals"
+                >
+                  {this.props.node["degree"]}
+                </span>
                 <br />
                 <b>Page Rank: </b>
-                <span className="node-details-table-numerals">{this.props.node["pagerank"]}</span>
+                <span
+                  style={{
+                    color: appState.preferences.darkMode
+                      ? "#BFCCD6"
+                      : "#5C7080",
+                  }}
+                  className="node-details-table-numerals"
+                >
+                  {this.props.node["pagerank"]}
+                </span>
                 <br />
                 <b>Node ID: </b>
-                <span className="node-details-table-numerals">{this.props.node["node_id"]}</span>
+                <span
+                  style={{
+                    color: appState.preferences.darkMode
+                      ? "#BFCCD6"
+                      : "#5C7080",
+                  }}
+                  className="node-details-table-numerals"
+                >
+                  {this.props.node["node_id"]}
+                </span>
               </div>
             </div>
 
@@ -123,7 +150,8 @@ class NodeDetail extends React.Component {
             <MenuDivider />
             <div style={{ display: "flex", flexWrap: "wrap" }}>
               <div>
-                <b>Abstract: </b><br/>
+                <b>Abstract: </b>
+                <br />
                 {this.props.node["paperAbstract"]}
               </div>
             </div>
