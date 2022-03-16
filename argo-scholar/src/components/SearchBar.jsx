@@ -137,24 +137,6 @@ class SearchBar extends React.Component {
     event.preventDefault();
   }
 
-  createEmptyGraph(event) {
-    appState.graph.runActiveLayout();
-    requestCreateNewProject({
-      name: appState.project.newProjectName,
-      createdDate: new Date().toLocaleString(),
-    });
-    requestCreateEmptyPaperGraph(
-      appState.project.newProjectName
-    );
-
-    // Importing a graph means no label would be shown by default,
-    // thus turn off label CSSRenderer for better performance.
-    appState.graph.frame.turnOffLabelCSSRenderer();
-    event.preventDefault();
-    appState.graph.selectedNodes.length = 0;
-    appState.graph.currentlyHovered = null;
-  }
-
   addToast(message) {
     toaster.show({ 
       message: message,
@@ -172,7 +154,7 @@ class SearchBar extends React.Component {
           rightElement={
             <Popover
               content={<AddNodes papers={this.state.searchResults} query={this.state.query}/>} 
-              target={<button onClick={this.handleSubmit} class="pt-button pt-minimal pt-intent-primary pt-icon-arrow-right"></button>}
+              target={<button onClick={this.handleSubmit} className="pt-button pt-minimal pt-intent-primary pt-icon-arrow-right"></button>}
               position={Position.BOTTOM}
               isOpen={this.state.display && this.state.searchResults.length > 0}
               onClose={() => {this.setState({display: false})}}

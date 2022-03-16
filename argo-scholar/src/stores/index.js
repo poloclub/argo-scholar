@@ -9,6 +9,7 @@ import ProjectStore from "./ProjectStore";
 import parse from "csv-parse/lib/sync";
 import SearchStore from "./SearchStore";
 import { runSearch } from "../ipc/client";
+import { Logger } from "../ipc/logger";
 
 import { BACKEND_URL, SAMPLE_GRAPH_SNAPSHOTS } from "../constants";
 import { toaster } from "../notifications/client";
@@ -20,6 +21,7 @@ export class AppState {
     this.import = new ImportStore();
     this.search = new SearchStore();
     this.project = new ProjectStore();
+    this.logger = new Logger();
   }
 }
 
@@ -35,7 +37,7 @@ const loadSnapshotFromURL = (url) => {
     .then((response) => response.text())
     .catch((error) => {
       toaster.show({
-        message: "Failed to fetch graph snapshot.",
+        message: "Failed to fetch graph snapshot",
         intent: Intent.DANGER,
         timeout: -1,
         iconName: "warning-sign",
@@ -54,7 +56,7 @@ const loadSnapshotFromStrapi = (uuid) => {
     .then((json) => json[0].body)
     .catch((error) => {
       toaster.show({
-        message: "Failed to fetch graph snapshot.",
+        message: "Failed to fetch graph snapshot",
         intent: Intent.DANGER,
         timeout: -1,
         iconName: "warning-sign",

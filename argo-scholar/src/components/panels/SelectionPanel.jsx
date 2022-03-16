@@ -67,12 +67,14 @@ class SelectionPanel extends React.Component {
                 {
                   sizeOptionOpen: true
                 },
-                () =>
+                () => {
                   this.batchTwoLayerUpdate(
                     appState.graph.selectedNodes,
                     "size",
                     appState.graph.overrideConfig.size
-                  )
+                  );
+                  appState.logger.addLog({eventName: `NodeSize`, elementName: `Selected Size`});
+                }
               );
             }
           }}
@@ -117,12 +119,14 @@ class SelectionPanel extends React.Component {
                 {
                   colorOptionOpen: true
                 },
-                () =>
+                () => {
                   this.batchTwoLayerUpdate(
                     appState.graph.selectedNodes,
                     "color",
                     appState.graph.overrideConfig.color
-                  )
+                  );
+                  appState.logger.addLog({eventName: `NodeColor`, elementName: `Selected Color`});
+                }
               );
             }
           }}
@@ -183,12 +187,14 @@ class SelectionPanel extends React.Component {
                 {
                   labelOptionOpen: true
                 },
-                () =>
+                () => {
                   this.batchTwoLayerUpdate(
                     appState.graph.selectedNodes,
                     "label",
                     appState.graph.overrideConfig.label
-                  )
+                  );
+                  appState.logger.addLog({eventName: `NodeLabel`, elementName: `Selected Label`});
+                }
               );
             }
           }}
@@ -230,12 +236,14 @@ class SelectionPanel extends React.Component {
                 {
                   shapeOptionOpen: true
                 },
-                () =>
+                () => {
                   this.batchTwoLayerUpdate(
                     appState.graph.selectedNodes,
                     "shape",
                     appState.graph.overrideConfig.shape
-                  )
+                  );
+                  appState.logger.addLog({eventName: `NodeShape`, elementName: `Selected Shape`});
+                }
               );
             }
           }}

@@ -1,3 +1,5 @@
+const { default: appState } = require("../../stores");
+
 var def = require("./imports").default;
 var THREE = def.THREE;
 var Edge = def.Edge;
@@ -44,10 +46,12 @@ module.exports = function(self) {
   };
 
   self.pinSelectedNodes = () => {
+    appState.logger.addLog({eventName: `pinSelectedNodes`, elementName: self.selection.map(node => node.id)})
     self.mapNodeAttributes([true, "", "pinned"], self.selection);
   };
 
   self.unpinSelectedNodes = () => {
+    appState.logger.addLog({eventName: `unpinSelectedNodes`, elementName: self.selection.map(node => node.id)})
     self.mapNodeAttributes([false, "", "pinned"], self.selection);
   };
 
@@ -139,16 +143,22 @@ module.exports = function(self) {
   };
 
   self.toggleSelectedLabels = () => {
+    appState.logger.addLog({eventName: 'ToggleSelectedLabels', elementName: self.selection.map(n => n.id)})
+
     self.toggleLabels(self.selection.map(n => n.id));
   };
 
   self.showSelectedLabels = () => {
+    appState.logger.addLog({eventName: 'ShowSelectedLabels', elementName: self.selection.map(n => n.id)})
+
     document.getElementById("showSelected").style.display="none";
     document.getElementById("hideSelected").style.display="inline";
     self.showLabels(self.selection.map(n => n.id));
   };
 
   self.hideSelectedLabels = () => {
+    appState.logger.addLog({eventName: 'HideSelectedLabels', elementName: self.selection.map(n => n.id)})
+
     document.getElementById("hideSelected").style.display="none";
     document.getElementById("showSelected").style.display="inline";
     self.hideLabels(self.selection.map(n => n.id));
@@ -191,6 +201,8 @@ module.exports = function(self) {
   };
 
   self.hideAllLabels = () => {
+    appState.logger.addLog({eventName: 'HideAllLabels'})
+
     document.getElementById("hideAll").style.display="none";
     document.getElementById("showAll").style.display="inline";
     self.graph.forEachNode(function(node) {
@@ -201,6 +213,8 @@ module.exports = function(self) {
   };
 
   self.showAllLabels = () => {
+    appState.logger.addLog({eventName: 'ShowAllNodes'})
+
     document.getElementById("showAll").style.display="none";
     document.getElementById("hideAll").style.display="inline";
     self.graph.forEachNode(function(node) {

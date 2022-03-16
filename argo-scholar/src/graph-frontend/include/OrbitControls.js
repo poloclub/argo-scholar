@@ -506,7 +506,7 @@ module.exports = function(THREE) {
     }
 
     function handleMouseWheel(event) {
-      
+      // console.log( "handleMouseWheel" )
       mousePos = {x: event.clientX, y: event.clientY}
 
       if (event.deltaY < 0) {
@@ -722,6 +722,8 @@ module.exports = function(THREE) {
 
     function onMouseUp(event) {
       if (scope.enabled === false) return;
+      // console.log( 'handleMouseDownPan' );
+      // appState.logger.addLog({eventName: `ViewportPan`, elementName: `ViewportPan`})
 
       handleMouseUp(event);
 
@@ -770,7 +772,7 @@ module.exports = function(THREE) {
         scope.enablePan === false
       )
         return;
-
+      // appState.logger.addLog({eventName: `ViewportPan`, elementName: `ViewportPan`})
       handleKeyUp(event);
     }
 

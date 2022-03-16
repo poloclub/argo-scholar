@@ -16,7 +16,10 @@ class LabelsPanel extends React.Component {
           id="hideAll"
           iconName="eye-off"
           className={Classes.FILL}
-          onClick={() => appState.graph.frame.hideAllLabels()}
+          onClick={() => {
+              appState.graph.frame.hideAllLabels();
+            }
+          }
         >
           Hide All
         </Button>
@@ -25,7 +28,10 @@ class LabelsPanel extends React.Component {
           id="showAll"
           iconName="eye-on"
           className={Classes.FILL}
-          onClick={() => appState.graph.frame.showAllLabels()}
+          onClick={() => {
+              appState.graph.frame.showAllLabels();
+            }
+          }
         >
           Show All
         </Button>
@@ -34,7 +40,10 @@ class LabelsPanel extends React.Component {
           id="hideSelected"
           iconName="eye-off"
           className={Classes.FILL}
-          onClick={() => appState.graph.frame.hideSelectedLabels()}
+          onClick={() => {
+              appState.graph.frame.hideSelectedLabels();
+            }
+          }
         >
           Hide Selected
         </Button>
@@ -43,7 +52,10 @@ class LabelsPanel extends React.Component {
           id="showSelected"
           iconName="eye-on"
           className={Classes.FILL}
-          onClick={() => appState.graph.frame.showSelectedLabels()}
+          onClick={() => {
+              appState.graph.frame.showSelectedLabels();
+            }
+          }
         >
           Show Selected
         </Button>

@@ -118,6 +118,7 @@ class ShareDialog extends React.Component {
                                                     ...this.state,
                                                     selectedContinue: true,
                                                 });
+                                                appState.logger.addLog({eventName: `ShareSnapshot`, elementName: uuid})
                                             }}
                                             text="Continue"
                                         />
