@@ -35,10 +35,12 @@ class EdgesPanel extends React.Component {
                 <Collapsable
                     name="Color"
                     isOpen={this.state.colorOptionOpen}
-                    onToggle={() =>
-                        this.setState({
-                        colorOptionOpen: !this.state.colorOptionOpen
-                        })
+                    onToggle={() => {
+                            this.setState({
+                            colorOptionOpen: !this.state.colorOptionOpen
+                            });
+                            appState.logger.addLog({eventName: `EdgeColor`, elementName: `Global Color`});
+                        }
                     }
                     >
                     <div className={classnames(Classes.CARD, "sub-option")}>
@@ -86,21 +88,22 @@ class EdgesPanel extends React.Component {
                 <Collapsable
                     name="Direction"
                     isOpen={this.state.directionOptionOpen}
-                    onToggle={() =>
-                        this.setState({
-                        directionOptionOpen: !this.state.directionOptionOpen
-                        })
+                    onToggle={() => {
+                            this.setState({
+                            directionOptionOpen: !this.state.directionOptionOpen
+                            });      
+                        }
                     }
                     >
                     <div className={classnames(Classes.CARD, "sub-option")}>
                         <div> 
                             <p style={{display: "inline"}}>Show Edge Direction: </p>
                             <span style={{float:"right"}}>
-                            <label class=".pt-large">
+                            <label className=".pt-large">
                             <input 
                                  type="checkbox"
                                  onChange={it => {
-                                     console.log(appState.graph.directedOrNot);
+                                    appState.logger.addLog({eventName: `EdgeDirection`, elementName: `Global Direction`});
                                      appState.graph.directedOrNot = !appState.graph.directedOrNot;
                                  }
                                  }

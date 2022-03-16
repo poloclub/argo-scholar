@@ -87,6 +87,7 @@ class RegularNavbar extends React.Component {
                           text={sampleSnapshotTitle}
                           onClick={() => {
                             window.loadAndDisplaySnapshotFromStrapi(sampleSnapshotStrapiUuid);
+                            appState.logger.addLog({eventName: `LoadSample`, elementName: sampleSnapshotTitle})
                           }}
                         />
                       );
@@ -100,7 +101,8 @@ class RegularNavbar extends React.Component {
                   text="Save Snapshot"
                   onClick={() => {
                     appState.project.stringCopyOfSnapshot = appState.graph.saveImmediateStates();
-                    appState.project.isSaveSnapshotDialogOpen = true
+                    appState.project.isSaveSnapshotDialogOpen = true;
+                    appState.logger.addLog({eventName: `SaveSnapshot`, elementName: appState.graph.metadata.snapshotId});
                   }}
                 />
                 <MenuItem
@@ -129,12 +131,16 @@ class RegularNavbar extends React.Component {
                     appState.graph.frame.pauseLayout();
                     appState.preferences.dataSheetDialogOpen = true;
                     this.forceUpdate();
+                    appState.logger.addLog({eventName: `DataSheet`, elementName: `DataSheet`})
                   }}
                 />
                 <MenuItem
                   text="Statistics"
                   iconName="pt-icon-timeline-bar-chart"
-                  onClick={() => { appState.preferences.statisticsDialogOpen = true }}
+                  onClick={() => { 
+                    appState.preferences.statisticsDialogOpen = true;
+                    appState.logger.addLog({eventName: `Statistics`, elementName: `Statistics`})
+                  }}
                 />
                 <MenuItem text="Filters" iconName="graph">
                   <MenuItem
