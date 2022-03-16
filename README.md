@@ -1,7 +1,7 @@
 # Argo Scholar
 
 [![Build Status](https://app.travis-ci.com/poloclub/argo-scholar.svg?branch=main)](https://app.travis-ci.com/poloclub/argo-scholar)
-[![arxiv badge](https://img.shields.io/badge/arXic-2110.14060-red)](https://arxiv.org/abs/2110.14060)
+[![arxiv badge](https://img.shields.io/badge/arXiv-2110.14060-red)](https://arxiv.org/abs/2110.14060)
 [![GitHub](https://img.shields.io/github/license/poloclub/argo-scholar?color=blue)](https://github.com/poloclub/argo-scholar/blob/main/LICENSE)
 
 An interactive literature exploration visualization system that runs in your web browsers. No installation needed.
