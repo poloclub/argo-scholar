@@ -200,7 +200,7 @@ export class Logger {
    */
   async uploadToS3() {
     try {
-      const url = 'https://h5r94usqaf.execute-api.us-east-1.amazonaws.com/default/LogArgoActions';
+      const url = 'https://argo-cors-anywhere.herokuapp.com/https://h5r94usqaf.execute-api.us-east-1.amazonaws.com/default/LogArgoActions';
 
       const blob = new Blob([this.toJSON()], {type: 'application/json'});
 
