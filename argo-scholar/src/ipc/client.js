@@ -471,6 +471,7 @@ async function createEmptyPaperGraph() {
       nodeProperties: ["id", "degree", "pagerank", "paperName", "paperAbstract", "authors", "citationCount", "venue", "year", "url", "node_id"],
       nodeComputed: ['pagerank', 'degree'],
       edgeProperties: ['source_id', 'target_id'],
+      snapshotId: `f${Math.round(Math.random() * 10000000, 0)}`
     },
   }
 }

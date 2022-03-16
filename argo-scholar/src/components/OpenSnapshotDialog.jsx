@@ -75,6 +75,7 @@ class OpenSnapshotDialog extends React.Component {
 
                   reader.onload = () => {
                     const fileAsString = reader.result;
+                    appState.logger.addLog({eventName: `OpenSnapshot`, elementName: fileAsString});
                     appState.graph.loadImmediateStates(fileAsString);
                   }
                 }}

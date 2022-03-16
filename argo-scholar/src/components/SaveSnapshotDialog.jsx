@@ -62,6 +62,7 @@ class SaveSnapshotDialog extends React.Component {
               onClick={() => {
                 document.getElementById('snapshot-textarea').select();
                 document.execCommand("copy");
+                // appState.logger.addLog({eventName: `SaveSnapshot`, elementName: `Copy to Clipboard`})
               }}
             >
               Copy to Clipboard

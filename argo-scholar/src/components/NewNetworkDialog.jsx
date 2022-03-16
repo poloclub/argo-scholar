@@ -40,6 +40,7 @@ class NewNetworkDialog extends React.Component {
     event.preventDefault();
     appState.graph.selectedNodes.length = 0;
     appState.graph.currentlyHovered = null;
+    appState.logger.addLog({eventName: `CreateNewGraph`, elementName: `New...`})
   }
 
   render() {

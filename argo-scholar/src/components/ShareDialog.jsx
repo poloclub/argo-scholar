@@ -104,6 +104,7 @@ class ShareDialog extends React.Component {
                                                 // Update local state
                                                 if (requestSuccess) {
                                                     this.setState({ isFetching: false, isShared: true, sharedURL });
+                                                    appState.logger.addLog({eventName: `ShareSnapshot`, elementName: uuid})
                                                 } else {
                                                     // request fails, toast fires
                                                     this.setState({ isFetching: false, isShared: false });
@@ -248,6 +249,7 @@ class ShareDialog extends React.Component {
                                         // Update local state
                                         if (requestSuccess) {
                                             this.setState({ isFetching: false, isShared: true, sharedURL });
+                                            appState.logger.addLog({eventName: `ShareSnapshot`, elementName: uuid})
                                         } else {
                                             // request fails, toast fires
                                             this.setState({ isFetching: false, isShared: false });

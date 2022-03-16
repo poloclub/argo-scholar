@@ -31,10 +31,12 @@ class GlobalPanel extends React.Component {
         <Collapsable
           name="Color"
           isOpen={this.state.colorOptionOpen}
-          onToggle={() =>
-            this.setState({
-              colorOptionOpen: !this.state.colorOptionOpen
-            })
+          onToggle={() => {
+              this.setState({
+                colorOptionOpen: !this.state.colorOptionOpen
+              });
+              appState.logger.addLog({eventName: `NodeColor`, elementName: `Global Color`});
+            }
           }
         >
           <div className={classnames(Classes.CARD, "sub-option")}>
@@ -146,10 +148,12 @@ class GlobalPanel extends React.Component {
         <Collapsable
           name="Size"
           isOpen={this.state.sizeOptionOpen}
-          onToggle={() =>
-            this.setState({
-              sizeOptionOpen: !this.state.sizeOptionOpen
-            })
+          onToggle={() => {
+              this.setState({
+                sizeOptionOpen: !this.state.sizeOptionOpen
+              });
+              appState.logger.addLog({eventName: `NodeSize`, elementName: `Global Size`});
+            }
           }
         >
          
@@ -209,10 +213,12 @@ class GlobalPanel extends React.Component {
         <Collapsable
           name="Shape"
           isOpen={this.state.shapeOptionOpen}
-          onToggle={() =>
-            this.setState({
-              shapeOptionOpen: !this.state.shapeOptionOpen
-            })
+          onToggle={() => {
+              this.setState({
+                shapeOptionOpen: !this.state.shapeOptionOpen
+              });
+              appState.logger.addLog({eventName: `NodeShape`, elementName: `Global Shape`});
+            }
           }
         >
           <div className={classnames(Classes.CARD, "sub-option")}>
