@@ -27,7 +27,7 @@ class AddNodes extends React.Component {
           width: "30vw",
         }}
       >
-        <div style={{pointerEvents: "all"}}>
+        <div style={{pointerEvents: "all"}} className={"paper-popover"}>
           <PaperResultsSubPanel papers={this.props.papers} query={this.state.query}/>
         </div>
         

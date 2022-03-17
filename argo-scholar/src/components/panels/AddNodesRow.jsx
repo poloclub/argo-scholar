@@ -15,10 +15,8 @@ import { timeThursdays } from "d3";
 import { toJS } from "mobx";
 // import { data } from "jquery";
 
-const pageCount = 10;
-const apiCorpusPrefix = "https://api.semanticscholar.org/v1/paper/CorpusID:";
-const apiKeywordPrefix = "https://api.semanticscholar.org/graph/v1/paper/search?query=";
-const corpusIDregex = /^[0-9]+$/; 
+const nodePrefix = "https://api.semanticscholar.org/graph/v1/paper/";
+const nodeFields = "?fields=abstract,authors,citationCount,paperId,references,title,url,venue,year,citations";
 
 @observer
 class AddNodesRow extends React.Component {
@@ -49,7 +47,7 @@ class AddNodesRow extends React.Component {
     if (paperId in appState.graph.preprocessedRawGraph.nodesPanelData) {
         appState.graph.showNodes(paperId);
     } else {
-        let citationAPI = "https://api.semanticscholar.org/v1/paper/" + paperId;
+        let citationAPI = nodePrefix + paperId + nodeFields;
         console.log("Adding selected paper: " + paperId);
         fetch(citationAPI)
         .then((res) => {

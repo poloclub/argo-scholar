@@ -275,7 +275,7 @@ export default class GraphStore {
             ? "n/a"
             : paperJsonResponse.abstract,
         authors: paperJsonResponse.authors.map((n) => n.name).join(", "),
-        citationCount: paperJsonResponse.citations.length,
+        citationCount: paperJsonResponse.citationCount,
         venue: paperJsonResponse.venue == "" ? "n/a" : paperJsonResponse.venue,
         year: paperJsonResponse.year,
         url: paperJsonResponse.url,
@@ -405,7 +405,6 @@ export default class GraphStore {
   getSnapshot() {
     const snapshot = {
       rawGraph: this.rawGraph,
-      citationReferenceMap: this.preprocessedRawGraph.citationReferenceMap,
       overrides: this.overrides,
       nodesShowingLabels: this.nodesShowingLabels,
       positions: this.frame.getPositions(),
