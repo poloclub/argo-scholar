@@ -24,13 +24,13 @@ import * as BackendAPIUtils from "../services/BackendAPIUtils";
 export default class GraphStore {
   initialGlobalConfig = {
     nodes: {
-      colorBy: "pagerank",
+      colorBy: "citationCount",
       color: {
         scale: "Linear Scale",
         from: "#448AFF",
         to: "#E91E63",
       },
-      sizeBy: "pagerank",
+      sizeBy: "citationCount",
       size: {
         min: 2,
         max: 10,
