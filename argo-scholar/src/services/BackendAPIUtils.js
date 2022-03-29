@@ -180,10 +180,15 @@ export function addSortedCitations(sortMethod, graph) {
       }
 
       Promise.all(fetches).then(() => {
+        var nodeLabels = []
+        var nodeIds = []
         addedNodes.forEach((node) => {
           appState.graph.selectedNodes.push(node);
           appState.graph.frame.selection.push(node);
+          nodeLabels.push(node.data.label);
+          nodeIds.push(node.id);
         });
+        appState.logger.addLog({eventName: `AddCitation${sortMethod}`, elementName: rightClickedNodeId, valueName: nodeLabels, newValue: nodeIds});
       });
     })
     // Error message, using backup method instead
@@ -317,10 +322,15 @@ function addRandomCitations(graph) {
       }
 
       Promise.all(fetches).then(() => {
+        var nodeLabels = [];
+        var nodeIds = [];
         addedNodes.forEach((node) => {
           appState.graph.selectedNodes.push(node);
           appState.graph.frame.selection.push(node);
+          nodeLabels.push(node.data.label);
+          nodeIds.push(node.id);
         });
+        appState.logger.addLog({eventName: `AddCitationRandom`, elementName: rightClickedNodeId, valueName: nodeIds, newValue: nodeLabels});
       });
     })
     .catch((error) => {
@@ -475,10 +485,15 @@ export function addSortedReferences(sortMethod, graph) {
       }
 
       Promise.all(fetches).then((response) => {
+        var nodeLabels = []
+        var nodeIds = []
         addedNodes.forEach((node) => {
           appState.graph.selectedNodes.push(node);
           appState.graph.frame.selection.push(node);
+          nodeLabels.push(node.data.label);
+          nodeIds.push(node.id);
         });
+        appState.logger.addLog({eventName: `AddReference${sortMethod}`, elementName: rightClickedNodeId, valueName: nodeIds, newValue: nodeLabels});
       });
     })
     // Error message, using backup method instead
@@ -594,10 +609,15 @@ function addRandomReferences(graph) {
         });
       }
       Promise.all(fetches).then((response) => {
+        var nodeLabels = [];
+        var nodeIds = [];
         addedNodes.forEach((node) => {
           appState.graph.selectedNodes.push(node);
           appState.graph.frame.selection.push(node);
+          nodeLabels.push(node.data.label);
+          nodeIds.push(node.id);
         });
+        appState.logger.addLog({eventName: `AddReferenceRandom`, elementName: rightClickedNodeId, valueName: nodeIds, newValue: nodeLabels});
       });
     })
     .catch((error) => {

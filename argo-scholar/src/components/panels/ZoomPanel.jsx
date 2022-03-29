@@ -38,6 +38,7 @@ class ZoomPanel extends React.Component {
                 targets: appState.controls.zoom,
                 percent: appState.controls.zoom.nextZoomInPercent
               });
+              // appState.logger.addLog({eventName: `ZoomingIn`, elementName: `PlusButton`})
             }}
             ></Button>
             
@@ -54,6 +55,7 @@ class ZoomPanel extends React.Component {
                 targets: appState.controls.zoom,
                 percent: appState.controls.zoom.nextZoomOutPercent
               });
+              // appState.logger.addLog({eventName: `ZoomingOut`, elementName: `MinusButton`})
             }}></Button>
 
 
@@ -66,6 +68,7 @@ class ZoomPanel extends React.Component {
             iconName="home"
             onClick={() => {
               appState.controls.reset();
+              // appState.logger.addLog({eventName: `Reset Viewport`, elementName: `HomeButton`})
             }}></Button>
       </div>
     );

@@ -59,6 +59,7 @@ class AddNodesRow extends React.Component {
         })
         .then((response) => {
             appState.graph.addNodetoGraph(response, "null", 0);
+            appState.logger.addLog({eventName: `AddPaper`, elementName: response.paperId, valueName: `Label`, newValue: response.title});
             // console.log("add node curcount: ", offset);
             let paperNode = appState.graph.process.graph.getNode(response.paperId);
             paperNode.renderData.textHolder.children[0].element.override = true;
