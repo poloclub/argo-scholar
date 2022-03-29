@@ -52,7 +52,7 @@ Argo Scholar allows you to embed your interactive literature exploration visuali
 
 ## Credits
 ♥ Argo Scholar was developed and maintained by [Kevin Li](https://github.com/kevinli573), [Alex Yang](https://github.com/AlexanderHYang), [Anish Upadhayay](https://github.com/aupadhayay3), [Zhiyan Zhou](https://github.com/FZ2000), [Jon Saad-Falcon](https://github.com/jonsaadfalcon), [Duen Horng Chau](https://github.com/polochau) from [Polo Club of Data Science](https://poloclub.github.io/) at Georgia Tech.
-##Citations
+## Citation
 ```bibTeX
 @inproceedings{li2021argoscholar,
   title={Argo Scholar: Interactive Visual Exploration of Literature in Browser},
