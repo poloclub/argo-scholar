@@ -416,7 +416,8 @@ export function requestCreateEmptyPaperGraph(newProjectName) {
       // appState.graph.setUpFrame();
     });
     // Reinitialize global configs
-    appState.graph.nodes = appState.graph.initialGlobalConfig.nodes;
+    
+    // appState.graph.nodes = appState.graph.initialGlobalConfig.nodes;
     appState.graph.overrides = new Map();
     appState.import.loading = false;
     appState.import.dialogOpen = false;

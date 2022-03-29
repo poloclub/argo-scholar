@@ -10,6 +10,8 @@ import { Intent } from "@blueprintjs/core";
 const pageLimit = 10;
 const pageSize = 10;
 
+const nodePrefix = "https://api.semanticscholar.org/graph/v1/paper/";
+const nodeFields = "?fields=abstract,authors,citationCount,paperId,references,title,url,venue,year,citations";
 /**
  * Adding sorted citations from Semantic Scholar's backend API through multiple steps.
  * Step 1: fetch multiple times in the for-loop and store the node id arrays in the promises array since maximum pageSize is 10 in order for the API to return ordered results.
@@ -109,8 +111,7 @@ export function addSortedCitations(sortMethod, graph) {
         curcount += 1;
 
         // Fetching node info from public API
-        let citationAPI =
-          "https://api.semanticscholar.org/v1/paper/" + PaperIds[i];
+        let citationAPI = nodePrefix + PaperIds[i] + nodeFields;
         fetches.push(
           fetch(citationAPI)
             .then((res) => {
@@ -247,8 +248,7 @@ function addRandomCitations(graph) {
           continue;
         }
         curcount += 1;
-        let citationAPI =
-          "https://api.semanticscholar.org/v1/paper/" + citations[i].paperId;
+        let citationAPI = nodePrefix + citations[i].paperId + nodeFields;
 
         // Fetching node info from public API
         fetches.push(
@@ -417,8 +417,7 @@ export function addSortedReferences(sortMethod, graph) {
         curcount += 1;
 
         // Fetching node info from public API
-        let citationAPI =
-          "https://api.semanticscholar.org/v1/paper/" + PaperIds[i];
+        let citationAPI = nodePrefix + PaperIds[i] + nodeFields;
         fetches.push(
           fetch(citationAPI)
             .then((res) => {
@@ -550,8 +549,7 @@ function addRandomReferences(graph) {
           continue;
         }
         curcount += 1;
-        let referenceAPI =
-          "https://api.semanticscholar.org/v1/paper/" + references[i].paperId;
+        let referenceAPI = nodePrefix + references[i].paperId + nodeFields;
 
         // Fetching node info from public API
         fetches.push(

@@ -24,13 +24,13 @@ import * as BackendAPIUtils from "../services/BackendAPIUtils";
 export default class GraphStore {
   initialGlobalConfig = {
     nodes: {
-      colorBy: "pagerank",
+      colorBy: "citationCount",
       color: {
         scale: "Linear Scale",
         from: "#448AFF",
         to: "#E91E63",
       },
-      sizeBy: "pagerank",
+      sizeBy: "citationCount",
       size: {
         min: 2,
         max: 10,
@@ -279,7 +279,7 @@ export default class GraphStore {
             ? "n/a"
             : paperJsonResponse.abstract,
         authors: paperJsonResponse.authors.map((n) => n.name).join(", "),
-        citationCount: paperJsonResponse.citations.length,
+        citationCount: paperJsonResponse.citationCount,
         venue: paperJsonResponse.venue == "" ? "n/a" : paperJsonResponse.venue,
         year: paperJsonResponse.year,
         url: paperJsonResponse.url,
@@ -414,7 +414,6 @@ export default class GraphStore {
     }
     const snapshot = {
       rawGraph: this.rawGraph,
-      citationReferenceMap: this.preprocessedRawGraph.citationReferenceMap,
       overrides: this.overrides,
       nodesShowingLabels: this.nodesShowingLabels,
       positions: this.frame.getPositions(),

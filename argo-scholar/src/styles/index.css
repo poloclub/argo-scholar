@@ -248,6 +248,11 @@ td.search-add {
   width: 25vw !important; 
 }
 
+.paper-popover {
+  max-height: 80vh;
+  overflow-y: scroll;
+}
+
 .import-preview-table {
   height: 200px;
   margin-bottom: 15px;
