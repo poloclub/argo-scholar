@@ -68,6 +68,7 @@ const loadSnapshotFromStrapi = (uuid) => {
 const loadAndDisplaySnapshotFromURL = (url) => {
   loadSnapshotFromURL(url).then((snapshotString) => {
     // use filename/last segment of URL as title in Navbar
+    appState.logger.addLog({eventName: `LoadSnapshotFromURL`, elementName: url});
     appState.graph.metadata.snapshotName =
       url.split("/").pop() || url.split("/").pop().pop();
     appState.graph.loadImmediateStates(snapshotString);
@@ -77,6 +78,7 @@ const loadAndDisplaySnapshotFromURL = (url) => {
 const loadAndDisplaySnapshotFromStrapi = (uuid) => {
   loadSnapshotFromStrapi(uuid).then((snapshotString) => {
     // TODO: use more sensible snapshot name
+    appState.logger.addLog({eventName: `LoadSnapshotFromStrapi`, elementName: uuid});
     appState.graph.metadata.snapshotName = "Shared";
     appState.graph.loadImmediateStates(snapshotString);
   });
