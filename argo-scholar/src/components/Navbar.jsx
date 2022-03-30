@@ -31,7 +31,7 @@ class RegularNavbar extends React.Component {
       <nav className={classnames([Classes.NAVBAR])}>
         <div className={classnames([Classes.NAVBAR_GROUP, Classes.ALIGN_LEFT])}>
           <a href={LOGO_URL} target="_blank">
-            <img title="Argo Lite" id="Argo logo"
+            <img title="Argo Scholar" id="Argo logo"
               src={appState.preferences.darkMode ? argologo_dark : argologo_light}
               height="28"></img>
           </a>
