@@ -625,8 +625,8 @@ export default class GraphStore {
                   onClick: () => {
                     BackendAPIUtils.addSortedCitations("is-influential", this);
                   },
-                  text: "Sort By Most Infleunced Papers",
-                  key: "Sort By Most Infleunced Papers",
+                  text: "Sort By Most Influenced Papers",
+                  key: "Sort By Most Influenced Papers",
                 }),
                 MenuItemFactory({
                   onClick: () => {
@@ -660,8 +660,8 @@ export default class GraphStore {
                   onClick: () => {
                     BackendAPIUtils.addSortedReferences("is-influential", this);
                   },
-                  text: "Sort By Most Infleunced Papers",
-                  key: "Sort By Most Infleunced Papers",
+                  text: "Sort By Most Influenced Papers",
+                  key: "Sort By Most Influenced Papers",
                 }),
                 MenuItemFactory({
                   onClick: () => {
