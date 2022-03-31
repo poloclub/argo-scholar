@@ -95,16 +95,48 @@ module.exports = function (self) {
       //set currently hovered node
       appState.graph.currentlyHovered = node;
 
+      //deploys dropdown if hovers over same node for one second
+      if (!appState.graph.startedHovering) {
+        //if this is the first time you hover over a node
+        appState.graph.startedHovering = true;
+        appState.graph.hoveredTime = Date.now();
+      } else {
+        if (!appState.graph.autoDisplayExploration) {
+          //checks to see that the dropdown has not been displayed
+          if (Date.now() - appState.graph.hoveredTime > 1000) {
+            //display dropdown
+            appState.graph.autoDisplayExploration = true;
+            self.ee.emit("right-click", {
+              pageX: appState.graph.currentMouseX,
+              pageY: appState.graph.currentMouseY
+            });
+            if (self.selection.length == 0) {
+              self.selection = [node];
+            }
+          }
+        }
+      }
+
     } else if (self.selection.length == 0) {
       //set currently hovered node
-      appState.graph.currentlyHovered = null;
-
+      if (!appState.graph.autoDisplayExploration) {
+        //if we are displaying the dropdown, don't reset the currentlyHovered node
+        appState.graph.currentlyHovered = null;
+      }
       self.graph.forEachNode(n => {
         self.colorNodeOpacity(n, 1);
         self.colorNodeEdge(n, 0.5, 0.5);
         self.highlightNode(n, false, def.ADJACENT_HIGHLIGHT);
       });
     }
+
+    //reset the counter when unhover a node
+    if (!node) {
+      appState.graph.startedHovering = false;
+      appState.graph.hoveredTime = undefined;
+      appState.graph.autoDisplayExploration = false;
+    }
+
     if (self.prevHighlights != undefined) {
       for (var i = 0; i < self.prevHighlights.length; i++) {
         self.colorNodeOpacity(self.prevHighlights[i], 1);
@@ -216,6 +248,11 @@ module.exports = function (self) {
           selection.renderData.textHolder.children[0].element.hideme = true;
           self.dragging = null;
         }
+
+        //dragging removes the one second timer for auto display 
+        appState.graph.startedHovering = false;
+        appState.graph.hoveredTime = undefined;
+        appState.graph.autoDisplayExploration = false;
       } else {
         if (self.newNodeIds) {
           self.highlightNodeIds([], true);

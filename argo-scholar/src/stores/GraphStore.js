@@ -64,6 +64,11 @@ export default class GraphStore {
   // Currently hovered node
   @observable currentlyHovered = undefined;
 
+  @observable startedHovering = false;
+  @observable hoveredTime = undefined;
+  @observable autoDisplayExploration = false;
+  @observable currentMouseX = 0;
+  @observable currentMouseY = 0;
   /**
    * Stores data relevant to smart pause feature
    */
@@ -671,6 +676,9 @@ export default class GraphStore {
         // onMenuClose
         console.log("ContextMenu closed");
         this.currentlyHovered = null;
+        this.startedHovering = false;
+        this.hoveredTime = undefined;
+        this.autoDisplayExploration = false;
       });
     });
   }
