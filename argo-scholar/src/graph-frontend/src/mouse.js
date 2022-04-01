@@ -8,6 +8,16 @@ var ee = def.ee;
 var $ = require("jquery");
 const { default: appState } = require("../../stores");
 
+const findNode = (o1, a1) => {
+  if (!a1) return null;
+  for (let i = 0; i < a1.length; i++) {
+    if (o1.id == a1[i].id) {
+      return a1[i];
+    }
+  }
+  return null;
+};
+
 module.exports = function (self) {
   
 
@@ -96,22 +106,21 @@ module.exports = function (self) {
       appState.graph.currentlyHovered = node;
 
       //deploys dropdown if hovers over same node for one second
-      if (!appState.graph.startedHovering) {
-        //if this is the first time you hover over a node
-        appState.graph.startedHovering = true;
-        appState.graph.hoveredTime = Date.now();
-      } else {
-        if (!appState.graph.autoDisplayExploration) {
-          //checks to see that the dropdown has not been displayed
-          if (Date.now() - appState.graph.hoveredTime > 1000) {
-            //display dropdown
-            appState.graph.autoDisplayExploration = true;
-            self.ee.emit("right-click", {
-              pageX: appState.graph.currentMouseX,
-              pageY: appState.graph.currentMouseY
-            });
-            if (self.selection.length == 0) {
-              self.selection = [node];
+      if (self.selection.length > 0 && findNode(node,self.selection)) {
+        if (!appState.graph.startedHovering) {
+          //if this is the first time you hover over a node
+          appState.graph.startedHovering = true;
+          appState.graph.hoveredTime = Date.now();
+        } else {
+          if (!appState.graph.autoDisplayExploration) {
+            //checks to see that the dropdown has not been displayed
+            if (Date.now() - appState.graph.hoveredTime > 1000) {
+              //display dropdown
+              appState.graph.autoDisplayExploration = true;
+              self.ee.emit("right-click", {
+                pageX: appState.graph.currentMouseX,
+                pageY: appState.graph.currentMouseY
+              });
             }
           }
         }
