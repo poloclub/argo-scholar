@@ -608,10 +608,7 @@ export default class GraphStore {
             }),
           this.frame.rightClickedNode &&
             MenuDividerFactory({
-              title: "Add Citations or References",
-              key: "Add Citations or References",
             }),
-          this.frame.rightClickedNode &&
             MenuItemFactory({
               children: [
                 MenuItemFactory({
