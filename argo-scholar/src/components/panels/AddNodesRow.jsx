@@ -6,7 +6,10 @@ import {
   Icon,
   Dialog,
   Intent,
-  Spinner
+  Spinner,
+  Tooltip,
+  Position,
+  AnchorButton
 } from "@blueprintjs/core";
 import { observer, propTypes } from "mobx-react";
 import classnames from "classnames";
@@ -97,17 +100,23 @@ class AddNodesRow extends React.Component {
     // })
     return (
         <tr class="search-row">
-          <td class="search-result">{this.state.paper.title}</td>
+          <td class="search-result">
+            <a target="_blank" rel="noopener noreferrer" href={this.state.paper.url}>{this.state.paper.title}</a>
+          </td>
           <td class="search-add">
-            <button type="button" class="pt-button pt-small"
-              // disabled={this.isNodeHidden(paper.paperId)} 
-              // // disabled={paper.paperId in appState.graph.preprocessedRawGraph.nodesPanelData}
-              disabled={buttonDisabled} 
-              onClick={() => this.handleClick(this.state.paper.paperId)}>
-              {nodeHidden ? "Unhide" 
-                : buttonDisabled
-                  ? "Added" : "Add"}
-            </button>
+            <Tooltip
+              content={nodeHidden ? "Unhide paper" : buttonDisabled ? "In visualization" : "Add to visualization"}
+              popoverClassName={"pt-popover-content-sizing"}
+              position={Position.BOTTOM}
+            >
+              <AnchorButton
+                className={"pt-button pt-small"}
+                disabled={buttonDisabled} 
+                onClick={() => this.handleClick(this.state.paper.paperId)}
+                iconName={nodeHidden ? "eye-on" : buttonDisabled ? "tick-circle" : "add"}
+              />
+            </Tooltip>
+            
           </td>
         </tr>
     );
