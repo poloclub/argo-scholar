@@ -24,7 +24,7 @@ class AddNodes extends React.Component {
     return (
       <div
         style={{
-          width: "30vw",
+          width: "500px",
         }}
       >
         <div style={{pointerEvents: "all"}} className={"paper-popover"}>
