@@ -251,6 +251,15 @@ td.search-add {
 .paper-popover {
   max-height: 80vh;
   overflow-y: scroll;
+  /* Hide scrollbar*/
+  /* IE and Edge */
+  -ms-overflow-style: none;
+  /* Firefox */
+  scrollbar-width: none;
+}
+/* Chrome */
+.paper-popover::-webkit-scrollbar {
+  display: none;
 }
 
 .import-preview-table {
