@@ -104,12 +104,12 @@ class AddNodesRow extends React.Component {
           </td>
           <td class="search-add">
             <Tooltip
-              content={nodeHidden ? "Unhide paper" : buttonDisabled ? "In visualization" : "Add to visualization"}
+              content={nodeHidden ? "Unhide" : buttonDisabled ? "Added" : "Add to visualization"}
               popoverClassName={"pt-popover-content-sizing"}
               position={Position.BOTTOM}
             >
               <AnchorButton
-                className={"pt-button pt-small"}
+                className={"pt-button pt-small pt-minimal"}
                 disabled={buttonDisabled} 
                 onClick={() => this.handleClick(this.state.paper.paperId)}
                 iconName={nodeHidden ? "eye-on" : buttonDisabled ? "tick-circle" : "add"}
