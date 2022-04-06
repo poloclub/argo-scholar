@@ -602,46 +602,42 @@ export default class GraphStore {
               text: "Show 5 Neighbors with Highest PageRank",
               key: "Show 5 Neighbors with Highest PageRank",
             }),
-          this.frame.rightClickedNode &&
-            MenuDividerFactory({
-              title: "Add Citations or References",
-              key: "Add Citations or References",
-            }),
-          this.frame.rightClickedNode &&
-            MenuItemFactory({
-              children: [
-                MenuItemFactory({
-                  onClick: () => {
-                    BackendAPIUtils.addSortedCitations("relevance", this);
-                  },
-                  text: "Sort By Relevance",
-                  key: "Sort By Relevance",
-                }),
-                MenuItemFactory({
-                  onClick: () => {
-                    BackendAPIUtils.addSortedCitations("is-influential", this);
-                  },
-                  text: "Sort By Most Infleunced Papers",
-                  key: "Sort By Most Infleunced Papers",
-                }),
-                MenuItemFactory({
-                  onClick: () => {
-                    BackendAPIUtils.addSortedCitations("total-citations", this);
-                  },
-                  text: "Sort By Citation Count",
-                  key: "Sort By Citation Count",
-                }),
-                MenuItemFactory({
-                  onClick: () => {
-                    BackendAPIUtils.addSortedCitations("pub-date", this);
-                  },
-                  text: "Sort By Recency",
-                  key: "Sort By Recency",
-                }),
-              ],
-              text: "Add 5 Paper Citations",
-              key: "Add 5 Paper Citations",
-            }),
+
+          this.frame.rightClickedNode && MenuDividerFactory({}),
+          MenuItemFactory({
+            children: [
+              MenuItemFactory({
+                onClick: () => {
+                  BackendAPIUtils.addSortedCitations("relevance", this);
+                },
+                text: "Sort By Relevance",
+                key: "Sort By Relevance",
+              }),
+              MenuItemFactory({
+                onClick: () => {
+                  BackendAPIUtils.addSortedCitations("is-influential", this);
+                },
+                text: "Sort By Most Infleunced Papers",
+                key: "Sort By Most Infleunced Papers",
+              }),
+              MenuItemFactory({
+                onClick: () => {
+                  BackendAPIUtils.addSortedCitations("total-citations", this);
+                },
+                text: "Sort By Citation Count",
+                key: "Sort By Citation Count",
+              }),
+              MenuItemFactory({
+                onClick: () => {
+                  BackendAPIUtils.addSortedCitations("pub-date", this);
+                },
+                text: "Sort By Recency",
+                key: "Sort By Recency",
+              }),
+            ],
+            text: "Add 5 Paper Citations",
+            key: "Add 5 Paper Citations",
+          }),
           this.frame.rightClickedNode &&
             MenuItemFactory({
               children: [
