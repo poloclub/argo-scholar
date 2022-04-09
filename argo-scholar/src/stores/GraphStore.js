@@ -69,6 +69,8 @@ export default class GraphStore {
   @observable autoDisplayExploration = false;
   @observable currentMouseX = 0;
   @observable currentMouseY = 0;
+
+  @observable numberAddedPerSearch = 0;
   /**
    * Stores data relevant to smart pause feature
    */

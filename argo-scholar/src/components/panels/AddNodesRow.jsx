@@ -27,6 +27,7 @@ class AddNodesRow extends React.Component {
     super(props);
     this.state = {
         paper: this.props.paper,
+        currentIncrement: -1,
     }
   }
 
@@ -68,7 +69,7 @@ class AddNodesRow extends React.Component {
             paperNode.pinnedx = true;
             paperNode.pinnedy = true;
             paperNode.x = appState.controls.camera.position.x;
-            paperNode.y = appState.controls.camera.position.y;
+            paperNode.y = appState.controls.camera.position.y - this.state.currentIncrement * 10;
             paperNode.pinnedx = true;
             paperNode.pinnedy = true;
             appState.graph.frame.updateNodesShowingLabels();
@@ -111,7 +112,11 @@ class AddNodesRow extends React.Component {
               <AnchorButton
                 className={"pt-button pt-small pt-minimal"}
                 disabled={buttonDisabled} 
-                onClick={() => this.handleClick(this.state.paper.paperId)}
+                onClick={() => {
+                  appState.graph.numberAddedPerSearch = appState.graph.numberAddedPerSearch + 1;
+                  this.state.currentIncrement = appState.graph.numberAddedPerSearch;
+                  this.handleClick(this.state.paper.paperId);
+                }}
                 iconName={nodeHidden ? "eye-on" : buttonDisabled ? "tick-circle" : "add"}
               />
             </Tooltip>

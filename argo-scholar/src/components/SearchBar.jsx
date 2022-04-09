@@ -27,7 +27,7 @@ import AddNodes from "./panels/AddNodesPanel";
 const corpusIDregex = /^[0-9]+$/; 
 const apiCorpusPrefix = "https://api.semanticscholar.org/v1/paper/CorpusID:";
 const apiKeywordPrefix = "https://api.semanticscholar.org/graph/v1/paper/search?query=";
-const nodeFields = "&fields=title,url";
+const nodeFields = "&limit=20&fields=title,url";
 
 class SearchBar extends React.Component {
   constructor(props) {
@@ -74,6 +74,7 @@ class SearchBar extends React.Component {
       return
     }
     // appState.project.currentQuery = this.state.query;
+    appState.graph.numberAddedPerSearch = 0;
     
     if (corpusIDregex.test(this.state.query)) {
       // CorpusID submitted
@@ -136,24 +137,6 @@ class SearchBar extends React.Component {
         });
     }
     event.preventDefault();
-  }
-
-  createEmptyGraph(event) {
-    appState.graph.runActiveLayout();
-    requestCreateNewProject({
-      name: appState.project.newProjectName,
-      createdDate: new Date().toLocaleString(),
-    });
-    requestCreateEmptyPaperGraph(
-      appState.project.newProjectName
-    );
-
-    // Importing a graph means no label would be shown by default,
-    // thus turn off label CSSRenderer for better performance.
-    appState.graph.frame.turnOffLabelCSSRenderer();
-    event.preventDefault();
-    appState.graph.selectedNodes.length = 0;
-    appState.graph.currentlyHovered = null;
   }
 
   addToast(message) {

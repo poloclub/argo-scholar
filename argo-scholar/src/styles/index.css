@@ -249,7 +249,7 @@ td.search-add {
 }
 
 .paper-popover {
-  max-height: 80vh;
+  max-height: 75vh;
   overflow-y: scroll;
   /* Hide scrollbar*/
   /* IE and Edge */
