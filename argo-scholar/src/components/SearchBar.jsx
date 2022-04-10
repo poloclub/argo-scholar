@@ -27,7 +27,7 @@ import AddNodes from "./panels/AddNodesPanel";
 const corpusIDregex = /^[0-9]+$/; 
 const apiCorpusPrefix = "https://api.semanticscholar.org/v1/paper/CorpusID:";
 const apiKeywordPrefix = "https://api.semanticscholar.org/graph/v1/paper/search?query=";
-const nodeFields = "&limit=20&fields=title,url";
+const nodeFields = "&limit=50&fields=title,url";
 
 class SearchBar extends React.Component {
   constructor(props) {
