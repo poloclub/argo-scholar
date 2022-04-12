@@ -15,8 +15,8 @@ export const BACKEND_URL = "https://argo-share.herokuapp.com"; // for production
 // export const BACKEND_URL = "https://sleepy-brushlands-57948.herokuapp.com"; // for free heroku
 // export const BACKEND_URL = "http://localhost:1337"; // for local strapi development
 export const SAMPLE_GRAPH_SNAPSHOTS = [
+  ["Deep Learning", "ad6fd65d-9aab-431f-b10d-3f70fe8f576f"],
   ["Apolo Sample", "0859c585-e1ff-4bf6-a1f2-0e6aec5de62f"],
-  ["Deep Learning", "fcad0808-eddf-4fc3-a4de-649a5888b8c0"]
   // ["CORD-19 Citation Graph 06-02", "4bf882d3-8966-4f41-a590-acafeb998d2a"]
 ];
 
