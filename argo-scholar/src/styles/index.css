@@ -68,7 +68,7 @@ html {
 .left-overlay-card {
   margin-top: -1em;
   padding-top: 1.1em;
-  overflow-y: overlay;
+  overflow-y: scroll;
   max-height: 530px;
 }
 
