@@ -156,7 +156,7 @@ class SearchBar extends React.Component {
           rightElement={
             <Popover
               content={<AddNodes papers={this.state.searchResults} query={this.state.query}/>} 
-              target={<button onClick={this.handleSubmit} class="pt-button pt-minimal pt-intent-primary pt-icon-arrow-right"></button>}
+              target={<button onClick={this.handleSubmit} className="pt-button pt-minimal pt-intent-primary pt-icon-arrow-right"></button>}
               position={Position.BOTTOM}
               isOpen={this.state.display && this.state.searchResults.length > 0}
               onClose={() => {this.setState({display: false})}}

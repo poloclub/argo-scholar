@@ -8,6 +8,15 @@ var ee = def.ee;
 var $ = require("jquery");
 const { default: appState } = require("../../stores");
 
+
+const arraysEqual = (a1, a2) => {
+  return a1.length === a2.length && a1.every((o, idx) => objectsEqual(o, a2[idx]));
+};
+
+const objectsEqual = (o1, o2) => {
+  return o1.id === o2.id;
+};
+
 const findNode = (o1, a1) => {
   if (!a1) return null;
   for (let i = 0; i < a1.length; i++) {
@@ -207,8 +216,21 @@ module.exports = function (self) {
       if(selection) {
         //when any node is clicked, un-smartpause if smartpaused
         //appState.graph.smartPause.lastUnpaused = Date.now(); //old code using lastUnpaused
+        // console.log(selection)
         appState.graph.smartPause.interactingWithGraph = true;
-        // appState.project.isAddPapersDialogOpen = false;
+        // appState.logger.addLog({eventName: `SelectNode`, elementName: selection.id, valueName: `Label`, newValue: selection.data.label});
+
+        
+        // if (!inArray(selection, appState.graph.currentNodes)) {
+        //   console.log("other node")
+        //   appState.graph.currentNodes = selection
+        //   appState.graph.currentNodeX = selection.x
+        //   appState.graph.currentNodeY = selection.y
+        // }
+
+        appState.graph.currentNodes = {id: selection.id, x: selection.x, y: selection.y}
+        appState.graph.currentNodeX = selection.x
+        appState.graph.currentNodeY = selection.y
       }
 
 
@@ -286,6 +308,105 @@ module.exports = function (self) {
       self.showBox = false;
       self.dragging = null;
       self.selectBox.visible = false;
+      
+      if (self.selection) {
+        if (self.selection.length == 1) {
+          var selected = self.selection[0]
+          // console.log("size 1")
+          // console.log(selected)
+          // console.log(appState.graph.currentNodes)
+
+          // console.log("========")
+
+          // console.log(selected.x)
+          // console.log(appState.graph.currentNodeX)
+
+          // console.log(selected.x !== appState.graph.currentNodeX)
+
+          // console.log("=======")
+          // console.log(selected.y)
+          // console.log(appState.graph.currentNodeY)
+
+          // console.log(selected.y - appState.graph.currentNodeY)
+
+          if (selected.id === appState.graph.currentNodes.id && (Math.abs(selected.x - appState.graph.currentNodeX) > 5 || 
+              Math.abs(selected. y - appState.graph.currentNodeY) > 5)) {
+            console.log("moved node");
+            var oldValues = {};
+            oldValues['x'] = appState.graph.currentNodeX;
+            oldValues['y'] = appState.graph.currentNodeY;
+
+            var newValues = {};
+            newValues['x'] = selected.x;
+            newValues['y'] = selected.y;
+
+            appState.logger.addLog({eventName: `MovedNode`, elementName: selection.id, valueName: `XYCoord`,
+              oldValue: oldValues, newValue: newValues});
+            appState.graph.currentNodeX = selected.x;
+            appState.graph.currentNodeY = selected.y;
+          }
+        } else if (self.selection.length > 1 && appState.graph.currentNodes) {
+          // console.log("===========")
+          // console.log(self.selection)
+          // console.log("currentNodes")
+          var oldNode = appState.graph.currentNodes
+          // console.log(selectedNode)
+          // console.log("In?")
+          var newNode = findNode(oldNode, self.selection)
+          // console.log(associatedNode)
+          if (newNode) {
+            var xDiff = newNode.x - oldNode.x;
+            var yDiff = newNode.y - oldNode.y;
+            if (Math.abs(xDiff) > 5 || Math.abs(yDiff) > 5) {
+              // console.log("selected")
+              // console.log(appState.graph.selectedNodes.slice())
+              // console.log("selection:")
+              // console.log(self.selection)
+              // console.log(arraysEqual(appState.graph.selectedNodes.slice(), self.selection))
+              var elements = []
+              var oldValues = {};
+              oldValuesX = [];
+              oldValuesY = [];
+
+              var newValues = {};
+              newValuesX = [];
+              newValuesY = [];
+              self.selection.forEach(node => {
+                elements.push(node.id);
+                oldValuesX.push(node.x - xDiff);
+                oldValuesY.push(node.y - yDiff);
+                newValuesX.push(node.x)
+                newValuesY.push(node.y);
+              });
+
+              oldValues['x'] = oldValuesX;
+              oldValues['y'] = oldValuesY;
+
+              newValues['x'] = newValuesX;
+              newValues['y'] = newValuesY;
+
+              appState.logger.addLog({eventName: `MovedNodes`, elementName: elements, valueName: `XYCoord`,
+              oldValue: oldValues, newValue: newValues});
+              console.log("moved selected nodes")
+            }
+          }
+          
+        }
+        // appState.graph.currentNodes = self.selection;
+        // console.log("currentNodes:")
+        // console.log(appState.graph.currentNodes.slice())
+
+        // console.log("selection: ")
+        // console.log(self.selection)
+        // console.log("selected")
+        // console.log(appState.graph.selectedNodes[0])
+        // console.log(self.selection[0] === appState.graph.selectedNodes[0])
+        // if (self.selection == appState.graph.selectedNodes[0] && self.selection.x !== appState.graph.currentNodeX && self.selection.y !== appState.graph.currentNodeY) {
+        //   console.log("moved node");
+        //   appState.graph.currentNodeX = self.selection.x;
+        //   appState.graph.currentNodeY = self.selection.y;
+        // }
+      }
 
       self.ee.emit("select-nodes", self.selection);
     }

@@ -64,6 +64,7 @@ export default class GraphStore {
   // Currently hovered node
   @observable currentlyHovered = undefined;
 
+
   @observable startedHovering = false;
   @observable hoveredTime = undefined;
   @observable autoDisplayExploration = false;
@@ -71,6 +72,11 @@ export default class GraphStore {
   @observable currentMouseY = 0;
 
   @observable numberAddedPerSearch = 0;
+
+  @observable currentNodeX;
+  @observable currentNodeY;
+  @observable currentNodes; 
+  
   /**
    * Stores data relevant to smart pause feature
    */
@@ -138,6 +144,7 @@ export default class GraphStore {
     nodeComputed: ["pagerank", "degree"],
     edgeProperties: [],
     snapshotName: "loading...", // Optional: for display in Argo-scholar only
+    snapshotId: "",
   };
 
   // used for listing all the properties, either original or computed
@@ -375,6 +382,7 @@ export default class GraphStore {
   }
 
   showNodes(nodeids) {
+    appState.logger.addLog({eventName: 'ShowNodes', elementName: nodeids})
     runInAction("show hidden nodes by ids", () => {
       this.rawGraph.nodes = this.rawGraph.nodes.map((n) => {
         if (nodeids.includes(n.id)) {
@@ -386,6 +394,7 @@ export default class GraphStore {
   }
 
   hideNodes(nodeids) {
+    appState.logger.addLog({eventName: 'HideNodes', elementName: nodeids})
     runInAction("hide nodes by ids", () => {
       this.frame.removeNodesByIds(nodeids);
       this.rawGraph.nodes = this.rawGraph.nodes.map((n) => {
@@ -410,6 +419,9 @@ export default class GraphStore {
   }
 
   getSnapshot() {
+    if (!this.metadata.snapshotId) {
+      this.metadata.snapshotId = `${Math.round(Math.random() * 10000000, 0)}`;
+    }
     const snapshot = {
       rawGraph: this.rawGraph,
       overrides: this.overrides,
@@ -653,8 +665,8 @@ export default class GraphStore {
                   onClick: () => {
                     BackendAPIUtils.addSortedReferences("is-influential", this);
                   },
-                  text: "Sort By Most Infleunced Papers",
-                  key: "Sort By Most Infleunced Papers",
+                  text: "Sort By Most Influenced Papers",
+                  key: "Sort By Most Influenced Papers",
                 }),
                 MenuItemFactory({
                   onClick: () => {
