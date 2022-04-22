@@ -41,6 +41,9 @@ export class Logger {
     /** @type {object[][]} Each entry is [key, value, timestamp]*/
     this.records = [];
 
+    this.addOSRecord();
+    this.addBrowserRecord();
+
     this.logNum = 0;
   }
 
