@@ -68,7 +68,7 @@ html {
 .left-overlay-card {
   margin-top: -1em;
   padding-top: 1.1em;
-  overflow-y: overlay;
+  overflow-y: scroll;
   max-height: 530px;
 }
 
@@ -249,8 +249,17 @@ td.search-add {
 }
 
 .paper-popover {
-  max-height: 80vh;
+  max-height: 50vh;
   overflow-y: scroll;
+  /* Hide scrollbar*/
+  /* IE and Edge */
+  -ms-overflow-style: none;
+  /* Firefox */
+  scrollbar-width: none;
+}
+/* Chrome */
+.paper-popover::-webkit-scrollbar {
+  display: none;
 }
 
 .import-preview-table {

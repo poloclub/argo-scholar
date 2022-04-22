@@ -64,9 +64,19 @@ export default class GraphStore {
   // Currently hovered node
   @observable currentlyHovered = undefined;
 
+
+  @observable startedHovering = false;
+  @observable hoveredTime = undefined;
+  @observable autoDisplayExploration = false;
+  @observable currentMouseX = 0;
+  @observable currentMouseY = 0;
+
+  @observable numberAddedPerSearch = 0;
+
   @observable currentNodeX;
   @observable currentNodeY;
   @observable currentNodes; 
+  
   /**
    * Stores data relevant to smart pause feature
    */
@@ -582,70 +592,65 @@ export default class GraphStore {
             text: "Pin Selected",
             key: "Pin Selected",
           }),
-          this.frame.rightClickedNode &&
-            MenuItemFactory({
-              onClick: () => {
-                if (this.frame.rightClickedNode) {
-                  const rightClickedNodeId =
-                    this.frame.rightClickedNode.data.ref.id.toString();
-                  const neighbors =
-                    this.getNeighborNodesFromRawGraph(rightClickedNodeId);
-                  neighbors.sort((n1, n2) => {
-                    if (n1["pagerank"] && n2["pagerank"]) {
-                      return n2["pagerank"] - n1["pagerank"];
-                    }
-                    return 0;
-                  });
-                  const ids = [];
-                  for (let i = 0; i < 5 && i < neighbors.length; i++) {
-                    ids.push(neighbors[i].id);
-                  }
-                  this.showNodes(ids);
-                }
-              },
-              text: "Show 5 Neighbors with Highest PageRank",
-              key: "Show 5 Neighbors with Highest PageRank",
-            }),
-          this.frame.rightClickedNode &&
-            MenuDividerFactory({
-              title: "Add Citations or References",
-              key: "Add Citations or References",
-            }),
-          this.frame.rightClickedNode &&
-            MenuItemFactory({
-              children: [
-                MenuItemFactory({
-                  onClick: () => {
-                    BackendAPIUtils.addSortedCitations("relevance", this);
-                  },
-                  text: "Sort By Relevance",
-                  key: "Sort By Relevance",
-                }),
-                MenuItemFactory({
-                  onClick: () => {
-                    BackendAPIUtils.addSortedCitations("is-influential", this);
-                  },
-                  text: "Sort By Most Influenced Papers",
-                  key: "Sort By Most Influenced Papers",
-                }),
-                MenuItemFactory({
-                  onClick: () => {
-                    BackendAPIUtils.addSortedCitations("total-citations", this);
-                  },
-                  text: "Sort By Citation Count",
-                  key: "Sort By Citation Count",
-                }),
-                MenuItemFactory({
-                  onClick: () => {
-                    BackendAPIUtils.addSortedCitations("pub-date", this);
-                  },
-                  text: "Sort By Recency",
-                  key: "Sort By Recency",
-                }),
-              ],
-              text: "Add 5 Paper Citations",
-              key: "Add 5 Paper Citations",
-            }),
+          // this.frame.rightClickedNode &&
+          //   MenuItemFactory({
+          //     onClick: () => {
+          //       if (this.frame.rightClickedNode) {
+          //         const rightClickedNodeId =
+          //           this.frame.rightClickedNode.data.ref.id.toString();
+          //         const neighbors =
+          //           this.getNeighborNodesFromRawGraph(rightClickedNodeId);
+          //         neighbors.sort((n1, n2) => {
+          //           if (n1["pagerank"] && n2["pagerank"]) {
+          //             return n2["pagerank"] - n1["pagerank"];
+          //           }
+          //           return 0;
+          //         });
+          //         const ids = [];
+          //         for (let i = 0; i < 5 && i < neighbors.length; i++) {
+          //           ids.push(neighbors[i].id);
+          //         }
+          //         this.showNodes(ids);
+          //       }
+          //     },
+          //     text: "Show 5 Neighbors with Highest PageRank",
+          //     key: "Show 5 Neighbors with Highest PageRank",
+          //   }),
+          this.frame.rightClickedNode && MenuDividerFactory({}),
+          MenuItemFactory({
+            children: [
+              MenuItemFactory({
+                onClick: () => {
+                  BackendAPIUtils.addSortedCitations("relevance", this);
+                },
+                text: "Sort By Relevance",
+                key: "Sort By Relevance",
+              }),
+              MenuItemFactory({
+                onClick: () => {
+                  BackendAPIUtils.addSortedCitations("is-influential", this);
+                },
+                text: "Sort By Most Infleunced Papers",
+                key: "Sort By Most Infleunced Papers",
+              }),
+              MenuItemFactory({
+                onClick: () => {
+                  BackendAPIUtils.addSortedCitations("total-citations", this);
+                },
+                text: "Sort By Citation Count",
+                key: "Sort By Citation Count",
+              }),
+              MenuItemFactory({
+                onClick: () => {
+                  BackendAPIUtils.addSortedCitations("pub-date", this);
+                },
+                text: "Sort By Recency",
+                key: "Sort By Recency",
+              }),
+            ],
+            text: "Add 5 Paper Citations",
+            key: "Add 5 Paper Citations",
+          }),
           this.frame.rightClickedNode &&
             MenuItemFactory({
               children: [
@@ -680,6 +685,9 @@ export default class GraphStore {
         // onMenuClose
         console.log("ContextMenu closed");
         this.currentlyHovered = null;
+        this.startedHovering = false;
+        this.hoveredTime = undefined;
+        this.autoDisplayExploration = false;
       });
     });
   }

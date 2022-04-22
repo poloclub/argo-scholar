@@ -6,7 +6,10 @@ import {
   Icon,
   Dialog,
   Intent,
-  Spinner
+  Spinner,
+  Tooltip,
+  Position,
+  AnchorButton
 } from "@blueprintjs/core";
 import { observer, propTypes } from "mobx-react";
 import classnames from "classnames";
@@ -24,6 +27,7 @@ class AddNodesRow extends React.Component {
     super(props);
     this.state = {
         paper: this.props.paper,
+        currentIncrement: -1,
     }
   }
 
@@ -66,7 +70,7 @@ class AddNodesRow extends React.Component {
             paperNode.pinnedx = true;
             paperNode.pinnedy = true;
             paperNode.x = appState.controls.camera.position.x;
-            paperNode.y = appState.controls.camera.position.y;
+            paperNode.y = appState.controls.camera.position.y - this.state.currentIncrement * 10;
             paperNode.pinnedx = true;
             paperNode.pinnedy = true;
             appState.graph.frame.updateNodesShowingLabels();
@@ -97,17 +101,27 @@ class AddNodesRow extends React.Component {
     // })
     return (
         <tr class="search-row">
-          <td class="search-result">{this.state.paper.title}</td>
+          <td class="search-result">
+            <a target="_blank" rel="noopener noreferrer" href={this.state.paper.url}>{this.state.paper.title}</a>
+          </td>
           <td class="search-add">
-            <button type="button" class="pt-button pt-small"
-              // disabled={this.isNodeHidden(paper.paperId)} 
-              // // disabled={paper.paperId in appState.graph.preprocessedRawGraph.nodesPanelData}
-              disabled={buttonDisabled} 
-              onClick={() => this.handleClick(this.state.paper.paperId)}>
-              {nodeHidden ? "Unhide" 
-                : buttonDisabled
-                  ? "Added" : "Add"}
-            </button>
+            <Tooltip
+              content={nodeHidden ? "Unhide" : buttonDisabled ? "Added" : "Add to visualization"}
+              popoverClassName={"pt-popover-content-sizing"}
+              position={Position.BOTTOM}
+            >
+              <AnchorButton
+                className={"pt-button pt-small pt-minimal"}
+                disabled={buttonDisabled} 
+                onClick={() => {
+                  appState.graph.numberAddedPerSearch = appState.graph.numberAddedPerSearch + 1;
+                  this.state.currentIncrement = appState.graph.numberAddedPerSearch;
+                  this.handleClick(this.state.paper.paperId);
+                }}
+                iconName={nodeHidden ? "eye-on" : buttonDisabled ? "tick-circle" : "add"}
+              />
+            </Tooltip>
+            
           </td>
         </tr>
     );

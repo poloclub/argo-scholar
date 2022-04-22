@@ -27,6 +27,7 @@ import AddNodes from "./panels/AddNodesPanel";
 const corpusIDregex = /^[0-9]+$/; 
 const apiCorpusPrefix = "https://api.semanticscholar.org/v1/paper/CorpusID:";
 const apiKeywordPrefix = "https://api.semanticscholar.org/graph/v1/paper/search?query=";
+const nodeFields = "&limit=50&fields=title,url";
 
 class SearchBar extends React.Component {
   constructor(props) {
@@ -73,6 +74,7 @@ class SearchBar extends React.Component {
       return
     }
     // appState.project.currentQuery = this.state.query;
+    appState.graph.numberAddedPerSearch = 0;
     
     if (corpusIDregex.test(this.state.query)) {
       // CorpusID submitted
@@ -107,7 +109,7 @@ class SearchBar extends React.Component {
       var keywordQuery = this.state.query; 
       keywordQuery = keywordQuery.trim().replace(/  +/g, ' ').replace(/ /g, '+');
 
-      let apiurl = apiKeywordPrefix + keywordQuery;
+      let apiurl = apiKeywordPrefix + keywordQuery + nodeFields;
 
       fetch(apiurl)
         .then((res) => {

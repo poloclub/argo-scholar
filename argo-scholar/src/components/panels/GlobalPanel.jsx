@@ -20,7 +20,8 @@ class GlobalPanel extends React.Component {
       timeOutRef: null,
       sizeOptionOpen: false,
       colorOptionOpen: false,
-      shapeOptionOpen: false
+      shapeOptionOpen: false,
+      visibilityOptionOpen: false,
     };
   }
 
@@ -244,6 +245,32 @@ class GlobalPanel extends React.Component {
             </div>        
           </div>
         </Collapsable>
+
+        {/* Collapsable Option: Shape */}
+        <Collapsable
+          name="Visibility"
+          isOpen={this.state.visibilityOptionOpen}
+          onToggle={() =>
+            this.setState({
+              visibilityOptionOpen: !this.state.visibilityOptionOpen,
+            })
+          }
+        >
+          <div className={classnames(Classes.CARD, "sub-option")}>
+          <div> 
+            <p style={{display: "inline"}}>Show All Nodes: </p>
+            <span style={{float:"right"}}>
+              <Button 
+                onClick={it => {
+                  appState.graph.showNodes(appState.graph.rawGraph.nodes.map(n => n.id));
+                }}
+                iconName={"eye-on"}
+              />
+            </span>
+            </div>       
+          </div>
+        </Collapsable>
+
         <br/>
         <small>
           

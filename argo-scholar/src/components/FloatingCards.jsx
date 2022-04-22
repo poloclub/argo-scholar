@@ -21,7 +21,7 @@ class RenderOptionsCard extends React.Component {
   render() {
     return (
       <div>
-        <h4>Graph Options</h4>
+        {/* <h4>Graph Options</h4> */}
         <Tabs2 animate id="graph-options">
           <Tab2 id="nodes" title="Nodes" panel={<NodesPanel />} />
           <Tab2 id="edges" title="Edges" panel={<EdgesPanel />} />

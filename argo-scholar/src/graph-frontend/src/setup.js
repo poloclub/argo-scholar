@@ -301,7 +301,11 @@ module.exports = function(self) {
           pageX = event.pageX;
           pageY = event.pageY;
         }
-        
+
+        //logs the current pageX and pageY for the auto-dropdown display in mouse.js 
+        appState.graph.currentMouseX = pageX;
+        appState.graph.currentMouseY = pageY;
+
         var coords = self.relMouseCoords(pageX, pageY, this);
         var mouseX = (coords.x / self.width) * 2 - 1;
         var mouseY = 1 - (coords.y / self.height) * 2;
