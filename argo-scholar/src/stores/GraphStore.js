@@ -617,7 +617,7 @@ export default class GraphStore {
           //     key: "Show 5 Neighbors with Highest PageRank",
           //   }),
           this.frame.rightClickedNode && MenuDividerFactory({}),
-          MenuItemFactory({
+          this.frame.rightClickedNode && MenuItemFactory({
             children: [
               MenuItemFactory({
                 onClick: () => {
