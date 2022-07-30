@@ -76,9 +76,11 @@ class SearchBar extends React.Component {
     }
     // appState.project.currentQuery = this.state.query;
     appState.graph.numberAddedPerSearch = 0;
+    
     // Replace hyphens with spaces to get the correct query for Semantic Scholar API
     this.state.query = this.state.query.replace("-", " ");
     console.log(this.state.query);
+
     if (corpusIDregex.test(this.state.query)) {
       // CorpusID submitted
 
