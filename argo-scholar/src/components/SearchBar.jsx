@@ -3,7 +3,7 @@ import appState from "../stores/index";
 import classnames from "classnames";
 import {
   requestCreateEmptyPaperGraph,
-  requestCreateNewProject
+  requestCreateNewProject,
 } from "../ipc/client";
 import {
   Button,
@@ -17,26 +17,27 @@ import {
   MenuItem,
   MenuDivider,
   Toaster,
-  IToastProps
+  IToastProps,
 } from "@blueprintjs/core";
 import { tree } from "d3";
-import { toaster } from '../notifications/client';
+import { toaster } from "../notifications/client";
 
 import AddNodes from "./panels/AddNodesPanel";
 
-const corpusIDregex = /^[0-9]+$/; 
+const corpusIDregex = /^[0-9]+$/;
 const apiCorpusPrefix = "https://api.semanticscholar.org/v1/paper/CorpusID:";
-const apiKeywordPrefix = "https://api.semanticscholar.org/graph/v1/paper/search?query=";
+const apiKeywordPrefix =
+  "https://api.semanticscholar.org/graph/v1/paper/search?query=";
 const nodeFields = "&limit=50&fields=title,url";
 
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
-    this._isMounted = false; 
+    this._isMounted = false;
     this.state = {
-        searchResults: [],
-        query: '', 
-        display: false,
+      searchResults: [],
+      query: "",
+      display: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -47,38 +48,42 @@ class SearchBar extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-  };
+  }
 
   componentWillUnmount() {
     this._isMounted = false;
-  };
+  }
 
   handleChange(event) {
-    this._isMounted && this.setState({query: event.target.value});
+    this._isMounted && this.setState({ query: event.target.value });
   }
 
   handleClick(event) {
-    this.setState({display: true});
+    this.setState({ display: true });
     // event.preventDefault();
-  } 
+  }
 
   handleEnter(event) {
     if (event.which === 13) {
       this.handleSubmit(event);
     }
-   }
+  }
 
   handleSubmit(event) {
-    this.setState({display: false})
+    this.setState({ display: false });
     if (this.state.query == "") {
-      return
+      return;
     }
     // appState.project.currentQuery = this.state.query;
     appState.graph.numberAddedPerSearch = 0;
     
+    // Replace hyphens with spaces to get the correct query for Semantic Scholar API
+    this.state.query = this.state.query.replace("-", " ");
+    console.log(this.state.query);
+
     if (corpusIDregex.test(this.state.query)) {
       // CorpusID submitted
-      
+
       let apiurl = apiCorpusPrefix + this.state.query;
 
       fetch(apiurl)
@@ -91,23 +96,28 @@ class SearchBar extends React.Component {
         })
         .then((response) => {
           var searches = [];
-          searches.push(response)
+          searches.push(response);
           // for (var i = 0; i < response.data.length; i++) {
           //   searches.push(response.data[i]);
           // }
-          this.setState({searchResults: searches})
-          this.setState({display: true})
+          this.setState({ searchResults: searches });
+          this.setState({ display: true });
           // appState.project.isAddPapersDialogOpen = true;
         })
         .catch((error) => {
-          this.addToast("Error occurred when fetching search results. This may be due to API issues or the CorpusID not being associated with a valid paper.");
+          this.addToast(
+            "Error occurred when fetching search results. This may be due to API issues or the CorpusID not being associated with a valid paper."
+          );
           // alert("Issue occurred when fetching search results. This may be due to API issues or the CorpusID not being associated with a valid paper.");
         });
     } else {
       // Keyword query
 
-      var keywordQuery = this.state.query; 
-      keywordQuery = keywordQuery.trim().replace(/  +/g, ' ').replace(/ /g, '+');
+      var keywordQuery = this.state.query;
+      keywordQuery = keywordQuery
+        .trim()
+        .replace(/  +/g, " ")
+        .replace(/ /g, "+");
 
       let apiurl = apiKeywordPrefix + keywordQuery + nodeFields;
 
@@ -121,26 +131,28 @@ class SearchBar extends React.Component {
         })
         .then((response) => {
           if (response.data.length < 1) {
-            this.addToast(`No results found for "${this.state.query}".`)
-            return
+            this.addToast(`No results found for "${this.state.query}".`);
+            return;
           }
           var searches = [];
           for (var i = 0; i < response.data.length; i++) {
             searches.push(response.data[i]);
           }
-          this.setState({searchResults: searches})
+          this.setState({ searchResults: searches });
           // appState.project.isAddPapersDialogOpen = true;
-          this.setState({display: true})
+          this.setState({ display: true });
         })
         .catch((error) => {
-          this.addToast("Error occurred when fetching search results. This may be due to API issues.");
+          this.addToast(
+            "Error occurred when fetching search results. This may be due to API issues."
+          );
         });
     }
     event.preventDefault();
   }
 
   addToast(message) {
-    toaster.show({ 
+    toaster.show({
       message: message,
       intent: Intent.DANGER,
       iconName: "warning-sign",
@@ -150,19 +162,31 @@ class SearchBar extends React.Component {
   render() {
     return (
       <div>
-        <InputGroup 
+        <InputGroup
           className={"search-bar-width"}
-          leftIconName={"search"} 
+          leftIconName={"search"}
           rightElement={
             <Popover
-              content={<AddNodes papers={this.state.searchResults} query={this.state.query}/>} 
-              target={<button onClick={this.handleSubmit} className="pt-button pt-minimal pt-intent-primary pt-icon-arrow-right"></button>}
+              content={
+                <AddNodes
+                  papers={this.state.searchResults}
+                  query={this.state.query}
+                />
+              }
+              target={
+                <button
+                  onClick={this.handleSubmit}
+                  className="pt-button pt-minimal pt-intent-primary pt-icon-arrow-right"
+                ></button>
+              }
               position={Position.BOTTOM}
               isOpen={this.state.display && this.state.searchResults.length > 0}
-              onClose={() => {this.setState({display: false})}}
+              onClose={() => {
+                this.setState({ display: false });
+              }}
               autoFocus={false}
               enforceFocus={false}
-            /> 
+            />
           }
           onChange={this.handleChange}
           placeholder={"Search"}
