@@ -9,7 +9,7 @@ env:
 before_script:
   - cd argo-scholar
 script:
-  - npm install
+  - npm install --legacy-peer-deps
   - npm run build
 
 deploy:
