@@ -293,6 +293,7 @@ export default class GraphStore {
         venue: paperJsonResponse.venue == "" ? "n/a" : paperJsonResponse.venue,
         year: paperJsonResponse.year,
         url: paperJsonResponse.url,
+        isHidden: false,
       };
       degreeDict[paperJsonResponse.paperId] = 0;
       rawGraphNodes.push(addedNode);
