@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/argo-scholar/static/css/main.8a5be818.chunk.css",
+    "main.js": "/argo-scholar/static/js/main.d8d4862f.chunk.js",
+    "main.js.map": "/argo-scholar/static/js/main.d8d4862f.chunk.js.map",
+    "runtime~main.js": "/argo-scholar/static/js/runtime~main.19d20500.js",
+    "runtime~main.js.map": "/argo-scholar/static/js/runtime~main.19d20500.js.map",
+    "static/css/2.03e46918.chunk.css": "/argo-scholar/static/css/2.03e46918.chunk.css",
+    "static/js/2.141b314d.chunk.js": "/argo-scholar/static/js/2.141b314d.chunk.js",
+    "static/js/2.141b314d.chunk.js.map": "/argo-scholar/static/js/2.141b314d.chunk.js.map",
+    "index.html": "/argo-scholar/index.html",
+    "precache-manifest.9277c64d4bf4831a0b0cc508fcf174b5.js": "/argo-scholar/precache-manifest.9277c64d4bf4831a0b0cc508fcf174b5.js",
+    "service-worker.js": "/argo-scholar/service-worker.js",
+    "static/css/2.03e46918.chunk.css.map": "/argo-scholar/static/css/2.03e46918.chunk.css.map",
+    "static/css/main.8a5be818.chunk.css.map": "/argo-scholar/static/css/main.8a5be818.chunk.css.map",
+    "static/media/argoscholar_logo_dark.svg": "/argo-scholar/static/media/argoscholar_logo_dark.4d2f6cdc.svg",
+    "static/media/argoscholar_logo_light.svg": "/argo-scholar/static/media/argoscholar_logo_light.a7447f19.svg",
+    "static/media/blueprint.css": "/argo-scholar/static/media/icons-20.c6e7874e.eot"
+  }
+}
