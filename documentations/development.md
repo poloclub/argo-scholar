@@ -1,4 +1,4 @@
-# Develop Argo Scholar
+# Developing Argo Scholar
 
 ## Developing the frontend
 
