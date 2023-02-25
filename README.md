@@ -49,7 +49,7 @@ If you want to fix the positions of certain nodes when other nodes are running f
 
 To unpin, just select them again and click the `Unpin` button.
 
-<img src="img/img-pin.png" width="30%">
+<img src="img/img-pin.png" width="50%">
 
 ## Exploring Your Own Network
 
@@ -62,7 +62,7 @@ To add new paper nodes, you can utilize the search bar on the top. Argo Scholar 
 
 > **_NOTE:_**  You can look up the *Corpus ID*  of a paper through [Semantic Scholar%](https://www.semanticscholar.org/). The CorpusID will be located on the paper's Semantic Scholar page, next to the paper title.  
 > 
-> <img src="img/img-corpusid.png" width="700">
+> <img src="img/img-corpusid.png" width="100%">
 
 
 
