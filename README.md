@@ -117,7 +117,7 @@ On the same screen where you get your sharable URL, you can also copy the iframe
 
 ### About Sharing Service
 
-We provide a public sharing service for public datasets. If you want to establish your own sharing server for private or proprietary datasets, refer to the [Deployment Guide](deploy.md) to easily set up your own sharing service!
+We provide a public sharing service for public datasets. If you want to establish your own sharing server for private or proprietary datasets, refer to the [Deployment Guide](documentations/deploy.md) to easily set up your own sharing service!
 
 
 
