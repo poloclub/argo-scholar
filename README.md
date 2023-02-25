@@ -60,7 +60,7 @@ To add new paper nodes, you can utilize the search bar on the top. Argo Scholar 
 
 <img src="img/video-search.gif" width="100%">
 
-> **_NOTE:_**  You can look up the *Corpus ID*  of a paper through [Semantic Scholar%](https://www.semanticscholar.org/). The CorpusID will be located on the paper's Semantic Scholar page, next to the paper title.  
+> **_NOTE:_**  You can look up the *Corpus ID*  of a paper through [Semantic Scholar](https://www.semanticscholar.org/). The CorpusID will be located on the paper's Semantic Scholar page, next to the paper title.  
 > 
 > <img src="img/img-corpusid.png" width="100%">
 
