@@ -72,6 +72,9 @@ Now we have starting paper nodes, we can add some neighbor nodes!
 
 Right-click the paper you find interesting. You will see the option to either `Add 5 Paper Citations` or `Add 5 Paper References`. Clicking either option will add 5 addition papers of either category to the literature network. You can keep on adding neighbors until you have added all possible papers. 
 
+>**_NOTE:_**  As defined on **Semantic Scholar**, **_citations_** refer to the papers that have cited the current paper, and **_references_** refer to the papers were referenced in the current paper.
+> 
+
 After adding the citations or references, you can now explore the newly added nodes. If you are not find certain papers interesting or relevant, you can hide them from view by clicking on the paper and selecting `Hide`. 
 
 Now select 1 paper that you find interesting, you will see a `Neighbors (xx nodes hidden)` button on the floating selection menu. Clicking on it will bring you to the *Neighbor Menu*.
