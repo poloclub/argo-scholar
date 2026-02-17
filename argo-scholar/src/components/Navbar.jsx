@@ -2,6 +2,7 @@ import React from "react";
 import classnames from "classnames";
 import {
   Button,
+  Callout,
   Classes,
   InputGroup,
   Intent,
@@ -26,6 +27,14 @@ import SearchBar from "./SearchBar";
 
 @observer
 class RegularNavbar extends React.Component {
+  state = {
+    eolDismissed: false
+  };
+
+  dismissEol = () => {
+    this.setState({ eolDismissed: true });
+  };
+
   render() {
     return (
       <nav className={classnames([Classes.NAVBAR])}>
@@ -335,6 +344,45 @@ class RegularNavbar extends React.Component {
             <FontAwesomeIcon icon={faGithub} />
           </a>
         </div>
+        {!this.state.eolDismissed && (
+          <div
+            className={classnames([Classes.NAVBAR_GROUP])}
+            style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}
+          >
+            <Popover
+              content={
+                <div style={{ maxWidth: 500, padding: 0 }}>
+                  <Callout
+                    iconName="warning-sign"
+                    intent={Intent.WARNING}
+                    title="Snapshot Publishing and Sharing Feature — End-of-Life Service Notice"
+                  >
+                    <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.6 }}>
+                      <li>The snapshot publishing and sharing feature for Argo Scholar and Argo Lite will reach end-of-life on <strong style={{ textDecoration: 'underline' }}>March 31, 2026</strong>.</li>
+                      <li>The applications will remain accessible until this date.</li>
+                      <li><strong>Publishing, saving, or loading shared (server-hosted) snapshots may be unavailable or unreliable</strong> during this period.</li>
+                      <li>After <strong style={{ textDecoration: 'underline' }}>March 31, 2026</strong>, <strong>backend services supporting snapshot publishing and sharing will be fully shut down</strong>. Users will still be able to save and load snapshots locally, but shared or server-hosted snapshots will no longer be supported.</li>
+                      <li>If you rely on snapshot publishing or sharing for active projects or teaching, please <strong>export any important shared snapshots before <span style={{ textDecoration: 'underline' }}>March 31, 2026</span></strong>.</li>
+                      <li>For questions or concerns, please contact the Argo maintainers.</li>
+                    </ul>
+                    <Button minimal small iconName="cross" onClick={this.dismissEol}>
+                      Dismiss
+                    </Button>
+                  </Callout>
+                </div>
+              }
+              position={Position.BOTTOM}
+            >
+              <Button
+                className={classnames([Classes.BUTTON, Classes.MINIMAL])}
+                iconName="warning-sign"
+                intent={Intent.WARNING}
+              >
+                End-of-Life Service Notice
+              </Button>
+            </Popover>
+          </div>
+        )}
       </nav>
     );
   }
