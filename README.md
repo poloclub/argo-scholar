@@ -12,10 +12,6 @@ An interactive literature exploration visualization system that runs in your web
 
 [**Launch Argo Scholar in your browser**](https://poloclub.github.io/argo-scholar/)
 
-## Build (CI)
-
-Create React App treats warnings as build failures in CI. Our CI build sets `CI=false` to avoid that behavior.
-
 
 ## Quick Start
 
