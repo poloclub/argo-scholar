@@ -1,6 +1,6 @@
 # Argo Scholar
 
-[![Build Status](https://app.travis-ci.com/poloclub/argo-scholar.svg?branch=main)](https://app.travis-ci.com/poloclub/argo-scholar)
+[![Build Status](https://github.com/poloclub/argo-scholar/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/poloclub/argo-scholar/actions/workflows/deploy.yml)
 [![arxiv badge](https://img.shields.io/badge/arXiv-2110.14060-red)](https://arxiv.org/abs/2110.14060)
 [![GitHub](https://img.shields.io/github/license/poloclub/argo-scholar?color=blue)](https://github.com/poloclub/argo-scholar/blob/main/LICENSE)
 
@@ -11,6 +11,10 @@ An interactive literature exploration visualization system that runs in your web
 <img src="img/readme-logo.png" width=100% alt="Argo Scholar logo">
 
 [**Launch Argo Scholar in your browser**](https://poloclub.github.io/argo-scholar/)
+
+## Build (CI)
+
+Create React App treats warnings as build failures in CI. Our CI build sets `CI=false` to avoid that behavior.
 
 
 ## Quick Start
@@ -152,4 +156,3 @@ More can be found here: [*Waleed Ammar et al. 2018. Construction of the Literatu
 
 ## Contact
 If you have any questions or would like to learn more about the project, feel free to contact [Kevin Li](mailto:kevin.li@gatech.edu) or [Alex Yang](https://alexanderyang.me).
-
