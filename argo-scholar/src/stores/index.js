@@ -29,12 +29,42 @@ const appState = new AppState();
 
 window.appState = appState;
 
+const APP_PUBLIC_URL = (process.env.PUBLIC_URL || "").replace(/\/$/, "");
+
+const resolveAppURL = (url) => {
+  if (!url) {
+    return url;
+  }
+
+  if (/^(?:[a-z]+:)?\/\//i.test(url)) {
+    return url;
+  }
+
+  if (APP_PUBLIC_URL && url.startsWith(`${APP_PUBLIC_URL}/`)) {
+    return url;
+  }
+
+  if (url.startsWith("/")) {
+    return `${APP_PUBLIC_URL}${url}`;
+  }
+
+  return `${APP_PUBLIC_URL}/${url}`;
+};
+
 const loadSnapshotFromURL = (url) => {
-  return fetch(url, {
+  const resolvedURL = resolveAppURL(url);
+
+  return fetch(resolvedURL, {
     method: "GET",
     mode: "cors",
   })
-    .then((response) => response.text())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch ${resolvedURL}: ${response.status} ${response.statusText}`);
+      }
+
+      return response.text();
+    })
     .catch((error) => {
       toaster.show({
         message: "Failed to fetch graph snapshot",
@@ -48,11 +78,26 @@ const loadSnapshotFromURL = (url) => {
 
 const loadAndDisplaySnapshotFromURL = (url) => {
   loadSnapshotFromURL(url).then((snapshotString) => {
+    if (!snapshotString) {
+      return;
+    }
+
     // use filename/last segment of URL as title in Navbar
     appState.logger.addLog({eventName: `LoadSnapshotFromURL`, elementName: url});
     appState.graph.metadata.snapshotName =
       url.split("/").pop() || url.split("/").pop().pop();
-    appState.graph.loadImmediateStates(snapshotString);
+
+    try {
+      appState.graph.loadImmediateStates(snapshotString);
+    } catch (error) {
+      toaster.show({
+        message: "Snapshot response was not valid JSON",
+        intent: Intent.DANGER,
+        timeout: -1,
+        iconName: "warning-sign",
+      });
+      console.error(error);
+    }
   });
 };
 

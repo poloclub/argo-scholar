@@ -11,8 +11,8 @@ export const FRONTEND_URL = "https://poloclub.github.io/argo-scholar";
 export const LOGO_URL = "https://poloclub.github.io/argo-scholar";
 export const GITHUB_URL = "https://github.com/poloclub/argo-scholar";
 export const SAMPLE_GRAPHS = [
-  ["Les Miserables", "/samples/les-miserables.json"],
-  ["CORD-19 Citations Network", "/samples/cord-19.json"]
+  ["Les Miserables", "samples/les-miserables.json"],
+  ["CORD-19 Citations Network", "samples/cord-19.json"]
 ];
 
 // When resizing window or running on mobile,
