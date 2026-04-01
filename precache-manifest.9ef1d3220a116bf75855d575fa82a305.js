@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "6d080103e678a60653153e94b91e6c3b",
+    "revision": "1dfeb61a0bf74f3292e27467fbb2705c",
     "url": "/argo-scholar/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/argo-scholar/static/css/2.03e46918.chunk.css"
   },
   {
-    "revision": "ce7c3c3ae85951e33270",
+    "revision": "ff1789d0278cf0e51f44",
     "url": "/argo-scholar/static/css/main.2ec35192.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/argo-scholar/static/js/2.a95d0da3.chunk.js"
   },
   {
-    "revision": "ce7c3c3ae85951e33270",
-    "url": "/argo-scholar/static/js/main.7eb0b3f4.chunk.js"
+    "revision": "ff1789d0278cf0e51f44",
+    "url": "/argo-scholar/static/js/main.913e3d2f.chunk.js"
   },
   {
     "revision": "c6ef5b800d3dd0f2d251",
