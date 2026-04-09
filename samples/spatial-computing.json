@@ -1,0 +1,386 @@
+{
+  "rawGraph": {
+    "nodes": [
+      {
+        "id": "4329d5be8e6988e4516c2884ba26498ed1ee6b24",
+        "node_id": "4329d5be8e6988e4516c2884ba26498ed1ee6b24",
+        "paperName": "The computer for the 21st Century",
+        "paperAbstract": "Specialized elements of hardware and software, connected by wires, radio waves and infrared, will soon be so ubiquitous that no-one will notice their presence.",
+        "authors": "M. Weiser",
+        "citationCount": 5910,
+        "venue": "IEEE pervasive computing",
+        "year": 1991,
+        "url": "https://www.semanticscholar.org/paper/4329d5be8e6988e4516c2884ba26498ed1ee6b24",
+        "degree": 1,
+        "pagerank": 0.03200826997097422
+      },
+      {
+        "id": "f78a31be8874eda176a5244c645289be9f1d4317",
+        "node_id": "f78a31be8874eda176a5244c645289be9f1d4317",
+        "paperName": "A Taxonomy of Mixed Reality Visual Displays",
+        "paperAbstract": "Introduces the reality-virtuality continuum and a taxonomy for mixed-reality visual displays, distinguishing augmented reality, augmented virtuality, and other display configurations that blend real and virtual content.",
+        "authors": "P. Milgram, F. Kishino",
+        "citationCount": 5594,
+        "venue": "n/a",
+        "year": 1994,
+        "url": "https://www.semanticscholar.org/paper/f78a31be8874eda176a5244c645289be9f1d4317",
+        "degree": 3,
+        "pagerank": 0.061232395116021666
+      },
+      {
+        "id": "4fdc075d1cc14d64c11c3c860e86a082b761f4a0",
+        "node_id": "4fdc075d1cc14d64c11c3c860e86a082b761f4a0",
+        "paperName": "A Survey of Augmented Reality",
+        "paperAbstract": "This paper surveys the field of augmented reality (AR), in which 3D virtual objects are integrated into a 3D real environment in real time. It describes the medical, manufacturing, visualization, path planning, entertainment, and military applications that have been explored. This paper describes the characteristics of augmented reality systems, including a detailed discussion of the tradeoffs between optical and video blending approaches. Registration and sensing errors are two of the biggest problems in building effective augmented reality systems, so this paper summarizes current efforts to overcome these problems. Future directions and areas requiring further research are discussed. This survey provides a starting point for anyone interested in researching or using augmented reality.",
+        "authors": "Ronald T. Azuma",
+        "citationCount": 10108,
+        "venue": "Presence: Teleoperators & Virtual Environments",
+        "year": 1997,
+        "url": "https://www.semanticscholar.org/paper/4fdc075d1cc14d64c11c3c860e86a082b761f4a0",
+        "degree": 4,
+        "pagerank": 0.08169186157916936
+      },
+      {
+        "id": "05de05f242f62bd597666c7821d99dc568d47b6c",
+        "node_id": "05de05f242f62bd597666c7821d99dc568d47b6c",
+        "paperName": "The office of the future: a unified approach to image-based modeling and spatially immersive displays",
+        "paperAbstract": "Presents a vision for shared spatially immersive displays that combine image-based scene modeling, multi-projector rendering, and viewpoint-dependent synthesis to support room-scale tele-immersion and collaborative visualization.",
+        "authors": "R. Raskar, G. Welch, Matt Cutts, Adam T. Lake, Lev Stesin, H. Fuchs",
+        "citationCount": 1011,
+        "venue": "International Conference on Computer Graphics and Interactive Techniques",
+        "year": 1998,
+        "url": "https://www.semanticscholar.org/paper/05de05f242f62bd597666c7821d99dc568d47b6c",
+        "degree": 5,
+        "pagerank": 0.09525318757800291
+      },
+      {
+        "id": "a2001bd39df0eac404a0391e0dd5df6fc77f719d",
+        "node_id": "a2001bd39df0eac404a0391e0dd5df6fc77f719d",
+        "paperName": "Reality-based interaction: a framework for post-WIMP interfaces",
+        "paperAbstract": "We are in the midst of an explosion of emerging human-computer interaction techniques that redefine our understanding of both computers and interaction. We propose the notion of Reality-Based Interaction (RBI) as a unifying concept that ties together a large subset of these emerging interaction styles. Based on this concept of RBI, we provide a framework that can be used to understand, compare, and relate current paths of recent HCI research as well as to analyze specific interaction designs. We believe that viewing interaction through the lens of RBI provides insights for design and uncovers gaps or opportunities for future research.",
+        "authors": "R. Jacob, Audrey Girouard, Leanne M. Hirshfield, Michael S. Horn, Orit Shaer, E. Solovey, Jamie Zigelbaum",
+        "citationCount": 919,
+        "venue": "International Conference on Human Factors in Computing Systems",
+        "year": 2008,
+        "url": "https://www.semanticscholar.org/paper/a2001bd39df0eac404a0391e0dd5df6fc77f719d",
+        "degree": 3,
+        "pagerank": 0.07224638270307074
+      },
+      {
+        "id": "e2975deb809f35bd47ac3de34e348675a0cfb3f6",
+        "node_id": "e2975deb809f35bd47ac3de34e348675a0cfb3f6",
+        "paperName": "KinectFusion: Real-time dense surface mapping and tracking",
+        "paperAbstract": "We present a system for accurate real-time mapping of complex and arbitrary indoor scenes in variable lighting conditions, using only a moving low-cost depth camera and commodity graphics hardware. We fuse all of the depth data streamed from a Kinect sensor into a single global implicit surface model of the observed scene in real-time. The current sensor pose is simultaneously obtained by tracking the live depth frame relative to the global model using a coarse-to-fine iterative closest point (ICP) algorithm, which uses all of the observed depth data available. We demonstrate the advantages of tracking against the growing full surface model compared with frame-to-frame tracking, obtaining tracking and mapping results in constant time within room sized scenes with limited drift and high accuracy. We also show both qualitative and quantitative results relating to various aspects of our tracking and mapping system. Modelling of natural scenes, in real-time with only commodity sensor and GPU hardware, promises an exciting step forward in augmented reality (AR), in particular, it allows dense surfaces to be reconstructed in real-time, with a level of detail and robustness beyond any solution yet presented using passive computer vision.",
+        "authors": "Richard A. Newcombe, S. Izadi, Otmar Hilliges, D. Molyneaux, David Kim, A. Davison, Pushmeet Kohli, J. Shotton, Steve Hodges, A. Fitzgibbon",
+        "citationCount": 4578,
+        "venue": "2011 10th IEEE International Symposium on Mixed and Augmented Reality",
+        "year": 2011,
+        "url": "https://www.semanticscholar.org/paper/e2975deb809f35bd47ac3de34e348675a0cfb3f6",
+        "degree": 3,
+        "pagerank": 0.06761242524404117
+      },
+      {
+        "id": "c1429edc37ce431899a5c3838070ab10e17a2f17",
+        "node_id": "c1429edc37ce431899a5c3838070ab10e17a2f17",
+        "paperName": "Beaming: An Asymmetric Telepresence System",
+        "paperAbstract": "The Beaming project recreates, virtually, a real environment; using immersive VR, remote participants can visit the virtual model and interact with the people in the real environment. The real environment doesn't need extensive equipment and can be a space such as an office or meeting room, domestic environment, or social space.",
+        "authors": "A. Steed, W. Steptoe, Oyewole Oyekoya, Fabrizio Pece, Tim Weyrich, Jan Kautz, D. Friedman, A. Peer, M. Solazzi, F. Tecchia, M. Bergamasco, M. Slater",
+        "citationCount": 62,
+        "venue": "IEEE Computer Graphics and Applications",
+        "year": 2012,
+        "url": "https://www.semanticscholar.org/paper/c1429edc37ce431899a5c3838070ab10e17a2f17",
+        "degree": 4,
+        "pagerank": 0.07743653770813802
+      },
+      {
+        "id": "2fe55fc6da5ed9d20f8c5c32ab11b93935fe4520",
+        "node_id": "2fe55fc6da5ed9d20f8c5c32ab11b93935fe4520",
+        "paperName": "RoomAlive: magical experiences enabled by scalable, adaptive projector-camera units",
+        "paperAbstract": "RoomAlive is a proof-of-concept prototype that transforms any room into an immersive, augmented entertainment experience. Our system enables new interactive projection mapping experiences that dynamically adapts content to any room. Users can touch, shoot, stomp, dodge and steer projected content that seamlessly co-exists with their existing physical environment. The basic building blocks of RoomAlive are projector-depth camera units, which can be combined through a scalable, distributed framework. The projector-depth camera units are individually auto-calibrating, self-localizing, and create a unified model of the room with no user intervention. We investigate the design space of gaming experiences that are possible with RoomAlive and explore methods for dynamically mapping content based on room layout and user position. Finally we showcase four experience prototypes that demonstrate the novel interactive experiences that are possible with RoomAlive and discuss the design challenges of adapting any game to any room.",
+        "authors": "Brett R. Jones, Rajinder Sodhi, Michael Murdock, Ravish Mehra, Hrvoje Benko, Andrew D. Wilson, E. Ofek, B. MacIntyre, N. Raghuvanshi, Lior Shapira",
+        "citationCount": 336,
+        "venue": "ACM Symposium on User Interface Software and Technology",
+        "year": 2014,
+        "url": "https://www.semanticscholar.org/paper/2fe55fc6da5ed9d20f8c5c32ab11b93935fe4520",
+        "degree": 7,
+        "pagerank": 0.13292893850161372
+      },
+      {
+        "id": "e37f2fb8d6e675abbcda3bd09d586b9aaec26486",
+        "node_id": "e37f2fb8d6e675abbcda3bd09d586b9aaec26486",
+        "paperName": "DynamicFusion: Reconstruction and tracking of non-rigid scenes in real-time",
+        "paperAbstract": "We present the first dense SLAM system capable of reconstructing non-rigidly deforming scenes in real-time, by fusing together RGBD scans captured from commodity sensors. Our DynamicFusion approach reconstructs scene geometry whilst simultaneously estimating a dense volumetric 6D motion field that warps the estimated geometry into a live frame. Like KinectFusion, our system produces increasingly denoised, detailed, and complete reconstructions as more measurements are fused, and displays the updated model in real time. Because we do not require a template or other prior scene model, the approach is applicable to a wide range of moving objects and scenes.",
+        "authors": "Richard A. Newcombe, D. Fox, S. Seitz",
+        "citationCount": 1073,
+        "venue": "Computer Vision and Pattern Recognition",
+        "year": 2015,
+        "url": "https://www.semanticscholar.org/paper/e37f2fb8d6e675abbcda3bd09d586b9aaec26486",
+        "degree": 2,
+        "pagerank": 0.04662789736565576
+      },
+      {
+        "id": "74f5a632a9966823919dfc91d65ce273a973294c",
+        "node_id": "74f5a632a9966823919dfc91d65ce273a973294c",
+        "paperName": "ElasticFusion: Dense SLAM Without A Pose Graph",
+        "paperAbstract": "We present a novel approach to real-time dense visual SLAM. Our system is capable of capturing comprehensive dense globally consistent surfel-based maps of room scale environments explored using an RGB-D camera in an incremental online fashion, without pose graph optimisation or any postprocessing steps. This is accomplished by using dense frame-to-model camera tracking and windowed surfel-based fusion coupled with frequent model refinement through non-rigid surface deformations. Our approach applies local model-to-model surface loop closure optimisations as often as possible to stay close to the mode of the map distribution, while utilising global loop closure to recover from arbitrary drift and maintain global consistency.",
+        "authors": "Thomas Whelan, Stefan Leutenegger, Renato F. Salas-Moreno, B. Glocker, A. Davison",
+        "citationCount": 883,
+        "venue": "Robotics: Science and Systems",
+        "year": 2015,
+        "url": "https://www.semanticscholar.org/paper/74f5a632a9966823919dfc91d65ce273a973294c",
+        "degree": 4,
+        "pagerank": 0.08790609108751633
+      },
+      {
+        "id": "dd137c18c302ba7a25fe48aeb60a6b46a0e82189",
+        "node_id": "dd137c18c302ba7a25fe48aeb60a6b46a0e82189",
+        "paperName": "Holoportation: Virtual 3D Teleportation in Real-time",
+        "paperAbstract": "Describes a real-time system for capturing, reconstructing, compressing, and transmitting life-size 3D representations of people so they can appear remotely in mixed-reality environments for natural telepresence.",
+        "authors": "Sergio Orts, Christoph Rhemann, S. Fanello, Wayne Chang, Adarsh Kowdle, Yu.G. Degtyarev, David Kim, Philip L. Davidson, S. Khamis, Mingsong Dou, V. Tankovich, Charles T. Loop, Q. Cai, P. Chou, Sarah Mennicken, Julien P. C. Valentin, V. Pradeep, Shenlong Wang, S. B. Kang, Pushmeet Kohli, Yuliya Lutchyn, Cem Keskin, S. Izadi",
+        "citationCount": 720,
+        "venue": "ACM Symposium on User Interface Software and Technology",
+        "year": 2016,
+        "url": "https://www.semanticscholar.org/paper/dd137c18c302ba7a25fe48aeb60a6b46a0e82189",
+        "degree": 7,
+        "pagerank": 0.135136165055774
+      },
+      {
+        "id": "a02d0d9ca58b1131a2595967c44ddbd5aa9b51b3",
+        "node_id": "a02d0d9ca58b1131a2595967c44ddbd5aa9b51b3",
+        "paperName": "Kintinuous: Spatially Extended KinectFusion",
+        "paperAbstract": "Abstract\u2014In this paper we present an extension to the KinectFusion algorithm that permits dense mesh-based mapping of extended scale environments in real-time. This is achieved through (i) altering the original algorithm such that the region of space being mapped by the KinectFusion algorithm can vary dynamically, (ii) extracting a dense point cloud from the regions that leave the KinectFusionvolume due tothisvariation, and,(iii) incrementally adding the resulting points to a triangular mesh representation of the environment. The system is implemented as a set of hierarchical multi-threaded components which are capable of operating in real-time. The architecture facilitates the creation and integration of new modules with minimal impact on the performance on the dense volume tracking and surface reconstruction modules. We provide experimental results demonstrating the system\u2019s ability to map areas considerably beyond the scale of the original KinectFusionalgorithm including a two story apartment and an extended sequence taken from a car at night. In order to overcome failure of the iterative closest point (ICP)based odometry in areas of low geometric features we have evaluated the Fast Odometry from Vision (FOVIS) system as an alternative. We provide a comparison between the two approaches where we show a trade off between the reduced drift of the visual odometry approach and the higher local mesh quality of the ICP-based approach. Finally we present ongoing work on incorporating full simultaneous localisation and mapping (SLAM) pose-graph optimisation. I.",
+        "authors": "Thomas Whelan, M. Kaess, M. Fallon, H. Johannsson, J. Leonard, J. McDonald",
+        "citationCount": 726,
+        "venue": "AAAI Conference on Artificial Intelligence",
+        "year": 2012,
+        "url": "https://www.semanticscholar.org/paper/a02d0d9ca58b1131a2595967c44ddbd5aa9b51b3",
+        "degree": 2,
+        "pagerank": 0.04937535971376342
+      },
+      {
+        "id": "17cd1059086e31e441bffc6556b48efb65465b34",
+        "node_id": "17cd1059086e31e441bffc6556b48efb65465b34",
+        "paperName": "Room2Room: Enabling Life-Size Telepresence in a Projected Augmented Reality Environment",
+        "paperAbstract": "Introduces a projected augmented-reality telepresence system that supports life-size remote collaboration by combining spatial projection, depth capture, and viewpoint-aware rendering in physically separated rooms.",
+        "authors": "T. Pejsa, Julian Kantor, Hrvoje Benko, E. Ofek, Andrew D. Wilson",
+        "citationCount": 236,
+        "venue": "Conference on Computer Supported Cooperative Work",
+        "year": 2016,
+        "url": "https://www.semanticscholar.org/paper/17cd1059086e31e441bffc6556b48efb65465b34",
+        "degree": 3,
+        "pagerank": 0.060544488376258816
+      }
+    ],
+    "edges": [
+      {
+        "source_id": "05de05f242f62bd597666c7821d99dc568d47b6c",
+        "target_id": "2fe55fc6da5ed9d20f8c5c32ab11b93935fe4520"
+      },
+      {
+        "source_id": "05de05f242f62bd597666c7821d99dc568d47b6c",
+        "target_id": "4fdc075d1cc14d64c11c3c860e86a082b761f4a0"
+      },
+      {
+        "source_id": "05de05f242f62bd597666c7821d99dc568d47b6c",
+        "target_id": "c1429edc37ce431899a5c3838070ab10e17a2f17"
+      },
+      {
+        "source_id": "05de05f242f62bd597666c7821d99dc568d47b6c",
+        "target_id": "dd137c18c302ba7a25fe48aeb60a6b46a0e82189"
+      },
+      {
+        "source_id": "05de05f242f62bd597666c7821d99dc568d47b6c",
+        "target_id": "f78a31be8874eda176a5244c645289be9f1d4317"
+      },
+      {
+        "source_id": "17cd1059086e31e441bffc6556b48efb65465b34",
+        "target_id": "2fe55fc6da5ed9d20f8c5c32ab11b93935fe4520"
+      },
+      {
+        "source_id": "17cd1059086e31e441bffc6556b48efb65465b34",
+        "target_id": "c1429edc37ce431899a5c3838070ab10e17a2f17"
+      },
+      {
+        "source_id": "17cd1059086e31e441bffc6556b48efb65465b34",
+        "target_id": "dd137c18c302ba7a25fe48aeb60a6b46a0e82189"
+      },
+      {
+        "source_id": "2fe55fc6da5ed9d20f8c5c32ab11b93935fe4520",
+        "target_id": "4fdc075d1cc14d64c11c3c860e86a082b761f4a0"
+      },
+      {
+        "source_id": "2fe55fc6da5ed9d20f8c5c32ab11b93935fe4520",
+        "target_id": "a2001bd39df0eac404a0391e0dd5df6fc77f719d"
+      },
+      {
+        "source_id": "2fe55fc6da5ed9d20f8c5c32ab11b93935fe4520",
+        "target_id": "c1429edc37ce431899a5c3838070ab10e17a2f17"
+      },
+      {
+        "source_id": "2fe55fc6da5ed9d20f8c5c32ab11b93935fe4520",
+        "target_id": "dd137c18c302ba7a25fe48aeb60a6b46a0e82189"
+      },
+      {
+        "source_id": "2fe55fc6da5ed9d20f8c5c32ab11b93935fe4520",
+        "target_id": "f78a31be8874eda176a5244c645289be9f1d4317"
+      },
+      {
+        "source_id": "4329d5be8e6988e4516c2884ba26498ed1ee6b24",
+        "target_id": "a2001bd39df0eac404a0391e0dd5df6fc77f719d"
+      },
+      {
+        "source_id": "4fdc075d1cc14d64c11c3c860e86a082b761f4a0",
+        "target_id": "a2001bd39df0eac404a0391e0dd5df6fc77f719d"
+      },
+      {
+        "source_id": "4fdc075d1cc14d64c11c3c860e86a082b761f4a0",
+        "target_id": "f78a31be8874eda176a5244c645289be9f1d4317"
+      },
+      {
+        "source_id": "74f5a632a9966823919dfc91d65ce273a973294c",
+        "target_id": "a02d0d9ca58b1131a2595967c44ddbd5aa9b51b3"
+      },
+      {
+        "source_id": "74f5a632a9966823919dfc91d65ce273a973294c",
+        "target_id": "dd137c18c302ba7a25fe48aeb60a6b46a0e82189"
+      },
+      {
+        "source_id": "74f5a632a9966823919dfc91d65ce273a973294c",
+        "target_id": "e2975deb809f35bd47ac3de34e348675a0cfb3f6"
+      },
+      {
+        "source_id": "74f5a632a9966823919dfc91d65ce273a973294c",
+        "target_id": "e37f2fb8d6e675abbcda3bd09d586b9aaec26486"
+      },
+      {
+        "source_id": "a02d0d9ca58b1131a2595967c44ddbd5aa9b51b3",
+        "target_id": "e2975deb809f35bd47ac3de34e348675a0cfb3f6"
+      },
+      {
+        "source_id": "c1429edc37ce431899a5c3838070ab10e17a2f17",
+        "target_id": "dd137c18c302ba7a25fe48aeb60a6b46a0e82189"
+      },
+      {
+        "source_id": "dd137c18c302ba7a25fe48aeb60a6b46a0e82189",
+        "target_id": "e2975deb809f35bd47ac3de34e348675a0cfb3f6"
+      },
+      {
+        "source_id": "dd137c18c302ba7a25fe48aeb60a6b46a0e82189",
+        "target_id": "e37f2fb8d6e675abbcda3bd09d586b9aaec26486"
+      }
+    ]
+  },
+  "overrides": {},
+  "nodesShowingLabels": [
+    "4fdc075d1cc14d64c11c3c860e86a082b761f4a0",
+    "4329d5be8e6988e4516c2884ba26498ed1ee6b24",
+    "f78a31be8874eda176a5244c645289be9f1d4317",
+    "e2975deb809f35bd47ac3de34e348675a0cfb3f6",
+    "e37f2fb8d6e675abbcda3bd09d586b9aaec26486",
+    "05de05f242f62bd597666c7821d99dc568d47b6c",
+    "a2001bd39df0eac404a0391e0dd5df6fc77f719d"
+  ],
+  "positions": {
+    "4329d5be8e6988e4516c2884ba26498ed1ee6b24": [
+      115.5,
+      115.5
+    ],
+    "f78a31be8874eda176a5244c645289be9f1d4317": [
+      126.5,
+      -126.5
+    ],
+    "4fdc075d1cc14d64c11c3c860e86a082b761f4a0": [
+      132.0,
+      -64.945623
+    ],
+    "05de05f242f62bd597666c7821d99dc568d47b6c": [
+      62.934395,
+      -129.668621
+    ],
+    "a2001bd39df0eac404a0391e0dd5df6fc77f719d": [
+      126.5,
+      26.132117
+    ],
+    "e2975deb809f35bd47ac3de34e348675a0cfb3f6": [
+      -87.238469,
+      71.732893
+    ],
+    "c1429edc37ce431899a5c3838070ab10e17a2f17": [
+      -4.517675,
+      -132.0
+    ],
+    "2fe55fc6da5ed9d20f8c5c32ab11b93935fe4520": [
+      59.625546,
+      -80.877329
+    ],
+    "e37f2fb8d6e675abbcda3bd09d586b9aaec26486": [
+      -121.0,
+      -37.336915
+    ],
+    "74f5a632a9966823919dfc91d65ce273a973294c": [
+      -132.0,
+      36.589627
+    ],
+    "dd137c18c302ba7a25fe48aeb60a6b46a0e82189": [
+      -53.441064,
+      -51.889042
+    ],
+    "a02d0d9ca58b1131a2595967c44ddbd5aa9b51b3": [
+      -121.0,
+      121.0
+    ],
+    "17cd1059086e31e441bffc6556b48efb65465b34": [
+      -52.835388,
+      -126.5
+    ]
+  },
+  "metadata": {
+    "snapshotName": "Spatial Computing",
+    "fullNodes": 13,
+    "fullEdges": 24,
+    "nodeProperties": [
+      "id",
+      "degree",
+      "pagerank",
+      "paperName",
+      "paperAbstract",
+      "authors",
+      "citationCount",
+      "venue",
+      "year",
+      "url",
+      "node_id"
+    ],
+    "nodeComputed": [
+      "pagerank",
+      "degree"
+    ],
+    "edgeProperties": [
+      "source_id",
+      "target_id"
+    ]
+  },
+  "global": {
+    "nodes": {
+      "colorBy": "citationCount",
+      "color": {
+        "scale": "Linear Scale",
+        "from": "#448AFF",
+        "to": "#E91E63"
+      },
+      "sizeBy": "citationCount",
+      "size": {
+        "min": 3,
+        "max": 12,
+        "scale": "Linear Scale"
+      },
+      "labelBy": "paperName",
+      "shape": "circle",
+      "labelSize": 0.65,
+      "labelLength": 36
+    },
+    "edges": {
+      "color": "#7f7f7f"
+    }
+  }
+}

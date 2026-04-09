@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/argo-scholar/static/css/main.2ec35192.chunk.css",
-    "main.js": "/argo-scholar/static/js/main.913e3d2f.chunk.js",
-    "main.js.map": "/argo-scholar/static/js/main.913e3d2f.chunk.js.map",
+    "main.js": "/argo-scholar/static/js/main.7e83e1c4.chunk.js",
+    "main.js.map": "/argo-scholar/static/js/main.7e83e1c4.chunk.js.map",
     "runtime~main.js": "/argo-scholar/static/js/runtime~main.19d20500.js",
     "runtime~main.js.map": "/argo-scholar/static/js/runtime~main.19d20500.js.map",
     "static/css/2.03e46918.chunk.css": "/argo-scholar/static/css/2.03e46918.chunk.css",
     "static/js/2.a95d0da3.chunk.js": "/argo-scholar/static/js/2.a95d0da3.chunk.js",
     "static/js/2.a95d0da3.chunk.js.map": "/argo-scholar/static/js/2.a95d0da3.chunk.js.map",
     "index.html": "/argo-scholar/index.html",
-    "precache-manifest.9ef1d3220a116bf75855d575fa82a305.js": "/argo-scholar/precache-manifest.9ef1d3220a116bf75855d575fa82a305.js",
+    "precache-manifest.6614c23a311f18a2d5d16c4ada151069.js": "/argo-scholar/precache-manifest.6614c23a311f18a2d5d16c4ada151069.js",
     "service-worker.js": "/argo-scholar/service-worker.js",
     "static/css/2.03e46918.chunk.css.map": "/argo-scholar/static/css/2.03e46918.chunk.css.map",
     "static/css/main.2ec35192.chunk.css.map": "/argo-scholar/static/css/main.2ec35192.chunk.css.map",

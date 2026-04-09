@@ -1,0 +1,432 @@
+{
+  "rawGraph": {
+    "nodes": [
+      {
+        "id": "2913c2bf3f92b5ae369400a42b2d27cc5bc05ecb",
+        "node_id": "2913c2bf3f92b5ae369400a42b2d27cc5bc05ecb",
+        "paperName": "Deep Learning",
+        "paperAbstract": "Reviews how deep neural networks learn hierarchical representations from data and explains how advances in computation, training methods, and large datasets enabled major breakthroughs in speech recognition, computer vision, and many other domains.",
+        "authors": "Yann LeCun, Yoshua Bengio, Geoffrey E. Hinton",
+        "citationCount": 38917,
+        "venue": "n/a",
+        "year": 2015,
+        "url": "https://www.semanticscholar.org/paper/2913c2bf3f92b5ae369400a42b2d27cc5bc05ecb",
+        "degree": 3,
+        "pagerank": 0.05214683776117258
+      },
+      {
+        "id": "abd1c342495432171beb7ca8fd9551ef13cbd0ff",
+        "node_id": "abd1c342495432171beb7ca8fd9551ef13cbd0ff",
+        "paperName": "ImageNet classification with deep convolutional neural networks",
+        "paperAbstract": "We trained a large, deep convolutional neural network to classify the 1.2 million high-resolution images in the ImageNet LSVRC-2010 contest into the 1000 different classes. On the test data, we achieved top-1 and top-5 error rates of 37.5% and 17.0%, respectively, which is considerably better than the previous state-of-the-art. The neural network, which has 60 million parameters and 650,000 neurons, consists of five convolutional layers, some of which are followed by max-pooling layers, and three fully connected layers with a final 1000-way softmax. To make training faster, we used non-saturating neurons and a very efficient GPU implementation of the convolution operation. To reduce overfitting in the fully connected layers we employed a recently developed regularization method called \"dropout\" that proved to be very effective. We also entered a variant of this model in the ILSVRC-2012 competition and achieved a winning top-5 test error rate of 15.3%, compared to 26.2% achieved by the second-best entry.",
+        "authors": "A. Krizhevsky, I. Sutskever, Geoffrey E. Hinton",
+        "citationCount": 127968,
+        "venue": "Communications of the ACM",
+        "year": 2012,
+        "url": "https://www.semanticscholar.org/paper/abd1c342495432171beb7ca8fd9551ef13cbd0ff",
+        "degree": 8,
+        "pagerank": 0.12198110036480767
+      },
+      {
+        "id": "34f25a8704614163c4095b3ee2fc969b60de4698",
+        "node_id": "34f25a8704614163c4095b3ee2fc969b60de4698",
+        "paperName": "Dropout: a simple way to prevent neural networks from overfitting",
+        "paperAbstract": "Deep neural nets with a large number of parameters are very powerful machine learning systems. However, overfitting is a serious problem in such networks. Large networks are also slow to use, making it difficult to deal with overfitting by combining the predictions of many different large neural nets at test time. Dropout is a technique for addressing this problem. The key idea is to randomly drop units (along with their connections) from the neural network during training. This prevents units from co-adapting too much. During training, dropout samples from an exponential number of different \u201cthinned \u201d networks. At test time, it is easy to approximate the effect of averaging the predictions of all these thinned networks by simply using a single unthinned network that has smaller weights. This significantly reduces overfitting and gives major improvements over other regularization methods. We show that dropout improves the performance of neural networks on supervised learning tasks in vision, speech recognition, document classification and computational biology, obtaining state-of-the-art results on many benchmark data sets.",
+        "authors": "Nitish Srivastava, Geoffrey E. Hinton, A. Krizhevsky, I. Sutskever, R. Salakhutdinov",
+        "citationCount": 42799,
+        "venue": "Journal of machine learning research",
+        "year": 2014,
+        "url": "https://www.semanticscholar.org/paper/34f25a8704614163c4095b3ee2fc969b60de4698",
+        "degree": 3,
+        "pagerank": 0.052218456411274615
+      },
+      {
+        "id": "2e9d221c206e9503ceb452302d68d10e293f2a10",
+        "node_id": "2e9d221c206e9503ceb452302d68d10e293f2a10",
+        "paperName": "Long Short-Term Memory",
+        "paperAbstract": "Learning to store information over extended time intervals by recurrent backpropagation takes a very long time, mostly because of insufficient, decaying error backflow. We briefly review Hochreiter's (1991) analysis of this problem, then address it by introducing a novel, efficient, gradient-based method called long short-term memory (LSTM). Truncating the gradient where this does not do harm, LSTM can learn to bridge minimal time lags in excess of 1000 discrete-time steps by enforcing constant error flow through constant error carousels within special units. Multiplicative gate units learn to open and close access to the constant error flow. LSTM is local in space and time; its computational complexity per time step and weight is O(1). Our experiments with artificial data involve local, distributed, real-valued, and noisy pattern representations. In comparisons with real-time recurrent learning, back propagation through time, recurrent cascade correlation, Elman nets, and neural sequence chunking, LSTM leads to many more successful runs, and learns much faster. LSTM also solves complex, artificial long-time-lag tasks that have never been solved by previous recurrent network algorithms.",
+        "authors": "Sepp Hochreiter, J. Schmidhuber",
+        "citationCount": 102845,
+        "venue": "Neural Computation",
+        "year": 1997,
+        "url": "https://www.semanticscholar.org/paper/2e9d221c206e9503ceb452302d68d10e293f2a10",
+        "degree": 6,
+        "pagerank": 0.09654233517591757
+      },
+      {
+        "id": "eb42cf88027de515750f230b23b1a057dc782108",
+        "node_id": "eb42cf88027de515750f230b23b1a057dc782108",
+        "paperName": "Very Deep Convolutional Networks for Large-Scale Image Recognition",
+        "paperAbstract": "In this work we investigate the effect of the convolutional network depth on its accuracy in the large-scale image recognition setting. Our main contribution is a thorough evaluation of networks of increasing depth using an architecture with very small (3x3) convolution filters, which shows that a significant improvement on the prior-art configurations can be achieved by pushing the depth to 16-19 weight layers. These findings were the basis of our ImageNet Challenge 2014 submission, where our team secured the first and the second places in the localisation and classification tracks respectively. We also show that our representations generalise well to other datasets, where they achieve state-of-the-art results. We have made our two best-performing ConvNet models publicly available to facilitate further research on the use of deep visual representations in computer vision.",
+        "authors": "K. Simonyan, Andrew Zisserman",
+        "citationCount": 110371,
+        "venue": "International Conference on Learning Representations",
+        "year": 2014,
+        "url": "https://www.semanticscholar.org/paper/eb42cf88027de515750f230b23b1a057dc782108",
+        "degree": 4,
+        "pagerank": 0.0629047758021536
+      },
+      {
+        "id": "e15cf50aa89fee8535703b9f9512fca5bfc43327",
+        "node_id": "e15cf50aa89fee8535703b9f9512fca5bfc43327",
+        "paperName": "Going deeper with convolutions",
+        "paperAbstract": "We propose a deep convolutional neural network architecture codenamed Inception that achieves the new state of the art for classification and detection in the ImageNet Large-Scale Visual Recognition Challenge 2014 (ILSVRC14). The main hallmark of this architecture is the improved utilization of the computing resources inside the network. By a carefully crafted design, we increased the depth and width of the network while keeping the computational budget constant. To optimize quality, the architectural decisions were based on the Hebbian principle and the intuition of multi-scale processing. One particular incarnation used in our submission for ILSVRC14 is called GoogLeNet, a 22 layers deep network, the quality of which is assessed in the context of classification and detection.",
+        "authors": "Christian Szegedy, Wei Liu, Yangqing Jia, P. Sermanet, Scott E. Reed, Dragomir Anguelov, D. Erhan, Vincent Vanhoucke, A. Rabinovich",
+        "citationCount": 46889,
+        "venue": "Computer Vision and Pattern Recognition",
+        "year": 2014,
+        "url": "https://www.semanticscholar.org/paper/e15cf50aa89fee8535703b9f9512fca5bfc43327",
+        "degree": 4,
+        "pagerank": 0.0629047758021536
+      },
+      {
+        "id": "cea967b59209c6be22829699f05b8b1ac4dc092d",
+        "node_id": "cea967b59209c6be22829699f05b8b1ac4dc092d",
+        "paperName": "Sequence to Sequence Learning with Neural Networks",
+        "paperAbstract": "Deep Neural Networks (DNNs) are powerful models that have achieved excellent performance on difficult learning tasks. Although DNNs work well whenever large labeled training sets are available, they cannot be used to map sequences to sequences. In this paper, we present a general end-to-end approach to sequence learning that makes minimal assumptions on the sequence structure. Our method uses a multilayered Long Short-Term Memory (LSTM) to map the input sequence to a vector of a fixed dimensionality, and then another deep LSTM to decode the target sequence from the vector. Our main result is that on an English to French translation task from the WMT-14 dataset, the translations produced by the LSTM achieve a BLEU score of 34.8 on the entire test set, where the LSTM's BLEU score was penalized on out-of-vocabulary words. Additionally, the LSTM did not have difficulty on long sentences. For comparison, a phrase-based SMT system achieves a BLEU score of 33.3 on the same dataset. When we used the LSTM to rerank the 1000 hypotheses produced by the aforementioned SMT system, its BLEU score increases to 36.5, which is close to the previous state of the art. The LSTM also learned sensible phrase and sentence representations that are sensitive to word order and are relatively invariant to the active and the passive voice. Finally, we found that reversing the order of the words in all source sentences (but not target sentences) improved the LSTM's performance markedly, because doing so introduced many short term dependencies between the source and the target sentence which made the optimization problem easier.",
+        "authors": "I. Sutskever, O. Vinyals, Quoc V. Le",
+        "citationCount": 21885,
+        "venue": "Neural Information Processing Systems",
+        "year": 2014,
+        "url": "https://www.semanticscholar.org/paper/cea967b59209c6be22829699f05b8b1ac4dc092d",
+        "degree": 4,
+        "pagerank": 0.06578878500008378
+      },
+      {
+        "id": "fa72afa9b2cbc8f0d7b05d52548906610ffbb9c5",
+        "node_id": "fa72afa9b2cbc8f0d7b05d52548906610ffbb9c5",
+        "paperName": "Neural Machine Translation by Jointly Learning to Align and Translate",
+        "paperAbstract": "Neural machine translation is a recently proposed approach to machine translation. Unlike the traditional statistical machine translation, the neural machine translation aims at building a single neural network that can be jointly tuned to maximize the translation performance. The models proposed recently for neural machine translation often belong to a family of encoder-decoders and consists of an encoder that encodes a source sentence into a fixed-length vector from which a decoder generates a translation. In this paper, we conjecture that the use of a fixed-length vector is a bottleneck in improving the performance of this basic encoder-decoder architecture, and propose to extend this by allowing a model to automatically (soft-)search for parts of a source sentence that are relevant to predicting a target word, without having to form these parts as a hard segment explicitly. With this new approach, we achieve a translation performance comparable to the existing state-of-the-art phrase-based system on the task of English-to-French translation. Furthermore, qualitative analysis reveals that the (soft-)alignments found by the model agree well with our intuition.",
+        "authors": "Dzmitry Bahdanau, Kyunghyun Cho, Yoshua Bengio",
+        "citationCount": 29165,
+        "venue": "International Conference on Learning Representations",
+        "year": 2014,
+        "url": "https://www.semanticscholar.org/paper/fa72afa9b2cbc8f0d7b05d52548906610ffbb9c5",
+        "degree": 3,
+        "pagerank": 0.05205850121987603
+      },
+      {
+        "id": "995c5f5e62614fcb4d2796ad2faab969da51713e",
+        "node_id": "995c5f5e62614fcb4d2796ad2faab969da51713e",
+        "paperName": "Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift",
+        "paperAbstract": "Training Deep Neural Networks is complicated by the fact that the distribution of each layer's inputs changes during training, as the parameters of the previous layers change. This slows down the training by requiring lower learning rates and careful parameter initialization, and makes it notoriously hard to train models with saturating nonlinearities. We refer to this phenomenon as internal covariate shift, and address the problem by normalizing layer inputs. Our method draws its strength from making normalization a part of the model architecture and performing the normalization for each training mini-batch. Batch Normalization allows us to use much higher learning rates and be less careful about initialization, and in some cases eliminates the need for Dropout. Applied to a state-of-the-art image classification model, Batch Normalization achieves the same accuracy with 14 times fewer training steps, and beats the original model by a significant margin. Using an ensemble of batch-normalized networks, we improve upon the best published result on ImageNet classification: reaching 4.82% top-5 test error, exceeding the accuracy of human raters.",
+        "authors": "Sergey Ioffe, Christian Szegedy",
+        "citationCount": 46368,
+        "venue": "International Conference on Machine Learning",
+        "year": 2015,
+        "url": "https://www.semanticscholar.org/paper/995c5f5e62614fcb4d2796ad2faab969da51713e",
+        "degree": 6,
+        "pagerank": 0.09206093262261897
+      },
+      {
+        "id": "2c03df8b48bf3fa39054345bafabfeff15bfd11d",
+        "node_id": "2c03df8b48bf3fa39054345bafabfeff15bfd11d",
+        "paperName": "Deep Residual Learning for Image Recognition",
+        "paperAbstract": "Deeper neural networks are more difficult to train. We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously. We explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions. We provide comprehensive empirical evidence showing that these residual networks are easier to optimize, and can gain accuracy from considerably increased depth. On the ImageNet dataset we evaluate residual nets with a depth of up to 152 layers - 8\u00d7 deeper than VGG nets [40] but still having lower complexity. An ensemble of these residual nets achieves 3.57% error on the ImageNet test set. This result won the 1st place on the ILSVRC 2015 classification task. We also present analysis on CIFAR-10 with 100 and 1000 layers. The depth of representations is of central importance for many visual recognition tasks. Solely due to our extremely deep representations, we obtain a 28% relative improvement on the COCO object detection dataset. Deep residual nets are foundations of our submissions to ILSVRC & COCO 2015 competitions1, where we also won the 1st places on the tasks of ImageNet detection, ImageNet localization, COCO detection, and COCO segmentation.",
+        "authors": "Kaiming He, X. Zhang, Shaoqing Ren, Jian Sun",
+        "citationCount": 224847,
+        "venue": "Computer Vision and Pattern Recognition",
+        "year": 2015,
+        "url": "https://www.semanticscholar.org/paper/2c03df8b48bf3fa39054345bafabfeff15bfd11d",
+        "degree": 8,
+        "pagerank": 0.12066605045938869
+      },
+      {
+        "id": "a6cb366736791bcccc5c8639de5a8f9636bf87e8",
+        "node_id": "a6cb366736791bcccc5c8639de5a8f9636bf87e8",
+        "paperName": "Adam: A Method for Stochastic Optimization",
+        "paperAbstract": "We introduce Adam, an algorithm for first-order gradient-based optimization of stochastic objective functions, based on adaptive estimates of lower-order moments. The method is straightforward to implement, is computationally efficient, has little memory requirements, is invariant to diagonal rescaling of the gradients, and is well suited for problems that are large in terms of data and/or parameters. The method is also appropriate for non-stationary objectives and problems with very noisy and/or sparse gradients. The hyper-parameters have intuitive interpretations and typically require little tuning. Some connections to related algorithms, on which Adam was inspired, are discussed. We also analyze the theoretical convergence properties of the algorithm and provide a regret bound on the convergence rate that is comparable to the best known results under the online convex optimization framework. Empirical results demonstrate that Adam works well in practice and compares favorably to other stochastic optimization methods. Finally, we discuss AdaMax, a variant of Adam based on the infinity norm.",
+        "authors": "Diederik P. Kingma, Jimmy Ba",
+        "citationCount": 164602,
+        "venue": "International Conference on Learning Representations",
+        "year": 2014,
+        "url": "https://www.semanticscholar.org/paper/a6cb366736791bcccc5c8639de5a8f9636bf87e8",
+        "degree": 2,
+        "pagerank": 0.037362045504502096
+      },
+      {
+        "id": "204e3073870fae3d05bcbc2f6a8e263d9b72e776",
+        "node_id": "204e3073870fae3d05bcbc2f6a8e263d9b72e776",
+        "paperName": "Attention is All you Need",
+        "paperAbstract": "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature. We show that the Transformer generalizes well to other tasks by applying it successfully to English constituency parsing both with large and limited training data.",
+        "authors": "Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, I. Polosukhin",
+        "citationCount": 172142,
+        "venue": "Neural Information Processing Systems",
+        "year": 2017,
+        "url": "https://www.semanticscholar.org/paper/204e3073870fae3d05bcbc2f6a8e263d9b72e776",
+        "degree": 6,
+        "pagerank": 0.09661600853965142
+      },
+      {
+        "id": "d6f2f611da110b5b5061731be3fc4c7f45d8ee23",
+        "node_id": "d6f2f611da110b5b5061731be3fc4c7f45d8ee23",
+        "paperName": "Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification",
+        "paperAbstract": "Rectified activation units (rectifiers) are essential for state-of-the-art neural networks. In this work, we study rectifier neural networks for image classification from two aspects. First, we propose a Parametric Rectified Linear Unit (PReLU) that generalizes the traditional rectified unit. PReLU improves model fitting with nearly zero extra computational cost and little overfitting risk. Second, we derive a robust initialization method that particularly considers the rectifier nonlinearities. This method enables us to train extremely deep rectified models directly from scratch and to investigate deeper or wider network architectures. Based on the learnable activation and advanced initialization, we achieve 4.94% top-5 test error on the ImageNet 2012 classification dataset. This is a 26% relative improvement over the ILSVRC 2014 winner (GoogLeNet, 6.66% [33]). To our knowledge, our result is the first to surpass the reported human-level performance (5.1%, [26]) on this dataset.",
+        "authors": "Kaiming He, X. Zhang, Shaoqing Ren, Jian Sun",
+        "citationCount": 20298,
+        "venue": "IEEE International Conference on Computer Vision",
+        "year": 2015,
+        "url": "https://www.semanticscholar.org/paper/d6f2f611da110b5b5061731be3fc4c7f45d8ee23",
+        "degree": 3,
+        "pagerank": 0.04953751094420784
+      },
+      {
+        "id": "e0945081b5b87187a53d4329cf77cd8bff635795",
+        "node_id": "e0945081b5b87187a53d4329cf77cd8bff635795",
+        "paperName": "Highway Networks",
+        "paperAbstract": "There is plenty of theoretical and empirical evidence that depth of neural networks is a crucial ingredient for their success. However, network training becomes more difficult with increasing depth and training of very deep networks remains an open problem. In this extended abstract, we introduce a new architecture designed to ease gradient-based training of very deep networks. We refer to networks with this architecture as highway networks, since they allow unimpeded information flow across several layers on\"information highways\". The architecture is characterized by the use of gating units which learn to regulate the flow of information through a network. Highway networks with hundreds of layers can be trained directly using stochastic gradient descent and with a variety of activation functions, opening up the possibility of studying extremely deep and efficient architectures.",
+        "authors": "R. Srivastava, Klaus Greff, J. Schmidhuber",
+        "citationCount": 1880,
+        "venue": "arXiv.org",
+        "year": 2015,
+        "url": "https://www.semanticscholar.org/paper/e0945081b5b87187a53d4329cf77cd8bff635795",
+        "degree": 2,
+        "pagerank": 0.03721188439219162
+      }
+    ],
+    "edges": [
+      {
+        "source_id": "204e3073870fae3d05bcbc2f6a8e263d9b72e776",
+        "target_id": "2c03df8b48bf3fa39054345bafabfeff15bfd11d"
+      },
+      {
+        "source_id": "204e3073870fae3d05bcbc2f6a8e263d9b72e776",
+        "target_id": "2e9d221c206e9503ceb452302d68d10e293f2a10"
+      },
+      {
+        "source_id": "204e3073870fae3d05bcbc2f6a8e263d9b72e776",
+        "target_id": "34f25a8704614163c4095b3ee2fc969b60de4698"
+      },
+      {
+        "source_id": "204e3073870fae3d05bcbc2f6a8e263d9b72e776",
+        "target_id": "a6cb366736791bcccc5c8639de5a8f9636bf87e8"
+      },
+      {
+        "source_id": "204e3073870fae3d05bcbc2f6a8e263d9b72e776",
+        "target_id": "cea967b59209c6be22829699f05b8b1ac4dc092d"
+      },
+      {
+        "source_id": "204e3073870fae3d05bcbc2f6a8e263d9b72e776",
+        "target_id": "fa72afa9b2cbc8f0d7b05d52548906610ffbb9c5"
+      },
+      {
+        "source_id": "2913c2bf3f92b5ae369400a42b2d27cc5bc05ecb",
+        "target_id": "2e9d221c206e9503ceb452302d68d10e293f2a10"
+      },
+      {
+        "source_id": "2913c2bf3f92b5ae369400a42b2d27cc5bc05ecb",
+        "target_id": "34f25a8704614163c4095b3ee2fc969b60de4698"
+      },
+      {
+        "source_id": "2913c2bf3f92b5ae369400a42b2d27cc5bc05ecb",
+        "target_id": "abd1c342495432171beb7ca8fd9551ef13cbd0ff"
+      },
+      {
+        "source_id": "2c03df8b48bf3fa39054345bafabfeff15bfd11d",
+        "target_id": "2e9d221c206e9503ceb452302d68d10e293f2a10"
+      },
+      {
+        "source_id": "2c03df8b48bf3fa39054345bafabfeff15bfd11d",
+        "target_id": "995c5f5e62614fcb4d2796ad2faab969da51713e"
+      },
+      {
+        "source_id": "2c03df8b48bf3fa39054345bafabfeff15bfd11d",
+        "target_id": "abd1c342495432171beb7ca8fd9551ef13cbd0ff"
+      },
+      {
+        "source_id": "2c03df8b48bf3fa39054345bafabfeff15bfd11d",
+        "target_id": "d6f2f611da110b5b5061731be3fc4c7f45d8ee23"
+      },
+      {
+        "source_id": "2c03df8b48bf3fa39054345bafabfeff15bfd11d",
+        "target_id": "e0945081b5b87187a53d4329cf77cd8bff635795"
+      },
+      {
+        "source_id": "2c03df8b48bf3fa39054345bafabfeff15bfd11d",
+        "target_id": "e15cf50aa89fee8535703b9f9512fca5bfc43327"
+      },
+      {
+        "source_id": "2c03df8b48bf3fa39054345bafabfeff15bfd11d",
+        "target_id": "eb42cf88027de515750f230b23b1a057dc782108"
+      },
+      {
+        "source_id": "2e9d221c206e9503ceb452302d68d10e293f2a10",
+        "target_id": "cea967b59209c6be22829699f05b8b1ac4dc092d"
+      },
+      {
+        "source_id": "2e9d221c206e9503ceb452302d68d10e293f2a10",
+        "target_id": "e0945081b5b87187a53d4329cf77cd8bff635795"
+      },
+      {
+        "source_id": "2e9d221c206e9503ceb452302d68d10e293f2a10",
+        "target_id": "fa72afa9b2cbc8f0d7b05d52548906610ffbb9c5"
+      },
+      {
+        "source_id": "34f25a8704614163c4095b3ee2fc969b60de4698",
+        "target_id": "995c5f5e62614fcb4d2796ad2faab969da51713e"
+      },
+      {
+        "source_id": "995c5f5e62614fcb4d2796ad2faab969da51713e",
+        "target_id": "abd1c342495432171beb7ca8fd9551ef13cbd0ff"
+      },
+      {
+        "source_id": "995c5f5e62614fcb4d2796ad2faab969da51713e",
+        "target_id": "d6f2f611da110b5b5061731be3fc4c7f45d8ee23"
+      },
+      {
+        "source_id": "995c5f5e62614fcb4d2796ad2faab969da51713e",
+        "target_id": "e15cf50aa89fee8535703b9f9512fca5bfc43327"
+      },
+      {
+        "source_id": "995c5f5e62614fcb4d2796ad2faab969da51713e",
+        "target_id": "eb42cf88027de515750f230b23b1a057dc782108"
+      },
+      {
+        "source_id": "a6cb366736791bcccc5c8639de5a8f9636bf87e8",
+        "target_id": "abd1c342495432171beb7ca8fd9551ef13cbd0ff"
+      },
+      {
+        "source_id": "abd1c342495432171beb7ca8fd9551ef13cbd0ff",
+        "target_id": "cea967b59209c6be22829699f05b8b1ac4dc092d"
+      },
+      {
+        "source_id": "abd1c342495432171beb7ca8fd9551ef13cbd0ff",
+        "target_id": "d6f2f611da110b5b5061731be3fc4c7f45d8ee23"
+      },
+      {
+        "source_id": "abd1c342495432171beb7ca8fd9551ef13cbd0ff",
+        "target_id": "e15cf50aa89fee8535703b9f9512fca5bfc43327"
+      },
+      {
+        "source_id": "abd1c342495432171beb7ca8fd9551ef13cbd0ff",
+        "target_id": "eb42cf88027de515750f230b23b1a057dc782108"
+      },
+      {
+        "source_id": "cea967b59209c6be22829699f05b8b1ac4dc092d",
+        "target_id": "fa72afa9b2cbc8f0d7b05d52548906610ffbb9c5"
+      },
+      {
+        "source_id": "e15cf50aa89fee8535703b9f9512fca5bfc43327",
+        "target_id": "eb42cf88027de515750f230b23b1a057dc782108"
+      }
+    ]
+  },
+  "overrides": {},
+  "nodesShowingLabels": [
+    "2c03df8b48bf3fa39054345bafabfeff15bfd11d",
+    "204e3073870fae3d05bcbc2f6a8e263d9b72e776",
+    "a6cb366736791bcccc5c8639de5a8f9636bf87e8",
+    "abd1c342495432171beb7ca8fd9551ef13cbd0ff",
+    "eb42cf88027de515750f230b23b1a057dc782108",
+    "2e9d221c206e9503ceb452302d68d10e293f2a10",
+    "e15cf50aa89fee8535703b9f9512fca5bfc43327",
+    "995c5f5e62614fcb4d2796ad2faab969da51713e"
+  ],
+  "positions": {
+    "2913c2bf3f92b5ae369400a42b2d27cc5bc05ecb": [
+      27.236947,
+      -65.875929
+    ],
+    "abd1c342495432171beb7ca8fd9551ef13cbd0ff": [
+      38.482079,
+      5.908386
+    ],
+    "34f25a8704614163c4095b3ee2fc969b60de4698": [
+      94.637064,
+      -51.813626
+    ],
+    "2e9d221c206e9503ceb452302d68d10e293f2a10": [
+      -91.534234,
+      -41.988185
+    ],
+    "eb42cf88027de515750f230b23b1a057dc782108": [
+      1.724874,
+      113.508833
+    ],
+    "e15cf50aa89fee8535703b9f9512fca5bfc43327": [
+      47.594299,
+      119.139051
+    ],
+    "cea967b59209c6be22829699f05b8b1ac4dc092d": [
+      -71.013462,
+      -93.750119
+    ],
+    "fa72afa9b2cbc8f0d7b05d52548906610ffbb9c5": [
+      -117.5368,
+      -126.5
+    ],
+    "995c5f5e62614fcb4d2796ad2faab969da51713e": [
+      75.948658,
+      59.988816
+    ],
+    "2c03df8b48bf3fa39054345bafabfeff15bfd11d": [
+      -17.013597,
+      50.675091
+    ],
+    "a6cb366736791bcccc5c8639de5a8f9636bf87e8": [
+      60.551411,
+      -118.616887
+    ],
+    "204e3073870fae3d05bcbc2f6a8e263d9b72e776": [
+      -20.153564,
+      -94.415881
+    ],
+    "d6f2f611da110b5b5061731be3fc4c7f45d8ee23": [
+      103.696708,
+      76.896151
+    ],
+    "e0945081b5b87187a53d4329cf77cd8bff635795": [
+      -121.0,
+      45.998359
+    ]
+  },
+  "metadata": {
+    "snapshotName": "Deep Learning",
+    "fullNodes": 14,
+    "fullEdges": 31,
+    "nodeProperties": [
+      "id",
+      "degree",
+      "pagerank",
+      "paperName",
+      "paperAbstract",
+      "authors",
+      "citationCount",
+      "venue",
+      "year",
+      "url",
+      "node_id"
+    ],
+    "nodeComputed": [
+      "pagerank",
+      "degree"
+    ],
+    "edgeProperties": [
+      "source_id",
+      "target_id"
+    ]
+  },
+  "global": {
+    "nodes": {
+      "colorBy": "citationCount",
+      "color": {
+        "scale": "Linear Scale",
+        "from": "#448AFF",
+        "to": "#E91E63"
+      },
+      "sizeBy": "citationCount",
+      "size": {
+        "min": 3,
+        "max": 12,
+        "scale": "Linear Scale"
+      },
+      "labelBy": "paperName",
+      "shape": "circle",
+      "labelSize": 0.65,
+      "labelLength": 36
+    },
+    "edges": {
+      "color": "#7f7f7f"
+    }
+  }
+}
