@@ -11,8 +11,8 @@ export const FRONTEND_URL = "https://poloclub.github.io/argo-scholar";
 export const LOGO_URL = "https://poloclub.github.io/argo-scholar";
 export const GITHUB_URL = "https://github.com/poloclub/argo-scholar";
 export const SAMPLE_GRAPHS = [
-  ["Les Miserables", "samples/les-miserables.json"],
-  ["CORD-19 Citations Network", "samples/cord-19.json"]
+    ["Deep Learning", "/samples/deep-learning.json"],
+    ["Spatial Computing", "/samples/spatial-computing.json"],
 ];
 
 // When resizing window or running on mobile,
@@ -25,8 +25,8 @@ export const SCALE_LINEAR = "Linear Scale";
 export const SCALE_LOG = "Log Scale";
 
 export const scales = {
-  [SCALE_LINEAR]: scale.scaleLinear,
-  [SCALE_LOG]: scale.scaleLog
+    [SCALE_LINEAR]: scale.scaleLinear,
+    [SCALE_LOG]: scale.scaleLog,
 };
 
 export const LOAD_USER_CONFIG = "load-user-config";
@@ -56,8 +56,7 @@ export const SAVE_TOAST_KEY = "save-const-key";
 export const MENU_LOAD = "menu-load";
 export const MENU_IMPORT_CSV = "menu-import-csv";
 export const MENU_SAVE_GRAPH_STATE = "menu-save-graph-state";
-export const MENU_SAVE_GRAPH_STATE_TO_PROJECT =
-  "menu-save-graph-state-to-project";
+export const MENU_SAVE_GRAPH_STATE_TO_PROJECT = "menu-save-graph-state-to-project";
 export const MENU_SAVE_GRAPH_SQLITE = "menu-save-graph-sqlite";
 export const SAVE_GRAPH_STATE = "save-graph-state";
 export const SAVED_GRAPH_STATE = "saved-graph-state";
@@ -67,9 +66,9 @@ export const LOAD_GRAPH_STATE = "load-graph-state";
 export const LOADED_GRAPH_STATE = "loaded-graph-state";
 
 export const SHOW_ITEM_IN_FOLDER = "show-item-in-folder";
-export const SHOW_WORKSPACE_FOLDER = 'show-workspace-folder';
-export const CHANGE_WORKSPACE_FOLDER = 'change-workspace-folder';
-export const CHANGED_WORKSPACE_FOLDER = 'changed-workspace-folder';
+export const SHOW_WORKSPACE_FOLDER = "show-workspace-folder";
+export const CHANGE_WORKSPACE_FOLDER = "change-workspace-folder";
+export const CHANGED_WORKSPACE_FOLDER = "changed-workspace-folder";
 
 export const CHOOSE_EDGE_FILE = "choose-edge-file";
 export const CHOSEN_EDGE_FILE = "chosen-edge-file";

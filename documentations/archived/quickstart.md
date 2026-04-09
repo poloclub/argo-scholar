@@ -4,9 +4,9 @@ This is a quick start guide introducing the basic features of Argo Scholar. Let'
 
 [Launch Argo Scholar](https://poloclub.github.io/argo-scholar/)
 
-For the purpose of this quick start, we will be working with built-in sample literature network visualizing the [Apolo](https://www.semanticscholar.org/paper/Apolo%3A-making-sense-of-large-network-data-by-rich-Chau-Kittur/42936c2f2f5c8f4152494b94609fb33ec6264b8b) paper citation and reference network.
+For the purpose of this quick start, we will be working with the built-in sample literature network for **Deep Learning**.
 
-If you have launched Argo Scholar with the above link, this sample network will automatically be displayed. If you have launched Argo with another literature network, you can navigate to this network by selecting `Graph -> Load Sample -> Apolo Sample` in the top menu.
+If you have launched Argo Scholar with the above link, this sample network will automatically be displayed. If you have launched Argo with another literature network, you can navigate to this network by selecting `Graph -> Load Sample -> Deep Learning` in the top menu.
 
 If you are on a device with small screen and cannot see the top menu, you can click the expand button to bring up the full Argo Scholar UI.
 

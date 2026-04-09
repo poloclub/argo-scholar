@@ -15,7 +15,7 @@ An interactive literature exploration visualization system that runs in your web
 
 ## Quick Start
 
-For beginners, Argo Scholar provides 2 built-in sample paper citation and reference networks for literature exploration: **Deep Learning** and **Apolo Sample**.
+For beginners, Argo Scholar provides 2 built-in sample paper citation and reference networks for literature exploration: **Deep Learning** and **Spatial Computing**.
 
 If you have launched Argo Scholar with the above link, **Deep Learning** will automatically be displayed. You can also load sample networks at any time by selecting `Graph -> Load Sample` in the top menu.
 
@@ -87,15 +87,15 @@ If you are using a mouse (as opposed to a touchscreen device), you can find a sh
 
 You can also individually manage nodes in `Tools -> Data Sheet`.
 
-When you are done, save or share your snapshot using the `Graph` menu!
+When you are done, save your snapshot using the `Graph` menu!
 
-## Saving and Sharing
+## Saving
 
 ### Network Snapshots
 
 Argo saves your visualization and exploration progress into *snapshots*. A snapshot includes the full network data (including nodes and connections) as well as the current visualization settings. 
 
-You can capture a snapshot using the `Graph -> Save Snapshot` for saving locally, or `Graph -> Publish and Share Snapshot` for saving your snapshot to a URL/link. You can also rename the snapshot by clicking on its name (`Untitled Graph` by default) on the menu bar.
+You can capture a snapshot using `Graph -> Save Snapshot`. You can also rename the snapshot by clicking on its name (`Untitled Graph` by default) on the menu bar.
 
 If you have saved your snapshot, you can import the network at anytime in the future and resume right where you left off.
 
@@ -103,32 +103,13 @@ You can find sample files to import in the `samples` directory of this repositor
 
 Now try using `Graph -> Open Snapshot`.
 
-### Sharing as links/URLs
-
-Now try `Graph -> Publish and Share Snapshot`.
-
-By sharing your literature network with a link, anyone can load the network through the link later. It's a great tool for sharing and collaboration.
-
-![Argo Scholar sharing graph as link](img/video-share.gif)
-
-
-### Sharing as Embedded Widgets
-
-On the same screen where you get your sharable URL, you can also copy the iframe code for embedding the snapshot. Argo Scholar allows you to embed any snapshot URL in iframes. This is perfect for publishing your literature network on online articles, blog posts or interactive notebooks (such as a Jupyter Notebook).
-
-![Argo Scholar embedded widget mode](img/img-embedded.png)
-
-### About Sharing Service
-
-We provide a public sharing service for public datasets. If you want to establish your own sharing server for private or proprietary datasets, refer to the [Deployment Guide](documentations/deploy.md) to easily set up your own sharing service!
-
 
 
 ## Documentations 
 If you want to learn about the development process or how to deploy your own version of Argo Scholar, please check out the following documentations:
 
 - [Development Guide](documentations/development.md) (Developing Argo Scholar)
-- [Deployment Guide](documentations/deploy.md) (Deploy Argo Scholar and custom sharing service with access)
+- [Deployment Guide](documentations/deploy.md) (Deploy Argo Scholar)
   
 ## Credits
 ♥ Argo Scholar was developed and maintained by [Kevin Li](https://github.com/kevinli573), [Alex Yang](https://github.com/AlexanderHYang), [Anish Upadhayay](https://github.com/aupadhayay3), [Zhiyan Zhou](https://github.com/FZ2000), [Jon Saad-Falcon](https://github.com/jonsaadfalcon), [Duen Horng Chau](https://github.com/polochau) from [Polo Club of Data Science](https://poloclub.github.io/) at Georgia Tech.
